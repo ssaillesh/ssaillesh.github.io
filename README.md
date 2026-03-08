@@ -1,3 +1,4 @@
 # ssaillesh.github.io
 
-Personal portfolio site for Saillesh, built with React + Vite and styled in a Spotify-inspired visual theme.
+Personal portfolio site, built with React + Vite.
+Check it out: https://ssaillesh.github.io/
