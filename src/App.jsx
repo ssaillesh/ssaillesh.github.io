@@ -138,9 +138,9 @@ const pinned = [
 
 const quickStats = [
   { title: 'Languages Known', value: 'Python, Java, JavaScript, SQL' },
-  { title: 'Accomplishments', value: '6+ Hackathons and 12 certifications' },
+  { title: 'Accomplishments', value: 'Presidential Scholarship, Certification of Excellence: Autonomous Robotics' },
   { title: 'Projects Built', value: '18 shipped projects and prototypes' },
-  { title: 'Focus', value: 'Physics, software engineering, and systems' },
+  { title: 'Focus', value: 'Physics, software engineering, Quntitative modeling, and practical AI applications' },
 ]
 
 const experienceEntries = [
@@ -225,7 +225,7 @@ const experienceEntries = [
 const skillGroups = [
   { title: 'Frontend', chips: ['React', 'Tailwind CSS', 'Framer Motion', 'TypeScript'] },
   { title: 'Backend', chips: ['Node.js', 'Express', 'Java Spring', 'REST APIs'] },
-  { title: 'Tools', chips: ['GitHub Actions', 'Docker', 'Postman', 'Figma'] },
+  { title: 'Tools', chips: ['Azure', 'Docker', 'Postman', 'Figma', "ELK Stack", 'Linux'] },
   { title: 'Languages', chips: ['Python', 'Java', 'JavaScript', 'SQL'] },
 ]
 
@@ -234,11 +234,11 @@ const educationItems = [
     id: 'uw-physics',
     title: 'Bachelor of Science in Honors Physics',
     provider: 'University of Waterloo',
-    period: 'Sep 2021 - Apr 2026',
-    badge: 'Degree',
+    period: '2021 -  2026',
+    badge: 'Bachelor of Science',
     color: 'from-yellow-500/35 via-black/25 to-black/70',
     details:
-      'Completed a Bachelor of Science in Honors Physics at the University of Waterloo, with strong focus on signals and systems, data structures, algorithms, computational physics, and computational modeling. Awarded Presidential Scholarship and Term Distinction.',
+      'Completed a Bachelor of Science in Honors Biology and Medical Physics at the University of Waterloo, with strong focus on signals and systems, data structures, algorithms, computational physics, and computational modeling. Awarded Presidential Scholarship and Term Distinction.',
     link: 'https://uwaterloo.ca/',
   },
   {
@@ -249,17 +249,17 @@ const educationItems = [
     badge: 'Coursework',
     color: 'from-emerald-500/50 to-emerald-800/20',
     details: 'Core foundations in algorithmic thinking, complexity analysis, and efficient data organization.',
-    link: 'https://uwaterloo.ca/',
+    ///link: 'https://uwaterloo.ca/',
   },
   {
     id: 'course-ml',
-    title: 'Machine Learning',
-    provider: 'University Coursework',
+    title: 'Agenic AI Engineering',
+    provider: 'Microsoft Certtification (Audit)',
     period: 'Academic Track',
     badge: 'Coursework',
     color: 'from-cyan-500/40 to-slate-900/10',
     details: 'Covered supervised and unsupervised learning, model evaluation, and practical ML workflows.',
-    link: 'https://uwaterloo.ca/',
+    ///link: 'https://uwaterloo.ca/',
   },
 ]
 
