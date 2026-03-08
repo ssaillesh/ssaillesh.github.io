@@ -96,7 +96,7 @@ const contactData = {
   subheading:
     "I love getting to know people, and I genuinely don't bite. Whether you want to talk code, physics, hockey, or just say hi, my inbox is always open.",
   email: 's5somasu@uwaterloo.ca',
-  linkedin: 'https://www.linkedin.com/in/[saillesh-linkedin-handle]', // TODO: Add LinkedIn URL
+  linkedin: 'https://www.linkedin.com/in/sailleshsomasundaram/', // TODO: Add LinkedIn URL
   status: 'Open to Opportunities',
   personalNote:
     "Seriously though, I love getting to know people. Whether you're a recruiter, a fellow student, a dev, or just someone who stumbled onto this page, reach out.",
