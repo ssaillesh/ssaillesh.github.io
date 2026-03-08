@@ -35,10 +35,8 @@ const aboutData = {
     'With hands-on experience across DevOps, automation, analytics, and software engineering, he builds systems that are both practical and scalable. His work spans CI/CD hardening, anomaly detection pipelines, data-driven optimization, and interactive engineering tooling.',
     'When he is not building software or solving complex technical problems, he is training, swimming, travelling, and exploring ideas that connect science, design, and technology.',
   ],
-  // TODO: Replace with real banner/hero photo of Saillesh
-  bannerPhoto: null,
-  // TODO: Replace with real portrait photo
-  portraitPhoto: null,
+  bannerPhoto: '/about/IMG_9431.jpeg',
+  portraitPhoto: '/about/IMG_0146.jpg',
   stats: {
     projects: 8,
     languages: 5,
@@ -90,6 +88,29 @@ const aboutData = {
     { name: 'Roger Federer', role: 'Athlete', reason: 'Consistency, composure, and mastery over long horizons.' },
   ],
 }
+
+const aboutPhotoMoments = [
+  {
+    src: '/about/IMG_9654.jpeg',
+    label: 'Exploring',
+    caption: 'Exploring immersive spaces and turning everyday moments into creative energy.',
+  },
+  {
+    src: '/about/IMG_0235.jpeg',
+    label: 'Travelling',
+    caption: 'Travelling keeps me curious and grounded; every city teaches me something new.',
+  },
+  {
+    src: '/about/IMG_6712.jpeg',
+    label: 'Night Adventures',
+    caption: 'Late-night skyline sessions where ideas, ambition, and adventure collide.',
+  },
+  {
+    src: '/about/IMG_0268.jpeg',
+    label: 'Creating',
+    caption: 'Creating with focus and intent, one project and one story at a time.',
+  },
+]
 
 const contactData = {
   headline: 'Let\'s Build Something.',
@@ -1051,6 +1072,27 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
   const [activeInspiration, setActiveInspiration] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [surpriseFlash, setSurpriseFlash] = useState(null)
+  const [bannerLoadFailed, setBannerLoadFailed] = useState(false)
+  const [portraitLoadFailed, setPortraitLoadFailed] = useState(false)
+  const [activeMomentIndex, setActiveMomentIndex] = useState(0)
+  const [momentLoadFailed, setMomentLoadFailed] = useState(false)
+  const [bioPhotoFailed, setBioPhotoFailed] = useState(false)
+
+  const activeMoment = aboutPhotoMoments[activeMomentIndex]
+
+  useEffect(() => {
+    if (aboutPhotoMoments.length <= 1) return undefined
+
+    const timer = setInterval(() => {
+      setActiveMomentIndex((current) => (current + 1) % aboutPhotoMoments.length)
+    }, 4300)
+
+    return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    setMomentLoadFailed(false)
+  }, [activeMomentIndex])
 
   const surpriseMe = () => {
     const pick = aboutData.whoIAm[Math.floor(Math.random() * aboutData.whoIAm.length)]
@@ -1075,8 +1117,13 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
         className="relative h-[55vh] min-h-[390px] overflow-hidden"
       >
         <div className="absolute inset-0">
-          {aboutData.bannerPhoto ? (
-            <img src={aboutData.bannerPhoto} alt="Saillesh banner" className="h-full w-full object-cover" />
+          {aboutData.bannerPhoto && !bannerLoadFailed ? (
+            <img
+              src={aboutData.bannerPhoto}
+              alt="Saillesh banner"
+              className="h-full w-full object-cover"
+              onError={() => setBannerLoadFailed(true)}
+            />
           ) : (
             <div className="h-full w-full bg-[radial-gradient(circle_at_18%_84%,rgba(29,185,84,0.28),transparent_44%),radial-gradient(circle_at_82%_20%,rgba(45,89,255,0.18),transparent_46%),linear-gradient(140deg,#0f172a,#121212_58%,#1f2937)]" />
           )}
@@ -1254,8 +1301,27 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
                   className="overflow-hidden rounded-lg border border-white/10 bg-[#181818] shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
                 >
                   <div className="aspect-[4/5] w-full">
-                    {aboutData.portraitPhoto ? (
-                      <img src={aboutData.portraitPhoto} alt="Saillesh portrait" className="h-full w-full object-cover" />
+                    {activeMoment && !momentLoadFailed ? (
+                      <AnimatePresence mode="wait">
+                        <Motion.img
+                          key={activeMoment.src}
+                          src={activeMoment.src}
+                          alt={`Saillesh - ${activeMoment.label}`}
+                          className="h-full w-full object-cover"
+                          onError={() => setMomentLoadFailed(true)}
+                          initial={{ opacity: 0.2, scale: 1.03 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 1.02 }}
+                          transition={{ duration: 0.55, ease: 'easeOut' }}
+                        />
+                      </AnimatePresence>
+                    ) : aboutData.portraitPhoto && !portraitLoadFailed ? (
+                      <img
+                        src={aboutData.portraitPhoto}
+                        alt="Saillesh portrait"
+                        className="h-full w-full object-cover"
+                        onError={() => setPortraitLoadFailed(true)}
+                      />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(145deg,#242424,#101010)] text-xs uppercase tracking-[0.16em] text-[#7f7f7f]">
                         Add Portrait
@@ -1263,8 +1329,20 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
                     )}
                   </div>
                   <div className="p-4">
-                    <p className="text-sm font-semibold text-[#d5d5d5]">Saillesh Somasundaram</p>
-                    <p className="mt-1 text-sm italic text-[#a8a8a8]">Building at the intersection of physics and code.</p>
+                    <p className="text-sm font-semibold text-[#d5d5d5]">{activeMoment?.label || 'Saillesh Somasundaram'}</p>
+                    <p className="mt-1 text-sm italic text-[#a8a8a8]">
+                      {activeMoment?.caption || 'Building at the intersection of physics and code.'}
+                    </p>
+                    <div className="mt-3 flex gap-1.5">
+                      {aboutPhotoMoments.map((moment, index) => (
+                        <span
+                          key={moment.src}
+                          className={`h-1.5 rounded-full transition-all ${
+                            activeMomentIndex === index ? 'w-6 bg-[#1db954]' : 'w-2 bg-white/25'
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </Motion.article>
               </div>
@@ -1283,33 +1361,50 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
               <div className="pointer-events-none absolute inset-0 opacity-45">
                 <div className="h-full w-full bg-[radial-gradient(circle_at_80%_20%,rgba(29,185,84,0.18),transparent_44%),linear-gradient(150deg,#1f2937,#121212)] blur-sm" />
               </div>
-              <div className="relative mx-auto max-w-3xl">
-                <h3 className="text-2xl font-bold text-white">Biography</h3>
-                {aboutData.bio.map((paragraph) => (
-                  <p key={paragraph} className="mt-4 text-sm leading-relaxed text-[#dfdfdf] sm:text-base">
-                    {paragraph}
-                  </p>
-                ))}
-                <div className="mt-7">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9e9e9e]">Currently Obsessed With</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {['Rust', 'LLMs', 'Quantum Computing', 'Systems Design'].map((tag) => (
-                      <span key={tag} className="rounded-full bg-white/10 px-3 py-1 text-xs text-white">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+              <div className="relative mx-auto grid max-w-5xl gap-6 lg:grid-cols-[280px_1fr]">
+                <div className="overflow-hidden rounded-xl border border-white/10 bg-black/30">
+                  {bioPhotoFailed ? (
+                    <div className="grid aspect-[4/5] place-items-center text-xs uppercase tracking-[0.18em] text-[#8e8e8e]">
+                      Photo Unavailable
+                    </div>
+                  ) : (
+                    <img
+                      src="/about/IMG_0146.jpg"
+                      alt="Saillesh portrait in biography"
+                      className="aspect-[4/5] w-full object-cover"
+                      onError={() => setBioPhotoFailed(true)}
+                    />
+                  )}
                 </div>
-                <div className="mt-7 flex items-center gap-3">
-                  <a href="https://github.com/ssaillesh" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white hover:border-white/45">
-                    <Github size={16} />
-                  </a>
-                  <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white hover:border-white/45">
-                    <Linkedin size={16} />
-                  </a>
-                  <a href="https://instagram.com" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white hover:border-white/45">
-                    <Instagram size={16} />
-                  </a>
+
+                <div>
+                  <h3 className="text-2xl font-bold text-white">Biography</h3>
+                  {aboutData.bio.map((paragraph) => (
+                    <p key={paragraph} className="mt-4 text-sm leading-relaxed text-[#dfdfdf] sm:text-base">
+                      {paragraph}
+                    </p>
+                  ))}
+                  <div className="mt-7">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9e9e9e]">Currently Obsessed With</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {['Rust', 'LLMs', 'Quantum Computing', 'Systems Design'].map((tag) => (
+                        <span key={tag} className="rounded-full bg-white/10 px-3 py-1 text-xs text-white">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mt-7 flex items-center gap-3">
+                    <a href="https://github.com/ssaillesh" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white hover:border-white/45">
+                      <Github size={16} />
+                    </a>
+                    <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white hover:border-white/45">
+                      <Linkedin size={16} />
+                    </a>
+                    <a href="https://instagram.com" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white hover:border-white/45">
+                      <Instagram size={16} />
+                    </a>
+                  </div>
                 </div>
               </div>
             </Motion.section>
@@ -1600,6 +1695,8 @@ function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
 }
 
 function LoginView({ onEnter }) {
+  const [loginPhotoFailed, setLoginPhotoFailed] = useState(false)
+
   return (
     <Motion.div
       key="login"
@@ -1612,8 +1709,17 @@ function LoginView({ onEnter }) {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(29,185,84,0.08),transparent_60%)]" />
       <div className="w-full max-w-md rounded-2xl border border-white/5 bg-[var(--surface)]/95 p-8 shadow-[0_30px_80px_rgba(0,0,0,0.6)] backdrop-blur-sm sm:p-10">
         <div className="mb-10 text-center">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-white text-2xl font-extrabold text-black">
-            S.
+          <div className="mx-auto mb-6 h-16 w-16 overflow-hidden rounded-full border border-white/20 bg-black/25">
+            {loginPhotoFailed ? (
+              <div className="flex h-full w-full items-center justify-center bg-white text-2xl font-extrabold text-black">S.</div>
+            ) : (
+              <img
+                src="/about/IMG_01.jpeg"
+                alt="Saillesh"
+                className="h-full w-full object-cover"
+                onError={() => setLoginPhotoFailed(true)}
+              />
+            )}
           </div>
           <h1 className="text-balance text-3xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-4xl">
             Welcome to Saillesh&apos;s Page
