@@ -23,7 +23,7 @@ import {
 } from 'lucide-react'
 
 const Motion = motion
-const navPills = ['About Me', 'Skills', 'Experience', 'Projects', 'Education', 'Contact']
+const navPills = ['About Me', 'Journey', 'Projects', 'Contact']
 const resumeUrl = '/resume/Saillesh_dev_resume.pdf'
 
 const aboutData = {
@@ -124,8 +124,7 @@ const contactData = {
 }
 
 const sideNav = [
-  { icon: BriefcaseBusiness, label: 'Experience' },
-  { icon: GraduationCap, label: 'Education' },
+  { icon: BriefcaseBusiness, label: 'Journey' },
   { icon: Wrench, label: 'Projects' },
   { icon: Mail, label: 'Contact' },
 ]
@@ -146,7 +145,7 @@ const quickStats = [
 const experienceEntries = [
   {
     id: 'symcor-devops',
-    role: 'DevOps Engineer (Internship)',
+    role: 'DevOps Engineer',
     org: 'Symcor Inc',
     logo: '/logos/symcor.png',
     accent: '#0072ce',
@@ -165,7 +164,7 @@ const experienceEntries = [
   },
   {
     id: 'omniabio-qa',
-    role: 'Quality Automation Engineer (Internship)',
+    role: 'Quality Automation Engineer',
     org: 'OmniaBio',
     logo: '/logos/omniabio.png',
     accent: '#2b6cb0',
@@ -184,7 +183,7 @@ const experienceEntries = [
   },
   {
     id: 'pepsico-data',
-    role: 'Data Analyst (Internship)',
+    role: 'Data Analyst',
     org: 'PepsiCo Inc',
     logo: '/logos/pepsico.png',
     accent: '#003e7e',
@@ -237,29 +236,23 @@ const educationItems = [
     period: '2021 -  2026',
     badge: 'Bachelor of Science',
     color: 'from-yellow-500/35 via-black/25 to-black/70',
+    logo: '',
+    schoolHighlights: [
+      'Recognized as one of North America\'s strongest physics-focused institutions.',
+      'Elite co-op ecosystem connecting students with top engineering and research teams.',
+      'Strong reputation in mathematical modeling, computing, and applied science.',
+    ],
+    degreeOverview:
+      'This degree blends rigorous physics fundamentals with computational problem-solving. The program emphasizes analytical modeling, quantitative reasoning, and building intuition for complex real-world systems.',
+    learningModules: [
+      'Classical mechanics, electromagnetism, and thermodynamics',
+      'Quantum physics, modern physics, and mathematical methods',
+      'Computational physics, simulations, and scientific programming',
+      'Signals, systems, and data-driven modeling techniques',
+    ],
     details:
-      'Completed a Bachelor of Science in Honors Biology and Medical Physics at the University of Waterloo, with strong focus on signals and systems, data structures, algorithms, computational physics, and computational modeling. Awarded Presidential Scholarship and Term Distinction.',
+      'Completed a Bachelor of Science in Honors Physics at the University of Waterloo, with strong focus on signals and systems, data structures, algorithms, computational physics, and computational modeling. Awarded Presidential Scholarship and Term Distinction.',
     link: 'https://uwaterloo.ca/',
-  },
-  {
-    id: 'course-ds',
-    title: 'Data Structures',
-    provider: 'University Coursework',
-    period: 'Academic Track',
-    badge: 'Coursework',
-    color: 'from-emerald-500/50 to-emerald-800/20',
-    details: 'Core foundations in algorithmic thinking, complexity analysis, and efficient data organization.',
-    ///link: 'https://uwaterloo.ca/',
-  },
-  {
-    id: 'course-ml',
-    title: 'Agenic AI Engineering',
-    provider: 'Microsoft Certtification (Audit)',
-    period: 'Academic Track',
-    badge: 'Coursework',
-    color: 'from-cyan-500/40 to-slate-900/10',
-    details: 'Covered supervised and unsupervised learning, model evaluation, and practical ML workflows.',
-    ///link: 'https://uwaterloo.ca/',
   },
 ]
 
@@ -277,28 +270,28 @@ const projectCatalog = [
     tags: ['React', 'Node.js', 'Security'],
     github: 'https://github.com/ssaillesh/Pad-Lock',
     liveUrl: '',
-    category: ['Trending in My World', 'Web & Frontend', 'Tools & Utilities'],
+    category: ['Trending in My World', 'Tools & Utilities'],
     year: 2024,
     status: 'Completed',
     featured: false,
     duration: '4 months',
-    complexity: 'Advanced',
+    complexity: 'Entry',
   },
   {
     id: 2,
-    title: 'heston_engine',
+    title: 'Heston Stochastic Volatility Model Engine',
     description:
-      'A quantitative-engineering style project for simulation and analytics workflows. Designed to experiment with model behavior and improve computational reliability.',
-    teaser: 'Simulation and analytics engine.',
+      'Numerical pricing and analysis toolkit for the Heston stochastic volatility model, with a Flask API + browser UI for pricing, Greeks, volatility surface visualization, Monte Carlo simulation, validation, and market-data-assisted parameter estimation. Built to deepen understanding of quantitative finance and practical implementation of complex mathematical models.',
+    teaser: 'Simulation and Analytics Engine.',
     image: null,
-    tags: ['Python', 'Math', 'Analytics'],
+    tags: ['Python', 'Stochastic Mathematics', 'Analytics'],
     github: 'https://github.com/ssaillesh/heston_engine',
     liveUrl: '',
-    category: ['Trending in My World', 'Tools & Utilities', 'University Projects'],
+    category: ['Trending in My World', 'Tools & Utilities', 'Web & Frontend'],
     year: 2024,
     status: 'Open Source',
     featured: true,
-    duration: '3 months',
+    duration: '5 months',
     complexity: 'Intermediate',
   },
   {
@@ -307,33 +300,33 @@ const projectCatalog = [
     description:
       'A real-time hand gesture recognition project using computer vision to detect and interpret gestures. Built for intuitive human-computer interaction experiments.',
     teaser: 'Real-time computer vision gesture recognition.',
-    image: null,
+    image: '/logos/omniabio.png',
     tags: ['Python', 'FastAPI', 'OpenCV'],
     github: 'https://github.com/ssaillesh/Interactive-Hand-Gesture-Recognition',
     liveUrl: '',
-    category: ['Trending in My World', 'AI & Machine Learning'],
+    category: ['Trending in My World', 'Web & Frontend'],
     year: 2024,
     status: 'Completed',
     featured: true,
     duration: '5 months',
-    complexity: 'Advanced',
+    complexity: 'intermediate',
   },
   {
     id: 4,
-    title: 'Care_Loop',
+    title: 'Care_Loop: ',
     description:
       'A utility-oriented project focused on practical, human-centered workflows. Built to simplify user tasks with clean interactions and reliable execution.',
     teaser: 'Human-centered utility solution.',
     image: null,
-    tags: ['React', 'Node.js', 'Utility'],
-    github: 'https://github.com/ssaillesh/Care_Loo',
+    tags: ['React', 'Node.js', 'Python', 'Java'],
+    github: 'https://github.com/aarya127/CareLoop',
     liveUrl: '',
     category: ['Web & Frontend', 'Tools & Utilities', 'Trending in My World'],
     year: 2024,
     status: 'Open Source',
     featured: false,
     duration: '2 months',
-    complexity: 'Intermediate',
+    complexity: 'Advanced',
   },
   {
     id: 5,
@@ -350,7 +343,7 @@ const projectCatalog = [
     status: 'In Progress',
     featured: false,
     duration: '3 months',
-    complexity: 'Advanced',
+    complexity: 'Entry Level',
   },
 ]
 
@@ -358,7 +351,10 @@ const projectCatalog = [
 
 const projectRows = [
   'Trending in My World',
+  'Web & Frontend',
+  'Tools & Utilities',
   'Coming Soon',
+
 ]
 
 const projectGradients = {
@@ -371,9 +367,7 @@ const projectGradients = {
 }
 
 const pillToId = {
-  Experience: 'experience',
-  Skills: 'skills',
-  Education: 'education',
+  Journey: 'journey',
 }
 
 class AppErrorBoundary extends React.Component {
@@ -1017,21 +1011,6 @@ function ProjectsPage({ scrollTop, onBack }) {
       transition={{ duration: 0.35, ease: 'easeOut' }}
       className="-mx-4 -mt-6 bg-[#141414] px-4 pb-6 pt-6 sm:-mx-8 sm:px-8"
     >
-      <div className="mb-6 rounded-2xl border border-white/8 bg-[linear-gradient(120deg,#2a0a0d,#141414_55%,#0f0f0f)] p-5 sm:p-6">
-        <button
-          type="button"
-          onClick={onBack}
-          className="inline-flex items-center gap-2 rounded-full bg-black/35 px-3 py-1.5 text-xs font-semibold text-white hover:bg-black/55"
-        >
-          <ChevronLeft size={14} />
-          Back to Home
-        </button>
-        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#bcbcbc]">Artist Page</p>
-        <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl">Saillesh Projects</h2>
-        <p className="mt-2 max-w-2xl text-sm text-[#bcbcbc]">
-          A dedicated showcase of selected builds, experiments, and shipped work presented as a standalone projects experience.
-        </p>
-      </div>
       <NetflixProjectsView scrollTop={scrollTop} />
     </Motion.div>
   )
@@ -1570,8 +1549,43 @@ function ContactPage() {
 
 function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
   const [selectedExperienceId, setSelectedExperienceId] = useState(experienceEntries[0].id)
-  const [openedExperience, setOpenedExperience] = useState(null)
-  const [openedEducation, setOpenedEducation] = useState(null)
+  const [selectedEducationId, setSelectedEducationId] = useState(educationItems[0].id)
+  const [educationLogoFailed, setEducationLogoFailed] = useState(false)
+
+  const selectedExperience = experienceEntries.find((entry) => entry.id === selectedExperienceId) || experienceEntries[0]
+  const selectedEducation = educationItems.find((item) => item.id === selectedEducationId) || educationItems[0]
+
+  useEffect(() => {
+    if (experienceEntries.length <= 1) return undefined
+
+    const timer = setInterval(() => {
+      setSelectedExperienceId((current) => {
+        const currentIndex = experienceEntries.findIndex((entry) => entry.id === current)
+        const nextIndex = (currentIndex + 1) % experienceEntries.length
+        return experienceEntries[nextIndex].id
+      })
+    }, 6500)
+
+    return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    if (educationItems.length <= 1) return undefined
+
+    const timer = setInterval(() => {
+      setSelectedEducationId((current) => {
+        const currentIndex = educationItems.findIndex((item) => item.id === current)
+        const nextIndex = (currentIndex + 1) % educationItems.length
+        return educationItems[nextIndex].id
+      })
+    }, 6500)
+
+    return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    setEducationLogoFailed(false)
+  }, [selectedEducationId])
 
   return (
     <Motion.div
@@ -1582,8 +1596,12 @@ function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
       transition={{ duration: 0.2, ease: 'easeInOut' }}
       className="space-y-10"
     >
-      <section>
+      <section
+        id="journey"
+        ref={(element) => registerSection('journey', element)}
+      >
         <h2 className="text-2xl font-bold tracking-tight text-white">{visitorGreeting}</h2>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">Journey hub: skills, experience, and education in one place.</p>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {quickStats.map((stat) => (
             <article
@@ -1633,34 +1651,88 @@ function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
       >
         <h3 className="text-xl font-bold text-white">Experience</h3>
         <p className="mt-2 text-sm text-[var(--text-secondary)]">
-          Select a role to view the Spotify-style track details.
+          Dynamic view: this section rotates automatically and can also be switched manually.
         </p>
-        <div className="hide-scrollbar mt-4 flex gap-4 overflow-x-auto pb-2">
-          {experienceEntries.map((entry) => (
-            <button
-              key={entry.id}
-              type="button"
-              onClick={() => {
-                setSelectedExperienceId(entry.id)
-                setOpenedExperience(entry)
-              }}
-              className={`w-[220px] shrink-0 rounded-xl border p-4 text-left transition duration-200 ease-out hover:-translate-y-1 ${
-                selectedExperienceId === entry.id
-                  ? 'bg-[var(--surface-hover)] shadow-[0_14px_30px_rgba(29,185,84,0.2)]'
-                  : 'border-white/6 bg-[var(--surface)]'
-              }`}
-              style={selectedExperienceId === entry.id ? { borderColor: `${entry.accent}66` } : undefined}
-            >
-              <div className="overflow-hidden rounded-md border border-white/8">
-                <ExperienceAlbumCover logo={entry.logo} org={entry.org} />
+        <div className="mt-4 grid gap-4 lg:grid-cols-[280px_1fr]">
+          <div className="space-y-3">
+            {experienceEntries.map((entry) => {
+              const isActive = entry.id === selectedExperienceId
+              return (
+                <button
+                  key={entry.id}
+                  type="button"
+                  onClick={() => setSelectedExperienceId(entry.id)}
+                  className={`w-full rounded-xl border p-4 text-left transition ${
+                    isActive
+                      ? 'bg-[var(--surface-hover)] shadow-[0_14px_30px_rgba(29,185,84,0.22)]'
+                      : 'border-white/8 bg-[var(--surface)] hover:border-white/20 hover:bg-[var(--surface-hover)]'
+                  }`}
+                  style={isActive ? { borderColor: `${entry.accent}88` } : undefined}
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{entry.period}</p>
+                  <h4 className="mt-2 text-sm font-bold text-white">{entry.role}</h4>
+                  <p className="mt-1 text-xs text-[var(--text-secondary)]">{entry.org}</p>
+                </button>
+              )
+            })}
+          </div>
+
+          <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface)]">
+            <div className="relative p-5" style={{ background: `linear-gradient(130deg, ${selectedExperience.accent}66 0%, #171717 52%, #121212 100%)` }}>
+              <div className="pointer-events-none absolute inset-0 bg-black/30" />
+              <div className="relative flex items-center gap-4">
+                <div className="w-14 overflow-hidden rounded-md border border-white/20 bg-white/95">
+                  <ExperienceAlbumCover logo={selectedExperience.logo} org={selectedExperience.org} />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#d9d9d9]">Experience Spotlight</p>
+                  <h4 className="mt-1 text-xl font-black text-white sm:text-2xl">{selectedExperience.role}</h4>
+                  <p className="text-sm text-[#d9d9d9]">{selectedExperience.org} • {selectedExperience.period}</p>
+                </div>
               </div>
-              <h4 className="mt-3 line-clamp-2 text-base font-bold text-white">{entry.role}</h4>
-              <p className="mt-1 line-clamp-1 text-xs text-[var(--text-secondary)]">{entry.org}</p>
-            </button>
-          ))}
+            </div>
+
+            <div className="space-y-5 p-5">
+              <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{selectedExperience.description}</p>
+
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Company Snapshot</p>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{selectedExperience.companyAbout}</p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Key Contributions</p>
+                <ul className="mt-2 space-y-2 text-sm text-[var(--text-secondary)]">
+                  {selectedExperience.highlights.map((item) => (
+                    <li key={item}>- {item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Tools Used</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {selectedExperience.stack.map((tool) => (
+                    <span key={tool} className="rounded-full bg-black/25 px-3 py-1 text-xs text-white">
+                      {tool}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <a
+                href={selectedExperience.companyUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white"
+                style={{ backgroundColor: selectedExperience.accent }}
+              >
+                <ExternalLink size={14} />
+                Visit Company
+              </a>
+            </div>
+          </article>
         </div>
-        <ExperienceModal experience={openedExperience} onClose={() => setOpenedExperience(null)} />
-        {/* TODO: Replace experience logo URLs with direct brand assets if preferred */}
       </section>
 
       <section
@@ -1668,25 +1740,92 @@ function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
         ref={(element) => registerSection('education', element)}
       >
         <h3 className="text-xl font-bold text-white">Education</h3>
-        <div className="hide-scrollbar mt-4 flex gap-4 overflow-x-auto pb-2">
-          {educationItems.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setOpenedEducation(item)}
-              className="group relative min-h-44 min-w-[220px] flex-1 overflow-hidden rounded-xl border border-white/6 bg-[var(--surface)] p-4 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(29,185,84,0.2)]"
-            >
-              <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-35`} />
-              <div className="relative">
-                <GraduationCap size={22} className="text-white" />
-                <h4 className="mt-4 text-lg font-bold text-white">{item.title}</h4>
-                <p className="mt-1 text-sm text-[var(--text-secondary)]">{item.provider}</p>
-                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{item.badge}</p>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
+          Dynamic view: this section rotates automatically and can also be switched manually.
+        </p>
+        <div className="mt-4 grid gap-4 lg:grid-cols-[280px_1fr]">
+          <div className="space-y-3">
+            {educationItems.map((item) => {
+              const isActive = item.id === selectedEducationId
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setSelectedEducationId(item.id)}
+                  className={`w-full rounded-xl border p-4 text-left transition ${
+                    isActive
+                      ? 'border-[#1db954]/55 bg-[var(--surface-hover)] shadow-[0_14px_30px_rgba(29,185,84,0.22)]'
+                      : 'border-white/8 bg-[var(--surface)] hover:border-white/20 hover:bg-[var(--surface-hover)]'
+                  }`}
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{item.badge}</p>
+                  <h4 className="mt-2 text-sm font-bold text-white">{item.title}</h4>
+                  <p className="mt-1 text-xs text-[var(--text-secondary)]">{item.provider}</p>
+                </button>
+              )
+            })}
+          </div>
+
+          <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface)]">
+            <div className={`relative bg-gradient-to-br ${selectedEducation.color} p-5`}>
+              <div className="pointer-events-none absolute inset-0 bg-black/35" />
+              <div className="relative flex items-center gap-4">
+                {selectedEducation.logo && !educationLogoFailed ? (
+                  <img
+                    src={selectedEducation.logo}
+                    alt={`${selectedEducation.provider} logo`}
+                    className="h-14 w-14 rounded-md border border-white/20 bg-white/95 object-contain p-1"
+                    onError={() => setEducationLogoFailed(true)}
+                  />
+                ) : (
+                  <div className="grid h-14 w-14 place-items-center rounded-md border border-dashed border-white/45 bg-black/35 text-[10px] font-semibold uppercase tracking-[0.08em] text-white/85">
+                    Add UW Logo
+                  </div>
+                )}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#d9d9d9]">Education Spotlight</p>
+                  <h4 className="mt-1 text-xl font-black text-white sm:text-2xl">{selectedEducation.title}</h4>
+                  <p className="text-sm text-[#d9d9d9]">{selectedEducation.provider} • {selectedEducation.period}</p>
+                </div>
               </div>
-            </button>
-          ))}
+            </div>
+
+            <div className="space-y-5 p-5">
+              <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{selectedEducation.details}</p>
+
+              {selectedEducation.schoolHighlights ? (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">School Accomplishments</p>
+                  <ul className="mt-2 space-y-2 text-sm text-[var(--text-secondary)]">
+                    {selectedEducation.schoolHighlights.map((item) => (
+                      <li key={item}>- {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {selectedEducation.degreeOverview ? (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Physics Degree Overview</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{selectedEducation.degreeOverview}</p>
+                </div>
+              ) : null}
+
+              {selectedEducation.learningModules ? (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">What I Learn</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {selectedEducation.learningModules.map((topic) => (
+                      <span key={topic} className="rounded-full bg-black/25 px-3 py-1 text-xs text-white">
+                        {topic}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </article>
         </div>
-        <EducationModal item={openedEducation} onClose={() => setOpenedEducation(null)} />
       </section>
 
       {/* TODO: Replace with real profile photo */}
@@ -1714,7 +1853,7 @@ function LoginView({ onEnter }) {
               <div className="flex h-full w-full items-center justify-center bg-white text-2xl font-extrabold text-black">S.</div>
             ) : (
               <img
-                src="/about/IMG_01.jpeg"
+                src="/about/IMG_9431.jpeg"
                 alt="Saillesh"
                 className="h-full w-full object-cover"
                 onError={() => setLoginPhotoFailed(true)}
@@ -1743,7 +1882,7 @@ function LoginView({ onEnter }) {
 
 function AppLayout() {
   const [activePill, setActivePill] = useState('About Me')
-  const [activeSide, setActiveSide] = useState('Experience')
+  const [activeSide, setActiveSide] = useState('Journey')
   const [activePage, setActivePage] = useState('about')
   const [transitioning, setTransitioning] = useState(false)
   const [scrollTop, setScrollTop] = useState(0)
@@ -1847,6 +1986,15 @@ function AppLayout() {
       return
     }
 
+    if (pill === 'Journey') {
+      setActivePill('Journey')
+      setActiveSide('Journey')
+      setActivePage('journey')
+      scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      setTimeout(() => setTransitioning(false), 320)
+      return
+    }
+
     if (activePage !== 'home') {
       goHomeAndScrollTo(pill)
       return
@@ -1865,12 +2013,8 @@ function AppLayout() {
   const handleSideClick = (label) => {
     setActiveSide(label)
 
-    if (label === 'Experience') {
-      handlePillClick('Experience')
-      return
-    }
-    if (label === 'Education') {
-      handlePillClick('Education')
+    if (label === 'Journey') {
+      handlePillClick('Journey')
       return
     }
     if (label === 'Projects') {
@@ -2028,6 +2172,12 @@ function AppLayout() {
                     setActivePill={setActivePill}
                   />
                 </Motion.div>
+              ) : activePage === 'journey' ? (
+                <DefaultPortfolioContent
+                  key="journey-screen"
+                  registerSection={registerSection}
+                  visitorGreeting={visitorGreeting}
+                />
               ) : (
                 <DefaultPortfolioContent
                   key="home-screen"
