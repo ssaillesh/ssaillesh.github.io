@@ -260,8 +260,76 @@ const educationItems = [
 
 /// TODO: Add project categories and filter projects by those instead of just 'Trending in My World' for better organization and display control. For example, categories could be 'Web & Frontend', 'AI & Machine Learning', 'Tools & Utilities', etc., and each project can belong to one or more categories. Then we can create rows based on these categories instead of just 'Trending in My World'.
 const projectCatalog = [
-  {
+   {
     id: 1,
+    title: 'ICT Displacement and Liquidity Sweep Detector',
+    description:
+      'A project focused on detecting and analyzing ICT displacement and liquidity sweep patterns in financial markets. Built to enhance understanding of market dynamics and improve trading strategies.',
+    teaser: 'Financial market analysis tool.',
+    image: '/project/ict_read.png',
+    tags: ['JavaScript', 'Data Analysis', 'Finance'],
+    github: 'https://github.com/ssaillesh/ICT-Displacement-and-Liquidity-Sweep-Detector',
+    liveUrl: '',
+    category: ['Web & Frontend', 'Trending in My World'],
+    year: 2024,
+    status: 'In Progress',
+    featured: false,
+    duration: '3 months',
+    complexity: 'Entry Level',
+  },
+   {
+    id: 2,
+    title: 'Financial Market News Sentiment Analyzer and Stock Correlation Dashboard',
+    description:
+      'A project focused on analyzing financial market news sentiment and correlating it with stock performance. Built to provide insights into how news events impact market movements and to assist in making informed trading decisions.',
+    teaser: 'Financial market analysis tool.',
+    image: '/project/news.png',
+    tags: ['JavaScript', 'Data Analysis', 'Finance'],
+    github: 'https://github.com/ssaillesh/ICT-Displacement-and-Liquidity-Sweep-Detector',
+    liveUrl: '',
+    category: ['Web & Frontend', 'Trending in My World'],
+    year: 2024,
+    status: 'In Progress',
+    featured: false,
+    duration: '3 months',
+    complexity: 'Entry Level',
+  },
+  {
+    id: 3,
+    title: 'Heston Stochastic Volatility Model Engine',
+    description:
+      'Numerical pricing and analysis toolkit for the Heston stochastic volatility model, with a Flask API + browser UI for pricing, Greeks, volatility surface visualization, Monte Carlo simulation, validation, and market-data-assisted parameter estimation. Built to deepen understanding of quantitative finance and practical implementation of complex mathematical models.',
+    teaser: 'Simulation and Analytics Engine.',
+    image: '/project/Heston_front.png',
+    tags: ['Python', 'Stochastic Mathematics', 'Analytics'],
+    github: 'https://github.com/ssaillesh/heston_engine',
+    liveUrl: '',
+    category: ['Trending in My World', 'Tools & Utilities', 'Web & Frontend'],
+    year: 2024,
+    status: 'Open Source',
+    featured: true,
+    duration: '5 months',
+    complexity: 'Intermediate',
+  },
+  {
+    id: 4,
+    title: 'Care_Loop: ',
+    description:
+      'A utility-oriented project focused on practical, human-centered workflows. Built to simplify user tasks with clean interactions and reliable execution.',
+    teaser: 'Human-centered utility solution.',
+    image: '/project/careloop_intro.png'  ,
+    tags: ['React', 'Node.js', 'Python', 'Java'],
+    github: 'https://github.com/aarya127/CareLoop',
+    liveUrl: '',
+    category: ['Web & Frontend', 'Tools & Utilities', 'Trending in My World'],
+    year: 2024,
+    status: 'Open Source',
+    featured: false,
+    duration: '2 months',
+    complexity: 'Advanced',
+  },
+  {
+    id: 5,
     title: 'Pad-Lock',
     description:
       'A secure lock and access management project focused on safer credential and key handling workflows. Built to make everyday security controls more practical and user friendly.',
@@ -277,30 +345,14 @@ const projectCatalog = [
     duration: '4 months',
     complexity: 'Entry',
   },
+
   {
-    id: 2,
-    title: 'Heston Stochastic Volatility Model Engine',
-    description:
-      'Numerical pricing and analysis toolkit for the Heston stochastic volatility model, with a Flask API + browser UI for pricing, Greeks, volatility surface visualization, Monte Carlo simulation, validation, and market-data-assisted parameter estimation. Built to deepen understanding of quantitative finance and practical implementation of complex mathematical models.',
-    teaser: 'Simulation and Analytics Engine.',
-    image: null,
-    tags: ['Python', 'Stochastic Mathematics', 'Analytics'],
-    github: 'https://github.com/ssaillesh/heston_engine',
-    liveUrl: '',
-    category: ['Trending in My World', 'Tools & Utilities', 'Web & Frontend'],
-    year: 2024,
-    status: 'Open Source',
-    featured: true,
-    duration: '5 months',
-    complexity: 'Intermediate',
-  },
-  {
-    id: 3,
+    id: 6,
     title: 'Interactive-Hand-Gesture-Recognition',
     description:
       'A real-time hand gesture recognition project using computer vision to detect and interpret gestures. Built for intuitive human-computer interaction experiments.',
     teaser: 'Real-time computer vision gesture recognition.',
-    image: '/logos/omniabio.png',
+    image: null,
     tags: ['Python', 'FastAPI', 'OpenCV'],
     github: 'https://github.com/ssaillesh/Interactive-Hand-Gesture-Recognition',
     liveUrl: '',
@@ -311,25 +363,9 @@ const projectCatalog = [
     duration: '5 months',
     complexity: 'intermediate',
   },
+ 
   {
-    id: 4,
-    title: 'Care_Loop: ',
-    description:
-      'A utility-oriented project focused on practical, human-centered workflows. Built to simplify user tasks with clean interactions and reliable execution.',
-    teaser: 'Human-centered utility solution.',
-    image: null,
-    tags: ['React', 'Node.js', 'Python', 'Java'],
-    github: 'https://github.com/aarya127/CareLoop',
-    liveUrl: '',
-    category: ['Web & Frontend', 'Tools & Utilities', 'Trending in My World'],
-    year: 2024,
-    status: 'Open Source',
-    featured: false,
-    duration: '2 months',
-    complexity: 'Advanced',
-  },
-  {
-    id: 5,
+    id: 7,
     title: 'Invasion-game',
     description:
       'A game project centered around gameplay mechanics, progression, and immersive interaction loops. Created to sharpen real-time logic and UI responsiveness.',
@@ -345,6 +381,7 @@ const projectCatalog = [
     duration: '3 months',
     complexity: 'Entry Level',
   },
+ 
 ]
 
 // ADD subcategories to projects and filter by those instead of tags for better organization and display control. For example, categories could be 'Web & Frontend', 'AI & Machine Learning', 'Tools & Utilities', etc., and each project can belong to one or more categories. Then we can create rows based on these categories instead of just 'Trending in My World'.
