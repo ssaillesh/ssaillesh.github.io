@@ -1403,7 +1403,7 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
                   <div className="mt-7">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9e9e9e]">Currently Obsessed With</p>
                     <div className="mt-3 flex flex-wrap gap-2">
-                      {['Rust', 'LLMs', 'Quantum Computing', 'Systems Design'].map((tag) => (
+                      {['Python', 'LLMs', 'Quantum Computing', 'Systems Design'].map((tag) => (
                         <span key={tag} className="rounded-full bg-white/10 px-3 py-1 text-xs text-white">
                           {tag}
                         </span>
