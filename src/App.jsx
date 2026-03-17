@@ -23,7 +23,7 @@ import {
 } from 'lucide-react'
 
 const Motion = motion
-const navPills = ['About Me', 'Journey', 'Projects', 'Contact']
+const navPills = ['About Me', 'Projects', 'Contact']
 const resumeUrl = '/resume/Saillesh_dev_resume.pdf'
 
 const aboutData = {
@@ -35,7 +35,8 @@ const aboutData = {
     'With hands-on experience across DevOps, automation, analytics, and software engineering, he builds systems that are both practical and scalable. His work spans CI/CD hardening, anomaly detection pipelines, data-driven optimization, and interactive engineering tooling.',
     'When he is not building software or solving complex technical problems, he is training, swimming, travelling, and exploring ideas that connect science, design, and technology.',
   ],
-  bannerPhoto: '/about/IMG_9431.jpeg',
+  // Use IMG_6712 as backdrop (requested)
+  bannerPhoto: '/about/IMG_6712.jpeg',
   portraitPhoto: '/about/IMG_0146.jpg',
   stats: {
     projects: 8,
@@ -112,6 +113,181 @@ const aboutPhotoMoments = [
   },
 ]
 
+function InteractiveBanner() {
+  const canvasRef = useRef(null)
+  const animRef = useRef(null)
+  const mouse = useRef({ x: null, y: null, down: false })
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    let width = 0
+    let height = 0
+    let dpr = window.devicePixelRatio || 1
+
+    const particles = []
+    const PARTICLE_COUNT = 60
+    let pulseAmp = 0
+    let lastTime = null
+
+    function resize() {
+      dpr = window.devicePixelRatio || 1
+      width = canvas.clientWidth
+      height = canvas.clientHeight
+      canvas.width = Math.floor(width * dpr)
+      canvas.height = Math.floor(height * dpr)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+
+    function rand(min, max) {
+      return Math.random() * (max - min) + min
+    }
+
+    function createParticles() {
+      particles.length = 0
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+          x: rand(0, width),
+          y: rand(0, height),
+          vx: rand(-0.3, 0.3),
+          vy: rand(-0.3, 0.3),
+          r: rand(6, 28),
+          hue: Math.floor(rand(160, 210)),
+          alpha: rand(0.35, 0.9),
+          phase: rand(0, Math.PI * 2),
+        })
+      }
+    }
+
+    function draw(time) {
+      if (!lastTime) lastTime = time
+      const dt = (time - lastTime) / 1000
+      lastTime = time
+
+      // decay pulse amplitude
+      pulseAmp *= Math.max(0, 1 - dt * 0.8)
+
+      ctx.clearRect(0, 0, width, height)
+      // background pulse based on time and pulseAmp
+      const base = 0.05 + Math.abs(Math.sin(time * 0.001)) * 0.02 + pulseAmp * 0.12
+      const g = ctx.createLinearGradient(0, 0, width, height)
+      g.addColorStop(0, `rgba(${10 + base * 60},${16 + base * 40},${32 + base * 40},1)`)
+      g.addColorStop(1, `rgba(${6 + base * 20},${6 + base * 20},${18 + base * 20},1)`)
+      ctx.fillStyle = g
+      ctx.fillRect(0, 0, width, height)
+
+      for (const p of particles) {
+        // attraction to mouse
+        if (mouse.current.x !== null) {
+          const dx = mouse.current.x - p.x
+          const dy = mouse.current.y - p.y
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1
+          const max = 140
+          if (dist < max) {
+            const force = (1 - dist / max) * 0.9
+            p.vx += (dx / dist) * force * 0.06
+            p.vy += (dy / dist) * force * 0.06
+            // amplify pulse when near mouse
+            pulseAmp = Math.min(1.2, pulseAmp + (1 - dist / max) * 0.08)
+          }
+        }
+
+        p.x += p.vx
+        p.y += p.vy
+
+        // friction
+        p.vx *= 0.985
+        p.vy *= 0.985
+
+        // gentle oscillation (pulse)
+        const pulse = 1 + Math.sin(time * 0.002 + p.phase) * 0.08 * (1 + pulseAmp)
+        const radius = p.r * pulse
+
+        // wrap
+        if (p.x < -50) p.x = width + 50
+        if (p.x > width + 50) p.x = -50
+        if (p.y < -50) p.y = height + 50
+        if (p.y > height + 50) p.y = -50
+
+        // draw glow circle
+        ctx.beginPath()
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius)
+        grad.addColorStop(0, `hsla(${p.hue},80%,64%,${p.alpha})`)
+        grad.addColorStop(0.2, `hsla(${p.hue},70%,48%,${p.alpha * 0.7})`)
+        grad.addColorStop(1, 'rgba(6,10,18,0)')
+        ctx.fillStyle = grad
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      animRef.current = requestAnimationFrame(draw)
+    }
+
+    function onMove(e) {
+      const rect = canvas.getBoundingClientRect()
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY
+      mouse.current.x = clientX - rect.left
+      mouse.current.y = clientY - rect.top
+    }
+
+    function onLeave() {
+      mouse.current.x = null
+      mouse.current.y = null
+    }
+
+    function onClick(e) {
+      const rect = canvas.getBoundingClientRect()
+      const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left
+      const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top
+      // spawn a few particles burst
+      for (let i = 0; i < 6; i++) {
+        particles.push({
+          x,
+          y,
+          vx: rand(-1.2, 1.2),
+          vy: rand(-1.2, 1.2),
+          r: rand(6, 18),
+          hue: Math.floor(rand(160, 220)),
+          alpha: rand(0.6, 1),
+          phase: rand(0, Math.PI * 2),
+        })
+      }
+      // create a larger pulse
+      pulseAmp = Math.min(1.6, pulseAmp + 0.9)
+    }
+
+    resize()
+    createParticles()
+    window.addEventListener('resize', resize)
+    canvas.addEventListener('mousemove', onMove)
+    canvas.addEventListener('touchmove', onMove, { passive: true })
+    canvas.addEventListener('mouseleave', onLeave)
+    canvas.addEventListener('touchend', onLeave)
+    canvas.addEventListener('click', onClick)
+    canvas.addEventListener('touchstart', onClick)
+
+    animRef.current = requestAnimationFrame(draw)
+
+    return () => {
+      window.removeEventListener('resize', resize)
+      canvas.removeEventListener('mousemove', onMove)
+      canvas.removeEventListener('touchmove', onMove)
+      canvas.removeEventListener('mouseleave', onLeave)
+      canvas.removeEventListener('touchend', onLeave)
+      canvas.removeEventListener('click', onClick)
+      canvas.removeEventListener('touchstart', onClick)
+      if (animRef.current) cancelAnimationFrame(animRef.current)
+    }
+  }, [])
+
+  return (
+    <canvas ref={canvasRef} className="absolute inset-0 h-full w-full block" style={{ display: 'block' }} />
+  )
+}
+
+
 const contactData = {
   headline: 'Let\'s Build Something.',
   subheading:
@@ -124,7 +300,6 @@ const contactData = {
 }
 
 const sideNav = [
-  { icon: BriefcaseBusiness, label: 'Journey' },
   { icon: Wrench, label: 'Projects' },
   { icon: Mail, label: 'Contact' },
 ]
@@ -138,7 +313,6 @@ const pinned = [
 const quickStats = [
   { title: 'Languages Known', value: 'Python, Java, JavaScript, SQL' },
   { title: 'Accomplishments', value: 'Presidential Scholarship, Certification of Excellence: Autonomous Robotics' },
-  { title: 'Projects Built', value: '18 shipped projects and prototypes' },
   { title: 'Focus', value: 'Physics, software engineering, Quntitative modeling, and practical AI applications' },
 ]
 
@@ -222,10 +396,21 @@ const experienceEntries = [
 ]
 
 const skillGroups = [
-  { title: 'Frontend', chips: ['React', 'Tailwind CSS', 'Framer Motion', 'TypeScript'] },
-  { title: 'Backend', chips: ['Node.js', 'Express', 'Java Spring', 'REST APIs'] },
+  {
+    title: 'Full Stack',
+    chips: [
+      'React',
+      'Tailwind CSS',
+      'Framer Motion',
+      'TypeScript',
+      'Node.js',
+      'Express',
+      'Java Spring',
+      'REST APIs',
+    ],
+  },
   { title: 'Tools', chips: ['Azure', 'Docker', 'Postman', 'Figma', "ELK Stack", 'Linux'] },
-  { title: 'Languages', chips: ['Python', 'Java', 'JavaScript', 'SQL'] },
+  { title: 'Languages (Within Skills)', chips: ['Python', 'Java', 'JavaScript', 'SQL'] },
 ]
 
 const educationItems = [
@@ -249,6 +434,14 @@ const educationItems = [
       'Quantum physics, modern physics, and mathematical methods',
       'Computational physics, simulations, and scientific programming',
       'Signals, systems, and data-driven modeling techniques',
+    ],
+    classesTaken: [
+      'MATH 237 - Calculus 3',
+      'PHYS 233 - Quantum Mechanics',
+      'PHYS 249 - Computational Physics and Linear Algebra',
+      'PHYS 349 - Electricity and Magnetism',
+      'AMATH/BIOL 382 - Computational Modeling',
+      'AMATH 250 - Differential Equations',
     ],
     details:
       'Completed a Bachelor of Science in Honors Physics at the University of Waterloo, with strong focus on signals and systems, data structures, algorithms, computational physics, and computational modeling. Awarded Presidential Scholarship and Term Distinction.',
@@ -403,9 +596,7 @@ const projectGradients = {
   default: 'from-red-500/35 via-neutral-700/20 to-zinc-900/70',
 }
 
-const pillToId = {
-  Journey: 'journey',
-}
+const pillToId = {}
 
 class AppErrorBoundary extends React.Component {
   constructor(props) {
@@ -1083,7 +1274,7 @@ function CountUpValue({ value, suffix = '' }) {
 }
 
 function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
-  const [activeTab, setActiveTab] = useState('Overview')
+  const [activeTab, setActiveTab] = useState('About Me')
   const [expandedWho, setExpandedWho] = useState(1)
   const [activeInspiration, setActiveInspiration] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -1247,7 +1438,7 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
         </div>
 
         <div className="mb-6 flex items-center gap-3 border-b border-[#282828] pb-3">
-          {['Overview', 'About', 'Stats'].map((tab) => (
+          {['About Me'].map((tab) => (
             <button
               key={tab}
               type="button"
@@ -1365,7 +1556,7 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
             </Motion.section>
           )}
 
-          {activeTab === 'About' && (
+          {activeTab === 'About Me' && (
             <Motion.section
               key="about-biography"
               initial={{ opacity: 0 }}
@@ -1460,59 +1651,22 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
           )}
         </AnimatePresence>
 
-        <section className="mt-12">
-          <h3 className="text-xl font-semibold text-white">Inspired By</h3>
-          <div className="mt-4 flex flex-wrap gap-5">
-            {aboutData.inspirations.map((person) => (
-              <button
-                key={person.name}
-                type="button"
-                title={person.name}
-                onClick={() => setActiveInspiration(person)}
-                className="text-center"
-              >
-                <div className="grid h-24 w-24 place-items-center rounded-full bg-[linear-gradient(150deg,#303030,#141414)] text-2xl text-white transition hover:scale-[1.04]">
-                  {person.name.split(' ').map((part) => part[0]).join('')}
-                </div>
-                <p className="mt-2 text-xs font-semibold text-white">{person.name}</p>
-              </button>
-            ))}
-          </div>
-        </section>
       </div>
-
-      <AnimatePresence>
-        {activeInspiration && (
-          <Motion.div
-            className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setActiveInspiration(null)}
-          >
-            <Motion.div
-              initial={{ y: 18, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 18, opacity: 0 }}
-              onClick={(event) => event.stopPropagation()}
-              className="w-full max-w-sm rounded-xl border border-white/10 bg-[#181818] p-5"
-            >
-              <h4 className="text-xl font-bold text-white">{activeInspiration.name}</h4>
-              <p className="mt-1 text-sm text-[#9f9f9f]">{activeInspiration.role}</p>
-              <p className="mt-3 text-sm leading-relaxed text-[#d1d1d1]">{activeInspiration.reason}</p>
-              <button
-                type="button"
-                onClick={() => setActiveInspiration(null)}
-                className="mt-4 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-black"
-              >
-                Close
-              </button>
-            </Motion.div>
-          </Motion.div>
-        )}
-      </AnimatePresence>
       {/* TODO: Swap in Saillesh's real bio */}
     </Motion.div>
+  )
+}
+
+function CombinedAboutJourneyPage({ onOpenProjects, onOpenContact, setActivePill, registerSection, visitorGreeting }) {
+  return (
+    <>
+      <AboutArtistPage
+        onOpenProjects={onOpenProjects}
+        onOpenContact={onOpenContact}
+        setActivePill={setActivePill}
+      />
+      <DefaultPortfolioContent registerSection={registerSection} visitorGreeting={visitorGreeting} />
+    </>
   )
 }
 
@@ -1586,6 +1740,9 @@ function ContactPage() {
 
 function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
   const [selectedExperienceId, setSelectedExperienceId] = useState(experienceEntries[0].id)
+  const [flippedExperienceId, setFlippedExperienceId] = useState(null)
+  const carouselRef = useRef(null)
+  const [isCarouselInteracting, setIsCarouselInteracting] = useState(false)
   const [selectedEducationId, setSelectedEducationId] = useState(educationItems[0].id)
   const [educationLogoFailed, setEducationLogoFailed] = useState(false)
 
@@ -1621,6 +1778,31 @@ function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
   }, [])
 
   useEffect(() => {
+    const el = carouselRef.current
+    if (!el) return undefined
+
+    let rafId = null
+    const speed = 0.4 // px per frame
+
+    const step = () => {
+      if (!isCarouselInteracting) {
+        el.scrollLeft += speed
+        // seamless loop when we've scrolled past half (we duplicated list)
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft = el.scrollLeft - el.scrollWidth / 2
+        }
+      }
+      rafId = requestAnimationFrame(step)
+    }
+
+    rafId = requestAnimationFrame(step)
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [isCarouselInteracting])
+
+  useEffect(() => {
     setEducationLogoFailed(false)
   }, [selectedEducationId])
 
@@ -1633,30 +1815,13 @@ function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
       transition={{ duration: 0.2, ease: 'easeInOut' }}
       className="space-y-10"
     >
-      <section
-        id="journey"
-        ref={(element) => registerSection('journey', element)}
-      >
-        <h2 className="text-2xl font-bold tracking-tight text-white">{visitorGreeting}</h2>
-        <p className="mt-2 text-sm text-[var(--text-secondary)]">Journey hub: skills, experience, and education in one place.</p>
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {quickStats.map((stat) => (
-            <article
-              key={stat.title}
-              className="rounded-xl border border-white/6 bg-[var(--surface)] p-4 transition duration-200 ease-out hover:-translate-y-1 hover:border-[var(--accent)]/30 hover:shadow-[0_14px_36px_rgba(29,185,84,0.22)]"
-            >
-              <h3 className="text-sm font-semibold text-white">{stat.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{stat.value}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      
 
       <section
         id="skills"
         ref={(element) => registerSection('skills', element)}
       >
-        <h3 className="text-xl font-bold text-white">Skills</h3>
+        <h3 className="text-xl font-bold text-white">Skills (including Languages)</h3>
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           {skillGroups.map((group) => (
             <article
@@ -1690,85 +1855,83 @@ function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
         <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Dynamic view: this section rotates automatically and can also be switched manually.
         </p>
-        <div className="mt-4 grid gap-4 lg:grid-cols-[280px_1fr]">
-          <div className="space-y-3">
-            {experienceEntries.map((entry) => {
-              const isActive = entry.id === selectedExperienceId
-              return (
+        <div
+          ref={carouselRef}
+          className="mt-4 hide-scrollbar flex gap-4 overflow-x-auto py-2 px-1"
+          onMouseEnter={() => setIsCarouselInteracting(true)}
+          onMouseLeave={() => setIsCarouselInteracting(false)}
+          onPointerDown={() => setIsCarouselInteracting(true)}
+          onPointerUp={() => setIsCarouselInteracting(false)}
+        >
+          {/** duplicate items to enable seamless looping */}
+          {[...experienceEntries, ...experienceEntries].map((entry, idx) => {
+            const realId = entry.id
+            const isActive = realId === selectedExperienceId
+            const isFlipped = flippedExperienceId === realId
+            return (
+              <div key={`${entry.id}-${idx}`} className="min-w-[380px] flex-shrink-0">
                 <button
-                  key={entry.id}
                   type="button"
-                  onClick={() => setSelectedExperienceId(entry.id)}
-                  className={`w-full rounded-xl border p-4 text-left transition ${
-                    isActive
-                      ? 'bg-[var(--surface-hover)] shadow-[0_14px_30px_rgba(29,185,84,0.22)]'
-                      : 'border-white/8 bg-[var(--surface)] hover:border-white/20 hover:bg-[var(--surface-hover)]'
-                  }`}
-                  style={isActive ? { borderColor: `${entry.accent}88` } : undefined}
+                  onClick={() => {
+                    setSelectedExperienceId(realId)
+                    setFlippedExperienceId((cur) => (cur === realId ? null : realId))
+                  }}
+                  className="w-full h-56"
+                  style={{ background: 'transparent', border: 'none', padding: 0 }}
                 >
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{entry.period}</p>
-                  <h4 className="mt-2 text-sm font-bold text-white">{entry.role}</h4>
-                  <p className="mt-1 text-xs text-[var(--text-secondary)]">{entry.org}</p>
+                  <Motion.div
+                    animate={{ rotateY: isFlipped ? 180 : 0 }}
+                    transition={{ duration: 0.45 }}
+                    className="relative h-full w-full"
+                    style={{ transformStyle: 'preserve-3d' }}
+                  >
+                    <div
+                      className={`absolute inset-0 rounded-xl overflow-hidden border transition ${
+                        isActive ? 'shadow-[0_14px_30px_rgba(29,185,84,0.22)]' : ''
+                      }`}
+                      style={{ backfaceVisibility: 'hidden' }}
+                    >
+                      {entry.logo ? (
+                        <div className="h-full w-full flex items-center justify-center bg-black/5">
+                          <img
+                            src={entry.logo}
+                            alt={`${entry.org} logo`}
+                            className="max-h-[86%] max-w-[86%] object-contain block"
+                            style={{ filter: 'saturate(1.05)' }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center bg-[var(--surface)]">
+                          <div className="text-xs font-semibold text-white/50">Logo</div>
+                        </div>
+                      )}
+
+                      <div className="absolute left-0 right-0 bottom-0 p-3 bg-gradient-to-t from-black/70 to-transparent">
+                        <h4 className="text-sm font-bold text-white truncate">{entry.role}</h4>
+                        <p className="text-xs text-[#d1d1d1] truncate">{entry.org}</p>
+                      </div>
+                    </div>
+
+                    <div
+                      className="absolute inset-0 rounded-xl border p-5 bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-white flex flex-col overflow-y-auto"
+                      style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
+                    >
+                      <h4 className="text-base font-bold text-white leading-tight">{entry.org}</h4>
+                      <p className="mt-2 text-sm leading-relaxed text-[#e0e0e0] flex-1">{entry.companyAbout}</p>
+                      <div className="mt-3">
+                        <p className="text-xs font-semibold text-[#1db954] uppercase tracking-wide">Key highlights:</p>
+                        <ul className="mt-2 text-xs list-disc list-inside text-[#d0d0d0] space-y-1">
+                          {entry.highlights.slice(0, 3).map((h) => (
+                            <li key={h} className="text-[#d0d0d0]">{h}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </Motion.div>
                 </button>
-              )
-            })}
-          </div>
-
-          <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface)]">
-            <div className="relative p-5" style={{ background: `linear-gradient(130deg, ${selectedExperience.accent}66 0%, #171717 52%, #121212 100%)` }}>
-              <div className="pointer-events-none absolute inset-0 bg-black/30" />
-              <div className="relative flex items-center gap-4">
-                <div className="w-14 overflow-hidden rounded-md border border-white/20 bg-white/95">
-                  <ExperienceAlbumCover logo={selectedExperience.logo} org={selectedExperience.org} />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#d9d9d9]">Experience Spotlight</p>
-                  <h4 className="mt-1 text-xl font-black text-white sm:text-2xl">{selectedExperience.role}</h4>
-                  <p className="text-sm text-[#d9d9d9]">{selectedExperience.org} • {selectedExperience.period}</p>
-                </div>
               </div>
-            </div>
-
-            <div className="space-y-5 p-5">
-              <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{selectedExperience.description}</p>
-
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Company Snapshot</p>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{selectedExperience.companyAbout}</p>
-              </div>
-
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Key Contributions</p>
-                <ul className="mt-2 space-y-2 text-sm text-[var(--text-secondary)]">
-                  {selectedExperience.highlights.map((item) => (
-                    <li key={item}>- {item}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Tools Used</p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {selectedExperience.stack.map((tool) => (
-                    <span key={tool} className="rounded-full bg-black/25 px-3 py-1 text-xs text-white">
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <a
-                href={selectedExperience.companyUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white"
-                style={{ backgroundColor: selectedExperience.accent }}
-              >
-                <ExternalLink size={14} />
-                Visit Company
-              </a>
-            </div>
-          </article>
+            )
+          })}
         </div>
       </section>
 
@@ -1860,6 +2023,17 @@ function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
                   </div>
                 </div>
               ) : null}
+
+              {selectedEducation.classesTaken ? (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Classes Taken</p>
+                  <ul className="mt-2 space-y-2 text-sm text-[var(--text-secondary)]">
+                    {selectedEducation.classesTaken.map((course) => (
+                      <li key={course}>- {course}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
           </article>
         </div>
@@ -1919,7 +2093,7 @@ function LoginView({ onEnter }) {
 
 function AppLayout() {
   const [activePill, setActivePill] = useState('About Me')
-  const [activeSide, setActiveSide] = useState('Journey')
+  const [activeSide, setActiveSide] = useState('Projects')
   const [activePage, setActivePage] = useState('about')
   const [transitioning, setTransitioning] = useState(false)
   const [scrollTop, setScrollTop] = useState(0)
@@ -2023,15 +2197,6 @@ function AppLayout() {
       return
     }
 
-    if (pill === 'Journey') {
-      setActivePill('Journey')
-      setActiveSide('Journey')
-      setActivePage('journey')
-      scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-      setTimeout(() => setTransitioning(false), 320)
-      return
-    }
-
     if (activePage !== 'home') {
       goHomeAndScrollTo(pill)
       return
@@ -2049,11 +2214,6 @@ function AppLayout() {
 
   const handleSideClick = (label) => {
     setActiveSide(label)
-
-    if (label === 'Journey') {
-      handlePillClick('Journey')
-      return
-    }
     if (label === 'Projects') {
       handlePillClick('Projects')
       return
@@ -2070,56 +2230,7 @@ function AppLayout() {
       transition={{ duration: 0.65, ease: 'easeOut' }}
       className="min-h-screen bg-[var(--bg)] pb-20"
     >
-      <div className="grid min-h-screen grid-cols-1 md:grid-cols-[270px_1fr]">
-        <Motion.aside
-          initial={{ opacity: 0, x: -18 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="sticky top-0 hidden h-screen border-r border-white/5 bg-black/20 p-6 md:block"
-        >
-          <h2 className="text-lg font-bold text-white">Saillesh&apos;s World</h2>
-          <nav className="mt-7 space-y-2">
-            {sideNav.map((item) => {
-              const NavIcon = item.icon
-              return (
-                <button
-                  key={item.label}
-                  type="button"
-                  onClick={() => handleSideClick(item.label)}
-                  className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
-                    activeSide === item.label
-                      ? 'bg-white/10 text-white'
-                      : 'text-[var(--text-secondary)] hover:bg-white/8 hover:text-white'
-                  }`}
-                >
-                  <NavIcon size={18} />
-                  {item.label}
-                </button>
-              )
-            })}
-          </nav>
-          <div className="mt-8 rounded-xl border border-white/5 bg-[var(--surface)] p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Pinned</p>
-            <div className="mt-3 space-y-3">
-              {pinned.map((item) => (
-                <a
-                  key={item.title}
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group block rounded-lg bg-white/[0.04] p-3 transition hover:bg-white/[0.09]"
-                >
-                  <p className="flex items-center justify-between text-sm font-semibold text-white">
-                    {item.title}
-                    <ExternalLink size={14} className="opacity-0 transition group-hover:opacity-100" />
-                  </p>
-                  <p className="mt-1 text-xs text-[var(--text-secondary)]">{item.subtitle}</p>
-                </a>
-              ))}
-            </div>
-          </div>
-        </Motion.aside>
-
+      <div className="grid min-h-screen grid-cols-1">
         <div
           ref={scrollContainerRef}
           onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}
@@ -2133,22 +2244,9 @@ function AppLayout() {
             className="sticky top-0 z-20 border-b border-white/5 bg-[rgba(18,18,18,0.88)] px-4 py-4 backdrop-blur-md sm:px-8"
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="hidden items-center gap-2 sm:flex">
-                <button
-                  type="button"
-                  className="grid h-8 w-8 place-items-center rounded-full bg-black/40 text-white transition hover:bg-black/60"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <button
-                  type="button"
-                  className="grid h-8 w-8 place-items-center rounded-full bg-black/40 text-white transition hover:bg-black/60"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
+              {/* arrows removed per request */}
 
-              <div className="hide-scrollbar flex max-w-full items-center gap-2 overflow-x-auto rounded-full bg-black/30 p-1">
+              <div className="hide-scrollbar flex max-w-full items-center gap-2 overflow-x-auto rounded-full bg-black/30 p-1 absolute left-1/2 transform -translate-x-1/2">
                 {navPills.map((pill) => {
                   const activeClass = pill === 'Projects' ? 'bg-[#e50914] text-white' : 'bg-[#1db954] text-black shadow-[0_6px_20px_rgba(29,185,84,0.35)]'
                   return (
@@ -2203,18 +2301,14 @@ function AppLayout() {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
                 >
-                  <AboutArtistPage
+                  <CombinedAboutJourneyPage
                     onOpenProjects={() => handlePillClick('Projects')}
                     onOpenContact={() => handlePillClick('Contact')}
                     setActivePill={setActivePill}
+                    registerSection={registerSection}
+                    visitorGreeting={visitorGreeting}
                   />
                 </Motion.div>
-              ) : activePage === 'journey' ? (
-                <DefaultPortfolioContent
-                  key="journey-screen"
-                  registerSection={registerSection}
-                  visitorGreeting={visitorGreeting}
-                />
               ) : (
                 <DefaultPortfolioContent
                   key="home-screen"
@@ -2229,12 +2323,35 @@ function AppLayout() {
 
       <div className="fixed inset-x-0 bottom-0 border-t border-white/10 bg-[rgba(24,24,24,0.95)] px-4 py-3 backdrop-blur-md">
         <div className="mx-auto flex max-w-screen-2xl items-center justify-between text-xs text-[var(--text-secondary)] sm:text-sm">
-          <p>
-            Now Playing:{' '}
-            <span className="font-semibold text-white">
-              {activePage === 'contact' ? 'Contact.mp3 - Saillesh Palani' : 'Saillesh\'s Portfolio v1.0'}
-            </span>
-          </p>
+          <div className="flex items-center gap-4">
+            <a
+              href={contactData.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium text-white hover:underline"
+            >
+              <Linkedin size={14} />
+              <span className="hidden sm:inline">LinkedIn</span>
+            </a>
+
+            <a
+              href="#" /* TODO: replace with your GitLab URL */
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium text-white/90 hover:underline"
+            >
+              <ExternalLink size={14} />
+              <span className="hidden sm:inline">GitLab</span>
+            </a>
+
+            <p className="ml-3">
+              Now Playing:{' '}
+              <span className="font-semibold text-white">
+                {activePage === 'contact' ? 'Contact.mp3 - Saillesh Palani' : "Saillesh's Portfolio v1.0"}
+              </span>
+            </p>
+          </div>
+
           <p>{activePage === 'contact' ? 'Signal strength: Stable' : 'Bottom playbar coming soon'}</p>
         </div>
       </div>
