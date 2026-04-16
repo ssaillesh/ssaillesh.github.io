@@ -35,8 +35,6 @@ const aboutData = {
     'With hands-on experience across DevOps, automation, analytics, and software engineering, he builds systems that are both practical and scalable. His work spans CI/CD hardening, anomaly detection pipelines, data-driven optimization, and interactive engineering tooling.',
     'When he is not building software or solving complex technical problems, he is training, swimming, travelling, and exploring ideas that connect science, design, and technology.',
   ],
-  // Use IMG_6712 as backdrop (requested)
-  bannerPhoto: '/about/IMG_6712.jpeg',
   portraitPhoto: '/about/IMG_0146.jpg',
   stats: {
     projects: 8,
@@ -573,6 +571,23 @@ const projectCatalog = [
     featured: false,
     duration: '3 months',
     complexity: 'Entry Level',
+  },
+  {
+    id: 8,
+    title: 'AutoML Researcher',
+    description:
+      'Local multi-agent AutoML lab for guided optimization loops. The app trains, compares, and ranks models across iterations, tracks run health and status, and surfaces leaderboard artifacts for reproducible research workflows.',
+    teaser: 'Guided AutoML optimization and model leaderboard.',
+    image: '/project/automl_researcher.png',
+    tags: ['Python', 'AutoML', 'Classification'],
+    github: '',
+    liveUrl: '',
+    category: ['Trending in My World', 'Tools & Utilities', 'Web & Frontend'],
+    year: 2026,
+    status: 'Completed',
+    featured: true,
+    duration: '1 month',
+    complexity: 'Advanced',
   },
  
 ]
@@ -1279,7 +1294,6 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
   const [activeInspiration, setActiveInspiration] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [surpriseFlash, setSurpriseFlash] = useState(null)
-  const [bannerLoadFailed, setBannerLoadFailed] = useState(false)
   const [portraitLoadFailed, setPortraitLoadFailed] = useState(false)
   const [activeMomentIndex, setActiveMomentIndex] = useState(0)
   const [momentLoadFailed, setMomentLoadFailed] = useState(false)
@@ -1324,16 +1338,17 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
         className="relative h-[55vh] min-h-[390px] overflow-hidden"
       >
         <div className="absolute inset-0">
-          {aboutData.bannerPhoto && !bannerLoadFailed ? (
-            <img
-              src={aboutData.bannerPhoto}
-              alt="Saillesh banner"
-              className="h-full w-full object-cover"
-              onError={() => setBannerLoadFailed(true)}
-            />
-          ) : (
-            <div className="h-full w-full bg-[radial-gradient(circle_at_18%_84%,rgba(29,185,84,0.28),transparent_44%),radial-gradient(circle_at_82%_20%,rgba(45,89,255,0.18),transparent_46%),linear-gradient(140deg,#0f172a,#121212_58%,#1f2937)]" />
-          )}
+          <InteractiveBanner />
+          <Motion.div
+            className="absolute inset-0 opacity-55"
+            animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+            transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 16% 18%, rgba(16,185,129,0.25), transparent 42%), radial-gradient(circle at 78% 74%, rgba(14,165,233,0.2), transparent 46%), radial-gradient(circle at 40% 88%, rgba(99,102,241,0.16), transparent 45%)',
+              backgroundSize: '180% 180%',
+            }}
+          />
         </div>
         <div className="absolute inset-0 bg-[linear-gradient(to_top,#121212_15%,rgba(0,0,0,0.4)_60%,transparent_100%)]" />
 
@@ -1343,9 +1358,6 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="absolute bottom-10 left-4 right-4 sm:left-8"
         >
-          <p className="inline-flex items-center gap-2 rounded-full bg-[#2d46b9]/80 px-3 py-1 text-xs font-semibold tracking-[0.12em] text-white">
-            ✦ VERIFIED DEVELOPER
-          </p>
           <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">{aboutData.name}</h1>
           <p className="mt-4 text-sm text-white/90 sm:text-base">{aboutData.title}</p>
           <p className="mt-2 text-xs font-medium text-[#b3b3b3] sm:text-sm">{aboutData.subtitle}</p>
