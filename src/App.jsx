@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   BriefcaseBusiness,
@@ -23,294 +23,46 @@ import {
 
 const Motion = motion
 const navPills = ['About Me', 'Projects']
-const resumeUrl = '/resume/Saillesh_dev_resume.pdf'
 
-const aboutData = {
-  name: 'Saillesh Somasundaram',
-  title: 'Physics Student · Software Engineer · Builder of Things',
-  subtitle: '5+ Projects · 3 Years Coding · 1 Physics Degree in Progress',
-  bio: [
-    'Saillesh is a physics student with a deep passion for software engineering, drawn to the intersection of mathematical thinking and real-world problem-solving. He approaches his craft with the same intensity he brings to every challenge: focused, competitive, and relentlessly curious.',
-    'With hands-on experience across DevOps, automation, analytics, and software engineering, he builds systems that are both practical and scalable. His work spans CI/CD hardening, anomaly detection pipelines, data-driven optimization, and interactive engineering tooling.',
-    'When he is not building software or solving complex technical problems, he is training, swimming, travelling, and exploring ideas that connect science, design, and technology.',
-  ],
-  portraitPhoto: '/about/IMG_0146.jpg',
-  stats: {
-    projects: 8,
-    languages: 5,
-    countries: 10,
-    yearsOfCoding: 3,
-    physicsCourses: 14,
-    coffee: 999,
-  },
-  whoIAm: [
-    {
-      id: 1,
-      title: 'Passionate About My Craft',
-      meta: 'Physics · Engineering',
-      detail:
-        'I approach work with intentional focus, from debugging distributed systems to refining user experience details. Craft matters to me, and I treat every project as an opportunity to improve both outcome and process.',
-    },
-    {
-      id: 2,
-      title: 'Physics Degree in Progress',
-      meta: 'University',
-      detail:
-        'My physics training sharpens how I model systems, reason from first principles, and make structured decisions under complexity. It has become a core advantage in my engineering mindset.',
-    },
-    {
-      id: 3,
-      title: 'Software Engineering Enthusiast',
-      meta: 'Full Stack · AI/ML',
-      detail:
-        'I enjoy building across the stack, from reliable backend automations to polished frontend interactions. I am especially interested in applied AI and practical developer tooling.',
-    },
-    {
-      id: 4,
-      title: 'Always Building Something',
-      meta: 'Side Projects',
-      detail:
-        'I stay hands-on outside formal roles through side projects that explore new frameworks, data workflows, and interaction patterns. Building consistently helps me learn fast.',
-    },
-    {
-      id: 5,
-      title: 'Driven by Curiosity',
-      meta: 'Research · Learning',
-      detail:
-        'Curiosity is my operating system. I actively test new ideas, compare approaches, and challenge assumptions so each project ships with better clarity and stronger fundamentals.',
-    },
-  ],
-  inspirations: [
-    { name: 'Richard Feynman', role: 'Physicist', reason: 'First-principles thinking and relentless curiosity.' },
-    { name: 'Margaret Hamilton', role: 'Software Engineer', reason: 'Precision engineering under mission-critical constraints.' },
-    { name: 'Roger Federer', role: 'Athlete', reason: 'Consistency, composure, and mastery over long horizons.' },
-  ],
-}
-
-const aboutPhotoMoments = [
-  {
-    src: '/about/IMG_9654.jpeg',
-    label: 'Exploring',
-    caption: 'Exploring immersive spaces and turning everyday moments into creative energy.',
-  },
-  {
-    src: '/about/IMG_0235.jpeg',
-    label: 'Travelling',
-    caption: 'Travelling keeps me curious and grounded; every city teaches me something new.',
-  },
-  {
-    src: '/about/IMG_6712.jpeg',
-    label: 'Night Adventures',
-    caption: 'Late-night skyline sessions where ideas, ambition, and adventure collide.',
-  },
-  {
-    src: '/about/IMG_0268.jpeg',
-    label: 'Creating',
-    caption: 'Creating with focus and intent, one project and one story at a time.',
-  },
+const techTags = [
+  { name: 'Linux (Ubuntu/RHEL)', url: 'https://ubuntu.com/server/docs', color: '#4B5563' },
+  { name: 'GitLab CI/CD', url: 'https://docs.gitlab.com/ee/ci/', color: '#F97316' },
+  { name: 'Jenkins', url: 'https://www.jenkins.io/doc/', color: '#B91C1C' },
+  { name: 'Docker', url: 'https://docs.docker.com/', color: '#0EA5E9' },
+  { name: 'Kubernetes', url: 'https://kubernetes.io/docs/home/', color: '#2563EB' },
+  { name: 'Helm', url: 'https://helm.sh/docs/', color: '#0EA5E9' },
+  { name: 'ArgoCD', url: 'https://argo-cd.readthedocs.io/en/stable/', color: '#2563EB' },
+  { name: 'Terraform', url: 'https://developer.hashicorp.com/terraform/docs', color: '#7C3AED' },
+  { name: 'Ansible', url: 'https://docs.ansible.com/', color: '#374151' },
+  { name: 'AWS (EC2, S3, Lambda, ECS, CloudWatch)', url: 'https://docs.aws.amazon.com/', color: '#B45309' },
+  { name: 'Azure (AKS)', url: 'https://learn.microsoft.com/en-us/azure/aks/', color: '#0284C7' },
+  { name: 'Prometheus', url: 'https://prometheus.io/docs/introduction/overview/', color: '#F97316' },
+  { name: 'Grafana', url: 'https://grafana.com/docs/grafana/latest/', color: '#F59E0B' },
+  { name: 'ELK Stack', url: 'https://www.elastic.co/docs', color: '#0F766E' },
+  { name: 'GitOps', url: 'https://opengitops.dev/', color: '#334155' },
+  { name: 'C++', url: 'https://en.cppreference.com/w/', color: '#1D4ED8' },
+  { name: 'Python', url: 'https://docs.python.org/3/', color: '#1E3A8A' },
+  { name: 'PyTorch', url: 'https://pytorch.org/docs/stable/index.html', color: '#9A3412' },
+  { name: 'scikit-learn', url: 'https://scikit-learn.org/stable/documentation.html', color: '#0C4A6E' },
+  { name: 'HuggingFace', url: 'https://huggingface.co/docs', color: '#A16207' },
+  { name: 'MLflow', url: 'https://mlflow.org/docs/latest/index.html', color: '#1D4ED8' },
+  { name: 'TorchServe', url: 'https://pytorch.org/serve/', color: '#7C2D12' },
+  { name: 'FastAPI', url: 'https://fastapi.tiangolo.com/', color: '#065F46' },
+  { name: 'MediaPipe', url: 'https://ai.google.dev/edge/mediapipe', color: '#155E75' },
+  { name: 'OpenCV', url: 'https://docs.opencv.org/', color: '#0F766E' },
+  { name: 'SQL', url: 'https://www.postgresql.org/docs/', color: '#0369A1' },
+  { name: 'Bash', url: 'https://www.gnu.org/software/bash/manual/', color: '#14532D' },
+  { name: 'PowerShell', url: 'https://learn.microsoft.com/en-us/powershell/', color: '#075985' },
+  { name: 'JavaScript', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript', color: '#854D0E' },
+  { name: 'Scala', url: 'https://docs.scala-lang.org/', color: '#991B1B' },
+  { name: 'Ruby', url: 'https://www.ruby-lang.org/en/documentation/', color: '#BE123C' },
+  { name: 'Java', url: 'https://docs.oracle.com/en/java/', color: '#92400E' },
 ]
-
-function InteractiveBanner() {
-  const canvasRef = useRef(null)
-  const animRef = useRef(null)
-  const mouse = useRef({ x: null, y: null, down: false })
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    let width = 0
-    let height = 0
-    let dpr = window.devicePixelRatio || 1
-
-    const particles = []
-    const PARTICLE_COUNT = 60
-    let pulseAmp = 0
-    let lastTime = null
-
-    function resize() {
-      dpr = window.devicePixelRatio || 1
-      width = canvas.clientWidth
-      height = canvas.clientHeight
-      canvas.width = Math.floor(width * dpr)
-      canvas.height = Math.floor(height * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    }
-
-    function rand(min, max) {
-      return Math.random() * (max - min) + min
-    }
-
-    function createParticles() {
-      particles.length = 0
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push({
-          x: rand(0, width),
-          y: rand(0, height),
-          vx: rand(-0.3, 0.3),
-          vy: rand(-0.3, 0.3),
-          r: rand(6, 28),
-          hue: Math.floor(rand(160, 210)),
-          alpha: rand(0.35, 0.9),
-          phase: rand(0, Math.PI * 2),
-        })
-      }
-    }
-
-    function draw(time) {
-      if (!lastTime) lastTime = time
-      const dt = (time - lastTime) / 1000
-      lastTime = time
-
-      // decay pulse amplitude
-      pulseAmp *= Math.max(0, 1 - dt * 0.8)
-
-      ctx.clearRect(0, 0, width, height)
-      // background pulse based on time and pulseAmp
-      const base = 0.05 + Math.abs(Math.sin(time * 0.001)) * 0.02 + pulseAmp * 0.12
-      const g = ctx.createLinearGradient(0, 0, width, height)
-      g.addColorStop(0, `rgba(${10 + base * 60},${16 + base * 40},${32 + base * 40},1)`)
-      g.addColorStop(1, `rgba(${6 + base * 20},${6 + base * 20},${18 + base * 20},1)`)
-      ctx.fillStyle = g
-      ctx.fillRect(0, 0, width, height)
-
-      for (const p of particles) {
-        // attraction to mouse
-        if (mouse.current.x !== null) {
-          const dx = mouse.current.x - p.x
-          const dy = mouse.current.y - p.y
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1
-          const max = 140
-          if (dist < max) {
-            const force = (1 - dist / max) * 0.9
-            p.vx += (dx / dist) * force * 0.06
-            p.vy += (dy / dist) * force * 0.06
-            // amplify pulse when near mouse
-            pulseAmp = Math.min(1.2, pulseAmp + (1 - dist / max) * 0.08)
-          }
-        }
-
-        p.x += p.vx
-        p.y += p.vy
-
-        // friction
-        p.vx *= 0.985
-        p.vy *= 0.985
-
-        // gentle oscillation (pulse)
-        const pulse = 1 + Math.sin(time * 0.002 + p.phase) * 0.08 * (1 + pulseAmp)
-        const radius = p.r * pulse
-
-        // wrap
-        if (p.x < -50) p.x = width + 50
-        if (p.x > width + 50) p.x = -50
-        if (p.y < -50) p.y = height + 50
-        if (p.y > height + 50) p.y = -50
-
-        // draw glow circle
-        ctx.beginPath()
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius)
-        grad.addColorStop(0, `hsla(${p.hue},80%,64%,${p.alpha})`)
-        grad.addColorStop(0.2, `hsla(${p.hue},70%,48%,${p.alpha * 0.7})`)
-        grad.addColorStop(1, 'rgba(6,10,18,0)')
-        ctx.fillStyle = grad
-        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2)
-        ctx.fill()
-      }
-
-      animRef.current = requestAnimationFrame(draw)
-    }
-
-    function onMove(e) {
-      const rect = canvas.getBoundingClientRect()
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY
-      mouse.current.x = clientX - rect.left
-      mouse.current.y = clientY - rect.top
-    }
-
-    function onLeave() {
-      mouse.current.x = null
-      mouse.current.y = null
-    }
-
-    function onClick(e) {
-      const rect = canvas.getBoundingClientRect()
-      const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left
-      const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top
-      // spawn a few particles burst
-      for (let i = 0; i < 6; i++) {
-        particles.push({
-          x,
-          y,
-          vx: rand(-1.2, 1.2),
-          vy: rand(-1.2, 1.2),
-          r: rand(6, 18),
-          hue: Math.floor(rand(160, 220)),
-          alpha: rand(0.6, 1),
-          phase: rand(0, Math.PI * 2),
-        })
-      }
-      // create a larger pulse
-      pulseAmp = Math.min(1.6, pulseAmp + 0.9)
-    }
-
-    resize()
-    createParticles()
-    window.addEventListener('resize', resize)
-    canvas.addEventListener('mousemove', onMove)
-    canvas.addEventListener('touchmove', onMove, { passive: true })
-    canvas.addEventListener('mouseleave', onLeave)
-    canvas.addEventListener('touchend', onLeave)
-    canvas.addEventListener('click', onClick)
-    canvas.addEventListener('touchstart', onClick)
-
-    animRef.current = requestAnimationFrame(draw)
-
-    return () => {
-      window.removeEventListener('resize', resize)
-      canvas.removeEventListener('mousemove', onMove)
-      canvas.removeEventListener('touchmove', onMove)
-      canvas.removeEventListener('mouseleave', onLeave)
-      canvas.removeEventListener('touchend', onLeave)
-      canvas.removeEventListener('click', onClick)
-      canvas.removeEventListener('touchstart', onClick)
-      if (animRef.current) cancelAnimationFrame(animRef.current)
-    }
-  }, [])
-
-  return (
-    <canvas ref={canvasRef} className="absolute inset-0 h-full w-full block" style={{ display: 'block' }} />
-  )
-}
-
 
 const contactData = {
-  headline: 'Let\'s Build Something.',
-  subheading:
-    "I love getting to know people, and I genuinely don't bite. Whether you want to talk code, physics, hockey, or just say hi, my inbox is always open.",
   email: 's5somasu@uwaterloo.ca',
-  linkedin: 'https://www.linkedin.com/in/sailleshsomasundaram/', // TODO: Add LinkedIn URL
-  status: 'Open to Opportunities',
-  personalNote:
-    "Seriously though, I love getting to know people. Whether you're a recruiter, a fellow student, a dev, or just someone who stumbled onto this page, reach out.",
+  linkedin: 'https://www.linkedin.com/in/sailleshsomasundaram/',
 }
-
-const sideNav = [
-  { icon: Wrench, label: 'Projects' },
-]
-
-const pinned = [
-  { title: 'Resume.pdf', href: resumeUrl, subtitle: 'One-page profile snapshot' },
-  { title: 'GitHub', href: 'https://github.com/ssaillesh', subtitle: 'Code, commits, experiments' },
-  { title: 'LinkedIn', href: 'https://linkedin.com', subtitle: 'Professional timeline' },
-]
-
-const quickStats = [
-  { title: 'Languages Known', value: 'Python, Java, JavaScript, SQL' },
-  { title: 'Accomplishments', value: 'Presidential Scholarship, Certification of Excellence: Autonomous Robotics' },
-  { title: 'Focus', value: 'Physics, software engineering, Quntitative modeling, and practical AI applications' },
-]
 
 const experienceEntries = [
   {
@@ -320,17 +72,16 @@ const experienceEntries = [
     logo: '/logos/symcor.png',
     accent: '#0072ce',
     companyUrl: 'https://www.symcor.ca/',
-    companyAbout:
-      'Symcor provides secure, scalable technology and operations solutions for highly regulated industries in Canada, including payments, fraud detection, open banking, document processing, and advisory services.',
+    companyAbout: 'Symcor builds secure technology and operations for highly regulated industries.',
     period: 'Sep 2025 - Present',
     highlights: [
-      'Implemented CI/CD quality gates and secret scanning at merge time across 100+ repositories.',
-      'Built GitLab Runner health telemetry and reduced CI brownouts and stalled jobs by 40%.',
-      'Modernized Java pipelines with Maven + JaCoCo and expanded reusable Ansible automation.',
+      'Implemented CI/CD quality gates and secret scanning across 100+ repositories.',
+      'Built GitLab Runner telemetry reducing pipeline brownouts by 40%.',
+      'Modernized Java pipelines with Maven + JaCoCo and reusable automation.',
     ],
     stack: ['GitLab CI/CD', 'SonarQube', 'Bash', 'Ansible', 'Maven', 'JaCoCo'],
     description:
-      'Hardened CI/CD across 100+ repositories by enforcing quality gates, secret scanning, and SonarQube reporting. Built GitLab Runner health telemetry that reduced pipeline brownouts and stalled jobs by 40%. Modernized Java workflows with Maven and JaCoCo integration while extending Ansible automation for reliable environment parity.',
+      'Hardened CI/CD across 100+ repositories by enforcing quality gates, secret scanning, and SonarQube reporting.',
   },
   {
     id: 'omniabio-qa',
@@ -339,17 +90,15 @@ const experienceEntries = [
     logo: '/logos/omniabio.png',
     accent: '#2b6cb0',
     companyUrl: 'https://omniabio.com/',
-    companyAbout:
-      'OmniaBio is a cell and gene therapy CDMO focused on AI-enabled development and GMP manufacturing, helping teams move from early-stage development to commercial-scale therapeutic production.',
+    companyAbout: 'OmniaBio is a cell and gene therapy CDMO focused on AI-enabled development and GMP manufacturing.',
     period: 'Aug 2024 - Dec 2024',
     highlights: [
-      'Engineered Python anomaly detection for 8K+ pharmaceutical samples with SPC techniques.',
-      'Automated validation and outlier checks to cut GMP inspection turnaround by 35%.',
-      'Delivered 99.8% compliance while reducing manual QC review cycles by 60%.',
+      'Engineered Python anomaly detection for 8K+ pharmaceutical samples.',
+      'Automated validation and outlier checks to cut GMP turnaround by 35%.',
+      'Delivered 99.8% compliance while reducing manual QC cycles by 60%.',
     ],
-    stack: ['Python', 'Statistical Process Control', 'Data Validation', 'Automation'],
-    description:
-      'Engineered a Python-based anomaly detection system for 8K+ pharmaceutical samples using control charts and Z-score methods. Automated schema validation and outlier detection pipelines to accelerate GMP inspection turnaround by 35%. Maintained 99.8% compliance while significantly reducing manual QC review cycles.',
+    stack: ['Python', 'SPC', 'Validation', 'Automation'],
+    description: 'Built anomaly detection and automated quality checks for GMP data pipelines.',
   },
   {
     id: 'pepsico-data',
@@ -358,102 +107,34 @@ const experienceEntries = [
     logo: '/logos/pepsico.png',
     accent: '#003e7e',
     companyUrl: 'https://www.pepsico.com/',
-    companyAbout:
-      'PepsiCo is a global food and beverage company with a broad brand portfolio, focused on delivering products at scale while driving sustainability and long-term business resilience through PepsiCo Positive.',
+    companyAbout: 'PepsiCo is a global food and beverage company with large-scale analytics operations.',
     period: 'Jan 2023 - Apr 2024',
     highlights: [
-      'Built optimized SQL aggregation layers for faster BI drill-down and reporting performance.',
-      'Used regression and time-series analysis to identify process bottlenecks and labor inefficiency.',
-      'Automated SLA-critical reporting for 500K+ users across 15 markets with 99.9% delivery.',
+      'Built optimized SQL layers for faster BI drill-down and reporting.',
+      'Applied regression and time-series analysis to uncover bottlenecks.',
+      'Automated SLA-critical reporting for 500K+ users across 15 markets.',
     ],
-    stack: ['SQL', 'Power BI', 'Regression', 'Time-Series', 'Reporting Automation'],
-    description:
-      'Designed optimized SQL aggregation layers powering Power BI analytics and faster KPI drill-down performance. Applied regression and time-series analysis to uncover bottlenecks driving labor inefficiency. Automated mission-critical reporting with 99.9% SLA reliability for 500K+ internal users across 15 markets.',
+    stack: ['SQL', 'Power BI', 'Regression', 'Time-Series'],
+    description: 'Designed analytics and reporting systems with high SLA reliability.',
   },
-  {
-    id: 'uwaft-swe',
-    role: 'Software Engineer (Design Team)',
-    org: 'UWAFT',
-    logo: '/logos/uwaft.png',
-    accent: '#2e8b57',
-    companyUrl: 'https://avtcseries.org/',
-    companyAbout:
-      'AVTC (Advanced Vehicle Technology Competitions) is a North American collegiate automotive engineering program run with Argonne National Laboratory and the U.S. Department of Energy, building workforce-ready engineers through hands-on vehicle innovation challenges.',
-    period: 'Sep 2022 - Jan 2023',
-    highlights: [
-      'Developed a React VR simulation front-end for autonomous vehicle validation workflows.',
-      'Designed Ansible automation for inventories, host grouping, and service mapping.',
-      'Added reliability observability with Prometheus and Grafana for pipeline health trends.',
-    ],
-    stack: ['React', 'Ansible', 'Prometheus', 'Grafana', 'Automation'],
-    description:
-      'Developed a React-based VR simulation front-end to support autonomous vehicle testing workflows. Designed Ansible automation for inventories, host grouping, and service mappings across environments. Instrumented reliability metrics with Prometheus and Grafana to surface recurring pipeline failure patterns.',
-  },
-]
-
-const skillGroups = [
-  {
-    title: 'Full Stack',
-    chips: [
-      'React',
-      'Tailwind CSS',
-      'Framer Motion',
-      'TypeScript',
-      'Node.js',
-      'Express',
-      'Java Spring',
-      'REST APIs',
-    ],
-  },
-  { title: 'Tools', chips: ['Azure', 'Docker', 'Postman', 'Figma', "ELK Stack", 'Linux'] },
-  { title: 'Languages (Within Skills)', chips: ['Python', 'Java', 'JavaScript', 'SQL'] },
 ]
 
 const educationItems = [
   {
     id: 'uw-physics',
+    period: '2021 - Present',
     title: 'Bachelor of Science in Honors Physics',
     provider: 'University of Waterloo',
-    period: '2021 -  2026',
-    badge: 'Bachelor of Science',
-    color: 'from-yellow-500/35 via-black/25 to-black/70',
-    logo: '',
-    schoolHighlights: [
-      'Recognized as one of North America\'s strongest physics-focused institutions.',
-      'Elite co-op ecosystem connecting students with top engineering and research teams.',
-      'Strong reputation in mathematical modeling, computing, and applied science.',
-    ],
-    degreeOverview:
-      'This degree blends rigorous physics fundamentals with computational problem-solving. The program emphasizes analytical modeling, quantitative reasoning, and building intuition for complex real-world systems.',
-    learningModules: [
-      'Classical mechanics, electromagnetism, and thermodynamics',
-      'Quantum physics, modern physics, and mathematical methods',
-      'Computational physics, simulations, and scientific programming',
-      'Signals, systems, and data-driven modeling techniques',
-    ],
-    classesTaken: [
-      'MATH 237 - Calculus 3',
-      'PHYS 233 - Quantum Mechanics',
-      'PHYS 249 - Computational Physics and Linear Algebra',
-      'PHYS 349 - Electricity and Magnetism',
-      'AMATH/BIOL 382 - Computational Modeling',
-      'AMATH 250 - Differential Equations',
-    ],
     details:
-      'Completed a Bachelor of Science in Honors Physics at the University of Waterloo, with strong focus on signals and systems, data structures, algorithms, computational physics, and computational modeling. Awarded Presidential Scholarship and Term Distinction.',
-    link: 'https://uwaterloo.ca/',
+      'Focused on computational physics, signals and systems, and mathematical modeling with practical software applications.',
   },
 ]
 
-
-
-/// TODO: Add project categories and filter projects by those instead of just 'Trending in My World' for better organization and display control. For example, categories could be 'Web & Frontend', 'AI & Machine Learning', 'Tools & Utilities', etc., and each project can belong to one or more categories. Then we can create rows based on these categories instead of just 'Trending in My World'.
 const projectCatalog = [
-   {
+  {
     id: 1,
     title: 'ICT Displacement and Liquidity Sweep Detector',
-    description:
-      'A project focused on detecting and analyzing ICT displacement and liquidity sweep patterns in financial markets. Built to enhance understanding of market dynamics and improve trading strategies.',
+    description: 'Detector and analysis tool for market displacement and liquidity sweep patterns.',
     teaser: 'Financial market analysis tool.',
     image: '/project/ict_read.png',
     tags: ['JavaScript', 'Data Analysis', 'Finance'],
@@ -463,15 +144,12 @@ const projectCatalog = [
     year: 2024,
     status: 'In Progress',
     featured: false,
-    duration: '3 months',
-    complexity: 'Entry Level',
   },
-   {
+  {
     id: 2,
-    title: 'Financial Market News Sentiment Analyzer and Stock Correlation Dashboard',
-    description:
-      'A project focused on analyzing financial market news sentiment and correlating it with stock performance. Built to provide insights into how news events impact market movements and to assist in making informed trading decisions.',
-    teaser: 'Financial market analysis tool.',
+    title: 'Financial Market News Sentiment Analyzer',
+    description: 'News sentiment analyzer correlated with stock movement and dashboards.',
+    teaser: 'Sentiment + market insight engine.',
     image: '/project/news.png',
     tags: ['JavaScript', 'Data Analysis', 'Finance'],
     github: 'https://github.com/ssaillesh/ICT-Displacement-and-Liquidity-Sweep-Detector',
@@ -480,16 +158,13 @@ const projectCatalog = [
     year: 2024,
     status: 'In Progress',
     featured: false,
-    duration: '3 months',
-    complexity: 'Entry Level',
   },
   {
     id: 3,
     title: 'Heston Stochastic Volatility Model Engine',
-    description:
-      'Numerical pricing and analysis toolkit for the Heston stochastic volatility model, with a Flask API + browser UI for pricing, Greeks, volatility surface visualization, Monte Carlo simulation, validation, and market-data-assisted parameter estimation. Built to deepen understanding of quantitative finance and practical implementation of complex mathematical models.',
-    teaser: 'Simulation and Analytics Engine.',
-    image: '/project/Heston_front.png',
+    description: 'Numerical pricing and analysis toolkit for Heston stochastic volatility model.',
+    teaser: 'Simulation and analytics engine.',
+    image: '/project/Heston2.png',
     tags: ['Python', 'Stochastic Mathematics', 'Analytics'],
     github: 'https://github.com/ssaillesh/heston_engine',
     liveUrl: '',
@@ -497,16 +172,13 @@ const projectCatalog = [
     year: 2024,
     status: 'Open Source',
     featured: true,
-    duration: '5 months',
-    complexity: 'Intermediate',
   },
   {
     id: 4,
-    title: 'Care_Loop: ',
-    description:
-      'A utility-oriented project focused on practical, human-centered workflows. Built to simplify user tasks with clean interactions and reliable execution.',
+    title: 'Care_Loop',
+    description: 'Utility-oriented project for human-centered workflows and reliable execution.',
     teaser: 'Human-centered utility solution.',
-    image: '/project/careloop_intro.png'  ,
+    image: '/project/careloop_intro.png',
     tags: ['React', 'Node.js', 'Python', 'Java'],
     github: 'https://github.com/aarya127/CareLoop',
     liveUrl: '',
@@ -514,15 +186,12 @@ const projectCatalog = [
     year: 2024,
     status: 'Open Source',
     featured: false,
-    duration: '2 months',
-    complexity: 'Advanced',
   },
   {
     id: 5,
     title: 'Pad-Lock',
-    description:
-      'A secure lock and access management project focused on safer credential and key handling workflows. Built to make everyday security controls more practical and user friendly.',
-    teaser: 'Access management and security workflow project.',
+    description: 'Access management and credential handling project.',
+    teaser: 'Security workflow project.',
     image: null,
     tags: ['React', 'Node.js', 'Security'],
     github: 'https://github.com/ssaillesh/Pad-Lock',
@@ -531,16 +200,12 @@ const projectCatalog = [
     year: 2024,
     status: 'Completed',
     featured: false,
-    duration: '4 months',
-    complexity: 'Entry',
   },
-
   {
     id: 6,
     title: 'Interactive-Hand-Gesture-Recognition',
-    description:
-      'A real-time hand gesture recognition project using computer vision to detect and interpret gestures. Built for intuitive human-computer interaction experiments.',
-    teaser: 'Real-time computer vision gesture recognition.',
+    description: 'Real-time hand gesture recognition with computer vision.',
+    teaser: 'Computer vision interaction.',
     image: null,
     tags: ['Python', 'FastAPI', 'OpenCV'],
     github: 'https://github.com/ssaillesh/Interactive-Hand-Gesture-Recognition',
@@ -549,16 +214,12 @@ const projectCatalog = [
     year: 2024,
     status: 'Completed',
     featured: true,
-    duration: '5 months',
-    complexity: 'intermediate',
   },
- 
   {
     id: 7,
     title: 'Invasion-game',
-    description:
-      'A game project centered around gameplay mechanics, progression, and immersive interaction loops. Created to sharpen real-time logic and UI responsiveness.',
-    teaser: 'Arcade-style gameplay project.',
+    description: 'Arcade-style gameplay project for real-time logic and UI responsiveness.',
+    teaser: 'Arcade gameplay project.',
     image: null,
     tags: ['JavaScript', 'Game Dev', 'Frontend'],
     github: 'https://github.com/ssaillesh/Invasion-game',
@@ -567,16 +228,13 @@ const projectCatalog = [
     year: 2024,
     status: 'In Progress',
     featured: false,
-    duration: '3 months',
-    complexity: 'Entry Level',
   },
   {
     id: 8,
     title: 'AutoML Researcher',
-    description:
-      'Local multi-agent AutoML lab for guided optimization loops. The app trains, compares, and ranks models across iterations, tracks run health and status, and surfaces leaderboard artifacts for reproducible research workflows.',
-    teaser: 'Guided AutoML optimization and model leaderboard.',
-    image: '/project/automl_researcher.png',
+    description: 'Guided optimization lab to train, compare, and rank models.',
+    teaser: 'AutoML optimization and leaderboard.',
+    image: '/project/automl.png',
     tags: ['Python', 'AutoML', 'Classification'],
     github: '',
     liveUrl: '',
@@ -584,21 +242,10 @@ const projectCatalog = [
     year: 2026,
     status: 'Completed',
     featured: true,
-    duration: '1 month',
-    complexity: 'Advanced',
   },
- 
 ]
 
-// ADD subcategories to projects and filter by those instead of tags for better organization and display control. For example, categories could be 'Web & Frontend', 'AI & Machine Learning', 'Tools & Utilities', etc., and each project can belong to one or more categories. Then we can create rows based on these categories instead of just 'Trending in My World'.
-
-const projectRows = [
-  'Trending in My World',
-  'Web & Frontend',
-  'Tools & Utilities',
-  'Coming Soon',
-
-]
+const projectRows = ['Trending in My World', 'Web & Frontend', 'Tools & Utilities', 'Coming Soon']
 
 const projectGradients = {
   React: 'from-cyan-500/45 via-cyan-700/25 to-zinc-900/60',
@@ -608,8 +255,6 @@ const projectGradients = {
   Kafka: 'from-rose-500/35 via-fuchsia-600/20 to-zinc-900/65',
   default: 'from-red-500/35 via-neutral-700/20 to-zinc-900/70',
 }
-
-const pillToId = {}
 
 class AppErrorBoundary extends React.Component {
   constructor(props) {
@@ -625,7 +270,6 @@ class AppErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error) {
-    // Keep this log for local debugging when the UI fails unexpectedly.
     console.error('Runtime render error:', error)
   }
 
@@ -636,7 +280,7 @@ class AppErrorBoundary extends React.Component {
           <div className="max-w-lg rounded-xl border border-red-500/40 bg-[#181818] p-6">
             <h2 className="text-xl font-bold text-red-400">UI Runtime Error</h2>
             <p className="mt-3 text-sm text-[#bcbcbc]">
-              The app hit a rendering error after login. Reload once and if this repeats, share this message.
+              The app hit a rendering error. Reload once and if this repeats, share this message.
             </p>
             <p className="mt-3 rounded-md bg-black/30 p-2 font-mono text-xs text-left">{this.state.errorMessage}</p>
           </div>
@@ -646,13 +290,6 @@ class AppErrorBoundary extends React.Component {
 
     return this.props.children
   }
-}
-
-function getGreeting() {
-  const hour = new Date().getHours()
-  if (hour < 12) return 'Good morning, Explorer'
-  if (hour < 18) return 'Good afternoon, Explorer'
-  return 'Good evening, Explorer'
 }
 
 function getProjectGradient(project) {
@@ -873,142 +510,73 @@ function EducationModal({ item, onClose }) {
 }
 
 function ProjectCard({ project, index, count, onOpenModal }) {
-  const [expanded, setExpanded] = useState(false)
-  const hoverTimerRef = useRef(null)
-
-  const transformOrigin =
-    index === 0 ? 'left center' : index === count - 1 ? 'right center' : 'center center'
-
-  const onEnter = () => {
-    hoverTimerRef.current = setTimeout(() => {
-      setExpanded(true)
-    }, 300)
-  }
-
-  const onLeave = () => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current)
-      hoverTimerRef.current = null
-    }
-    setExpanded(false)
-  }
-
-  useEffect(() => {
-    return () => {
-      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current)
-    }
-  }, [])
-
   return (
-    <div className="relative h-[280px] w-[240px] shrink-0" onMouseEnter={onEnter} onMouseLeave={onLeave}>
-      <Motion.div
-        className="absolute left-0 top-4 w-full"
-        style={{ transformOrigin }}
-        animate={{
-          scale: expanded ? 1.4 : 1,
-          y: expanded ? -10 : 0,
-          zIndex: expanded ? 40 : 1,
-        }}
-        transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
-      >
-        <div className="overflow-hidden rounded-md border border-white/5 bg-[#181818] shadow-lg">
-          <div className="aspect-video w-full">
-            <ProjectCover project={project} />
-          </div>
-
-          <AnimatePresence>
-            {expanded && (
-              <Motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-3 p-3"
-              >
-                <p className="text-sm font-bold text-white">{project.title}</p>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    className="grid h-7 w-7 place-items-center rounded-full bg-white text-black"
-                    onClick={() => window.open(project.liveUrl || project.github, '_blank', 'noreferrer')}
-                  >
-                    <Play size={13} fill="currentColor" />
-                  </button>
-                  <button type="button" className="grid h-7 w-7 place-items-center rounded-full border border-white/40 text-white">
-                    <Plus size={13} />
-                  </button>
-                  <button type="button" className="grid h-7 w-7 place-items-center rounded-full border border-white/40 text-white">
-                    <ThumbsUp size={13} />
-                  </button>
-                  <button
-                    type="button"
-                    className="ml-auto grid h-7 w-7 place-items-center rounded-full border border-white/40 text-white"
-                    onClick={() => onOpenModal(project)}
-                  >
-                    <ChevronDown size={13} />
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tags.map((tag) => (
-                    <span key={tag} className="rounded-full bg-[#333333] px-2 py-0.5 text-[10px] text-[#bcbcbc]">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <p className="line-clamp-1 text-xs text-[#bcbcbc]">{project.teaser}</p>
-              </Motion.div>
-            )}
-          </AnimatePresence>
+    <Motion.article
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, delay: index * 0.04 }}
+      className="group overflow-hidden rounded-xl border border-white/10 bg-[#191919] shadow-lg transition hover:-translate-y-1 hover:border-white/25"
+    >
+      <div className="aspect-video w-full">
+        <ProjectCover project={project} />
+      </div>
+      <div className="space-y-3 p-4">
+        <h4 className="line-clamp-2 text-base font-semibold text-white">{project.title}</h4>
+        <p className="line-clamp-2 text-xs leading-relaxed text-[#bcbcbc]">{project.teaser || project.description}</p>
+        <div className="flex items-center gap-2 pt-1">
+          <button
+            type="button"
+            className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-black"
+            onClick={() => window.open(project.liveUrl || project.github, '_blank', 'noreferrer')}
+          >
+            <Play size={12} fill="currentColor" />
+            View
+          </button>
+          <button
+            type="button"
+            className="inline-flex items-center gap-1.5 rounded-md border border-white/30 px-3 py-1.5 text-xs font-semibold text-white"
+            onClick={() => onOpenModal(project)}
+          >
+            <Info size={12} />
+            Details
+          </button>
         </div>
-      </Motion.div>
-    </div>
+      </div>
+    </Motion.article>
   )
 }
 
 function ProjectRow({ title, projects, onOpenModal, delay }) {
-  const trackRef = useRef(null)
-
-  const scrollByCards = (direction) => {
-    if (!trackRef.current) return
-    trackRef.current.scrollBy({ left: direction * 760, behavior: 'smooth' })
-  }
-
   return (
     <Motion.section
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay }}
-      className="group relative"
+      className="relative"
     >
-      <h3 className="mb-3 text-base font-semibold text-white sm:text-lg">{title}</h3>
-
-      <button
-        type="button"
-        onClick={() => scrollByCards(-1)}
-        className="absolute left-2 top-1/2 z-20 hidden -translate-y-1/2 rounded-full bg-black/65 p-2 text-white opacity-0 transition group-hover:opacity-100 md:block"
-      >
-        <ChevronLeft size={18} />
-      </button>
-
-      <div ref={trackRef} className="hide-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-16 pt-4">
-        {projects.map((project, index) => (
-          <ProjectCard
-            key={`${title}-${project.id}`}
-            project={project}
-            index={index}
-            count={projects.length}
-            onOpenModal={onOpenModal}
-          />
-        ))}
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h3 className="text-base font-semibold text-white sm:text-lg">{title}</h3>
+        <p className="text-xs text-[#9f9f9f]">Showing {projects.length}</p>
       </div>
 
-      <button
-        type="button"
-        onClick={() => scrollByCards(1)}
-        className="absolute right-2 top-1/2 z-20 hidden -translate-y-1/2 rounded-full bg-black/65 p-2 text-white opacity-0 transition group-hover:opacity-100 md:block"
-      >
-        <ChevronRight size={18} />
-      </button>
+      {projects.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-white/15 bg-[#171717] p-5 text-sm text-[#a3a3a3]">
+          Projects for this section are coming soon.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {projects.map((project, index) => (
+            <ProjectCard
+              key={`${title}-${project.id}`}
+              project={project}
+              index={index}
+              count={projects.length}
+              onOpenModal={onOpenModal}
+            />
+          ))}
+        </div>
+      )}
     </Motion.section>
   )
 }
@@ -1149,19 +717,10 @@ function ProjectModal({ project, onClose, onOpenModal }) {
 
 function NetflixProjectsView({ scrollTop }) {
   const [selectedProject, setSelectedProject] = useState(null)
-  const featuredProjects = projectCatalog.filter((project) => project.featured)
-  const [featuredIndex, setFeaturedIndex] = useState(0)
-
-  useEffect(() => {
-    if (featuredProjects.length <= 1) return undefined
-    const timer = setInterval(() => {
-      setFeaturedIndex((current) => (current + 1) % featuredProjects.length)
-    }, 8000)
-
-    return () => clearInterval(timer)
-  }, [featuredProjects.length])
-
-  const heroProject = featuredProjects[featuredIndex] || projectCatalog[0]
+  const manualHeroProject = projectCatalog.find((project) => project.hero)
+  const mostRecentProject = [...projectCatalog].sort((a, b) => (b.year - a.year) || (b.id - a.id))[0]
+  const listedProjects = [...projectCatalog].sort((a, b) => (b.year - a.year) || (b.id - a.id))
+  const heroProject = manualHeroProject || mostRecentProject || projectCatalog[0]
   const heroScale = 1 + Math.min(scrollTop * 0.00012, 0.03)
 
   return (
@@ -1174,11 +733,10 @@ function NetflixProjectsView({ scrollTop }) {
       className="space-y-9"
     >
       <section className="relative -mx-4 -mt-6 h-[65vh] min-h-[420px] overflow-hidden sm:-mx-8">
-        <Motion.div style={{ scale: heroScale }} className="absolute inset-0">
+        <Motion.div style={{ scale: heroScale }} className="absolute inset-0 saturate-125 brightness-110 contrast-110 will-change-transform">
           <ProjectCover project={heroProject} />
         </Motion.div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#141414_30%,transparent)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,#141414_10%,transparent_48%,rgba(20,20,20,0.75)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#141414_10%,transparent_48%)]" />
 
         <Motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -1221,18 +779,12 @@ function NetflixProjectsView({ scrollTop }) {
       </section>
 
       <div className="space-y-8">
-        {projectRows.map((row, index) => {
-          const rowProjects = projectCatalog.filter((project) => project.category.includes(row))
-          return (
-            <ProjectRow
-              key={row}
-              title={row}
-              projects={rowProjects}
-              delay={index * 0.15}
-              onOpenModal={setSelectedProject}
-            />
-          )
-        })}
+        <ProjectRow
+          title="All Projects"
+          projects={listedProjects}
+          delay={0.05}
+          onOpenModal={setSelectedProject}
+        />
       </div>
 
       <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} onOpenModal={setSelectedProject} />
@@ -1242,7 +794,7 @@ function NetflixProjectsView({ scrollTop }) {
   )
 }
 
-function ProjectsPage({ scrollTop, onBack }) {
+function ProjectsPage({ scrollTop }) {
   return (
     <Motion.div
       key="projects-page"
@@ -1254,35 +806,6 @@ function ProjectsPage({ scrollTop, onBack }) {
     >
       <NetflixProjectsView scrollTop={scrollTop} />
     </Motion.div>
-  )
-}
-
-function CountUpValue({ value, suffix = '' }) {
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    const duration = 1200
-    const start = performance.now()
-    let frameId = 0
-
-    const tick = (time) => {
-      const progress = Math.min((time - start) / duration, 1)
-      const eased = 1 - (1 - progress) ** 3
-      setCount(Math.round(value * eased))
-      if (progress < 1) {
-        frameId = requestAnimationFrame(tick)
-      }
-    }
-
-    frameId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frameId)
-  }, [value])
-
-  return (
-    <span>
-      {count}
-      {suffix}
-    </span>
   )
 }
 
@@ -1313,6 +836,13 @@ function AboutArtistPage({ onOpenProjects }) {
   }, [])
 
   const isVisible = (id) => Boolean(visibleSections[id])
+  const skillPyramidRows = [
+    techTags.slice(0, 4),
+    techTags.slice(4, 9),
+    techTags.slice(9, 15),
+    techTags.slice(15),
+  ]
+  const skillPyramidWidths = ['max-w-lg', 'max-w-2xl', 'max-w-4xl', 'max-w-5xl']
 
   return (
     <Motion.div
@@ -1331,7 +861,7 @@ function AboutArtistPage({ onOpenProjects }) {
           data-story="intro"
           className="relative min-h-[120vh]"
         >
-          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center justify-center overflow-hidden px-6 text-center sm:px-10">
+          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
             <img
               src="/about/IMG_6712.jpeg"
               alt=""
@@ -1339,86 +869,37 @@ function AboutArtistPage({ onOpenProjects }) {
               className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30"
             />
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_24%_18%,rgba(192,132,252,0.24),transparent_40%),radial-gradient(circle_at_78%_80%,rgba(251,191,36,0.18),transparent_44%),linear-gradient(180deg,rgba(5,5,5,0.62),rgba(5,5,5,0.9))]" />
-            <Motion.div
-              initial={{ opacity: 0, y: 36 }}
-              animate={isVisible('intro') ? { opacity: 1, y: 0 } : { opacity: 0.15, y: 20 }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-              className="relative"
-            >
-              <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-white/60">About Me</p>
-              <h1 className="mt-6 text-6xl font-semibold tracking-[-0.04em] text-white sm:text-8xl lg:text-9xl">Sai</h1>
-              <p className="mx-auto mt-6 max-w-2xl text-base tracking-[0.02em] text-white/70 sm:text-xl">
-                Software crafted with precision, calm, and intent.
-              </p>
-            </Motion.div>
-          </div>
-        </section>
+            <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[300px_1fr]">
+              <Motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={isVisible('intro') ? { opacity: 1, y: 0 } : { opacity: 0.12, y: 14 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                className="mx-auto w-full max-w-[300px] overflow-hidden rounded-[24px] border border-white/20 bg-white/5 p-2 backdrop-blur-sm"
+              >
+                <img src="/about/IMG_0146.jpg" alt="Sai portrait" className="aspect-[4/5] w-full rounded-[18px] object-cover" />
+              </Motion.div>
 
-        <section
-          ref={(node) => {
-            sectionRefs.current[1] = node
-          }}
-          data-story="identity"
-          className="relative min-h-[120vh]"
-        >
-          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
-            <img
-              src="/about/IMG_0235.jpeg"
-              alt=""
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-26"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_30%,rgba(14,165,233,0.2),transparent_38%),linear-gradient(170deg,rgba(9,9,9,0.75),rgba(9,9,9,0.92))]" />
-            <div className="relative mx-auto w-full max-w-6xl">
-              <div className="space-y-5 sm:space-y-7">
-                {['Developer', 'Designer', 'Builder'].map((word, index) => (
-                  <Motion.p
-                    key={word}
-                    initial={{ opacity: 0, y: 28 }}
-                    animate={isVisible('identity') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 16 }}
-                    transition={{ duration: 0.85, delay: index * 0.16, ease: [0.22, 1, 0.36, 1] }}
-                    className="text-4xl font-semibold tracking-[-0.02em] text-white/92 sm:text-6xl lg:text-7xl"
-                  >
-                    {word}
-                  </Motion.p>
-                ))}
-              </div>
+              <Motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={isVisible('intro') ? { opacity: 1, y: 0 } : { opacity: 0.12, y: 16 }}
+                transition={{ duration: 1, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-white/60">Welcome.</p>
+                <h1 className="mt-5 text-5xl font-semibold tracking-[-0.04em] text-white sm:text-7xl lg:text-8xl">Saillesh</h1>
+                <p className="mt-4 text-sm font-medium uppercase tracking-[0.18em] text-white/70 sm:text-base">
+                  Honors Physics  · University of Waterloo
+                </p>
+                <p className="mt-5 max-w-3xl text-base leading-relaxed tracking-[0.02em] text-white/74 sm:text-xl">
+                  I design and deliver production-ready software across DevOps, data, and full-stack engineering, combining analytical rigor with execution speed to build secure, scalable systems that create measurable business impact.
+                </p>
+              </Motion.div>
             </div>
           </div>
         </section>
 
         <section
           ref={(node) => {
-            sectionRefs.current[2] = node
-          }}
-          data-story="build"
-          className="relative min-h-[120vh]"
-        >
-          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
-            <img
-              src="/about/IMG_0268.jpeg"
-              alt=""
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-20"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_76%_24%,rgba(56,189,248,0.2),transparent_36%),linear-gradient(180deg,rgba(9,9,9,0.78),rgba(9,9,9,0.94))]" />
-            <Motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={isVisible('build') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 14 }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="relative mx-auto w-full max-w-6xl"
-            >
-              <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/55">What I Build</p>
-              <h2 className="mt-6 max-w-5xl text-4xl font-semibold leading-[1.06] tracking-[-0.03em] text-white sm:text-6xl lg:text-7xl">
-                I build intelligent products that make complexity feel effortless.
-              </h2>
-            </Motion.div>
-          </div>
-        </section>
-
-        <section
-          ref={(node) => {
-            sectionRefs.current[3] = node
+            sectionRefs.current[1] = node
           }}
           data-story="skills"
           className="relative min-h-[120vh]"
@@ -1433,18 +914,42 @@ function AboutArtistPage({ onOpenProjects }) {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(192,132,252,0.2),transparent_35%),radial-gradient(circle_at_80%_76%,rgba(45,212,191,0.16),transparent_40%),linear-gradient(180deg,rgba(9,9,9,0.86),rgba(9,9,9,0.96))]" />
             <div className="relative mx-auto w-full max-w-6xl">
               <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/55">Skills</p>
-              <div className="mt-8 flex flex-wrap gap-4 sm:gap-5">
-                {['Python', 'ML Systems', 'React', 'Data Modeling', 'System Design', 'Automation'].map((skill, index) => (
-                  <Motion.span
-                    key={skill}
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={isVisible('skills') ? { opacity: 1, y: 0 } : { opacity: 0.07, y: 16 }}
-                    transition={{ duration: 0.72, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    className="rounded-full border border-white/25 bg-white/10 px-6 py-2.5 text-sm font-medium tracking-[0.03em] text-white/90 backdrop-blur-sm sm:text-base"
-                  >
-                    {skill}
-                  </Motion.span>
-                ))}
+              <h3 className="mt-5 text-4xl font-semibold tracking-[-0.03em] text-white sm:text-6xl">Tech Stack</h3>
+              <p className="mt-3 max-w-2xl text-sm text-white/65 sm:text-base"></p>
+
+              <div className="relative mt-10">
+                <div className="pointer-events-none absolute -left-12 top-2 h-24 w-24 rounded-full bg-cyan-400/20 blur-3xl" />
+                <div className="pointer-events-none absolute -right-8 bottom-1 h-28 w-28 rounded-full bg-fuchsia-400/15 blur-3xl" />
+                <div className="relative space-y-4 sm:space-y-5">
+                  {skillPyramidRows.map((row, rowIndex) => (
+                    <div key={`pyramid-row-${rowIndex}`} className={`mx-auto w-full ${skillPyramidWidths[rowIndex]} flex flex-wrap justify-center gap-3 sm:gap-4`}>
+                      {row.map((tag) => (
+                        <a
+                          key={tag.name}
+                          href={tag.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="group relative inline-flex items-center rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.02em] text-white transition duration-300 hover:-translate-y-1 hover:scale-[1.03] sm:text-sm"
+                          style={{
+                            backgroundColor: `${tag.color}33`,
+                            borderColor: `${tag.color}B3`,
+                          }}
+                          aria-label={`Open docs for ${tag.name}`}
+                        >
+                          <span
+                            className="pointer-events-none absolute -inset-1 rounded-full opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100"
+                            style={{ backgroundColor: `${tag.color}77` }}
+                          />
+                          <span
+                            className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                            style={{ boxShadow: `0 0 0 1px ${tag.color}, 0 0 20px ${tag.color}AA, 0 0 34px ${tag.color}88` }}
+                          />
+                          <span className="relative">{tag.name}</span>
+                        </a>
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -1452,35 +957,71 @@ function AboutArtistPage({ onOpenProjects }) {
 
         <section
           ref={(node) => {
-            sectionRefs.current[4] = node
+            sectionRefs.current[2] = node
           }}
-          data-story="philosophy"
-          className="relative min-h-[120vh]"
+          data-story="experience"
+          className="relative min-h-[145vh]"
         >
-          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
-            <img
-              src="/about/IMG_9654.jpeg"
-              alt=""
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-22"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_24%_70%,rgba(251,146,60,0.2),transparent_35%),linear-gradient(180deg,rgba(9,9,9,0.82),rgba(9,9,9,0.96))]" />
-            <div className="mx-auto w-full max-w-7xl">
-              <Motion.p
-                initial={{ opacity: 0, y: 28 }}
-                animate={isVisible('philosophy') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 18 }}
-                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                className="relative text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-white sm:text-7xl lg:text-9xl"
+          <div className="sticky top-16 flex min-h-[calc(100vh-64px)] items-center px-6 py-10 sm:px-10 sm:py-12">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_22%,rgba(45,212,191,0.14),transparent_34%),radial-gradient(circle_at_88%_70%,rgba(59,130,246,0.16),transparent_40%),linear-gradient(180deg,rgba(9,9,9,0.9),rgba(9,9,9,0.98))]" />
+            <div className="relative mx-auto w-full max-w-6xl">
+              <Motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={isVisible('experience') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 14 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               >
-                Quiet precision. Powerful outcomes.
-              </Motion.p>
+                <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-white/55">Experience</p>
+                <h3 className="mt-5 text-4xl font-semibold tracking-[-0.03em] text-white sm:text-6xl">What I&apos;ve Done</h3>
+              </Motion.div>
+
+              <Motion.article
+                initial={{ opacity: 0, y: 24 }}
+                animate={isVisible('experience') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 14 }}
+                transition={{ duration: 0.85, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-8 overflow-hidden rounded-3xl border border-white/15 bg-[linear-gradient(110deg,rgba(17,24,39,0.84),rgba(8,47,73,0.55))] p-6 backdrop-blur-sm sm:p-8"
+              >
+                <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-cyan-400/15 blur-3xl" />
+                <div className="pointer-events-none absolute -bottom-20 left-10 h-56 w-56 rounded-full bg-indigo-400/15 blur-3xl" />
+                <div className="relative grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+                  <div>
+                    <h4 className="text-3xl font-semibold tracking-[-0.02em] text-white sm:text-4xl">Biography</h4>
+                    <p className="mt-6 text-base leading-relaxed text-white/78 sm:text-[1.08rem]">
+                      Saillesh is an Honors Physics student at the University of Waterloo and a software engineer focused on high-impact execution.
+                      He combines analytical rigor with product-minded engineering to build systems that are reliable, scalable, and measurable in real business environments.
+                    </p>
+                    <p className="mt-5 text-base leading-relaxed text-white/78 sm:text-[1.08rem]">
+                      Across DevOps, automation, and analytics, he has strengthened CI/CD quality and security controls at scale, shipped anomaly detection pipelines,
+                      and delivered data-driven tooling that improves delivery speed, operational resilience, and decision quality.
+                    </p>
+                    <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-white/62">Core Focus</p>
+                    <p className="mt-2 text-sm leading-relaxed text-white/74 sm:text-base">
+                      Platform engineering, CI/CD reliability, cloud infrastructure, software development, and optimization through data.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {experienceEntries.map((entry, index) => (
+                      <Motion.div
+                        key={entry.id}
+                        initial={{ opacity: 0, x: 16 }}
+                        animate={isVisible('experience') ? { opacity: 1, x: 0 } : { opacity: 0.12, x: 10 }}
+                        transition={{ duration: 0.5, delay: 0.1 + index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                        className="rounded-2xl border border-white/15 bg-black/20 p-4"
+                      >
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/55">{entry.period}</p>
+                        <p className="mt-1 text-sm font-semibold text-white sm:text-base">{entry.role} · {entry.org}</p>
+                      </Motion.div>
+                    ))}
+                  </div>
+                </div>
+              </Motion.article>
             </div>
           </div>
         </section>
 
         <section
           ref={(node) => {
-            sectionRefs.current[5] = node
+            sectionRefs.current[3] = node
           }}
           data-story="cta"
           className="relative min-h-[120vh]"
@@ -1520,438 +1061,36 @@ function CombinedAboutJourneyPage({ onOpenProjects }) {
   return <AboutArtistPage onOpenProjects={onOpenProjects} />
 }
 
-function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
-  const [selectedExperienceId, setSelectedExperienceId] = useState(experienceEntries[0].id)
-  const [flippedExperienceId, setFlippedExperienceId] = useState(null)
-  const carouselRef = useRef(null)
-  const [isCarouselInteracting, setIsCarouselInteracting] = useState(false)
-  const [selectedEducationId, setSelectedEducationId] = useState(educationItems[0].id)
-  const [educationLogoFailed, setEducationLogoFailed] = useState(false)
 
-  const selectedExperience = experienceEntries.find((entry) => entry.id === selectedExperienceId) || experienceEntries[0]
-  const selectedEducation = educationItems.find((item) => item.id === selectedEducationId) || educationItems[0]
-
-  useEffect(() => {
-    if (experienceEntries.length <= 1) return undefined
-
-    const timer = setInterval(() => {
-      setSelectedExperienceId((current) => {
-        const currentIndex = experienceEntries.findIndex((entry) => entry.id === current)
-        const nextIndex = (currentIndex + 1) % experienceEntries.length
-        return experienceEntries[nextIndex].id
-      })
-    }, 6500)
-
-    return () => clearInterval(timer)
-  }, [])
-
-  useEffect(() => {
-    if (educationItems.length <= 1) return undefined
-
-    const timer = setInterval(() => {
-      setSelectedEducationId((current) => {
-        const currentIndex = educationItems.findIndex((item) => item.id === current)
-        const nextIndex = (currentIndex + 1) % educationItems.length
-        return educationItems[nextIndex].id
-      })
-    }, 6500)
-
-    return () => clearInterval(timer)
-  }, [])
-
-  useEffect(() => {
-    const el = carouselRef.current
-    if (!el) return undefined
-
-    let rafId = null
-    const speed = 0.4 // px per frame
-
-    const step = () => {
-      if (!isCarouselInteracting) {
-        el.scrollLeft += speed
-        // seamless loop when we've scrolled past half (we duplicated list)
-        if (el.scrollLeft >= el.scrollWidth / 2) {
-          el.scrollLeft = el.scrollLeft - el.scrollWidth / 2
-        }
-      }
-      rafId = requestAnimationFrame(step)
-    }
-
-    rafId = requestAnimationFrame(step)
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId)
-    }
-  }, [isCarouselInteracting])
-
-  useEffect(() => {
-    setEducationLogoFailed(false)
-  }, [selectedEducationId])
-
-  return (
-    <Motion.div
-      key="default-content"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2, ease: 'easeInOut' }}
-      className="space-y-10"
-    >
-      
-
-      <section
-        id="skills"
-        ref={(element) => registerSection('skills', element)}
-      >
-        <h3 className="text-xl font-bold text-white">Skills (including Languages)</h3>
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {skillGroups.map((group) => (
-            <article
-              key={group.title}
-              className="rounded-xl border border-white/6 bg-[var(--surface)] p-4 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(29,185,84,0.2)]"
-            >
-              <div className="flex items-center gap-2">
-                <Code2 size={16} className="text-[var(--accent)]" />
-                <h4 className="text-sm font-semibold text-white">{group.title}</h4>
-              </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {group.chips.map((chip) => (
-                  <span
-                    key={chip}
-                    className="rounded-full bg-black/25 px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)]"
-                  >
-                    {chip}
-                  </span>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section
-        id="experience"
-        ref={(element) => registerSection('experience', element)}
-      >
-        <h3 className="text-xl font-bold text-white">Experience</h3>
-        <p className="mt-2 text-sm text-[var(--text-secondary)]">
-          Dynamic view: this section rotates automatically and can also be switched manually.
-        </p>
-        <div
-          ref={carouselRef}
-          className="mt-4 hide-scrollbar flex gap-4 overflow-x-auto py-2 px-1"
-          onMouseEnter={() => setIsCarouselInteracting(true)}
-          onMouseLeave={() => setIsCarouselInteracting(false)}
-          onPointerDown={() => setIsCarouselInteracting(true)}
-          onPointerUp={() => setIsCarouselInteracting(false)}
-        >
-          {/** duplicate items to enable seamless looping */}
-          {[...experienceEntries, ...experienceEntries].map((entry, idx) => {
-            const realId = entry.id
-            const isActive = realId === selectedExperienceId
-            const isFlipped = flippedExperienceId === realId
-            return (
-              <div key={`${entry.id}-${idx}`} className="min-w-[380px] flex-shrink-0">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedExperienceId(realId)
-                    setFlippedExperienceId((cur) => (cur === realId ? null : realId))
-                  }}
-                  className="w-full h-56"
-                  style={{ background: 'transparent', border: 'none', padding: 0 }}
-                >
-                  <Motion.div
-                    animate={{ rotateY: isFlipped ? 180 : 0 }}
-                    transition={{ duration: 0.45 }}
-                    className="relative h-full w-full"
-                    style={{ transformStyle: 'preserve-3d' }}
-                  >
-                    <div
-                      className={`absolute inset-0 rounded-xl overflow-hidden border transition ${
-                        isActive ? 'shadow-[0_14px_30px_rgba(29,185,84,0.22)]' : ''
-                      }`}
-                      style={{ backfaceVisibility: 'hidden' }}
-                    >
-                      {entry.logo ? (
-                        <div className="h-full w-full flex items-center justify-center bg-black/5">
-                          <img
-                            src={entry.logo}
-                            alt={`${entry.org} logo`}
-                            className="max-h-[86%] max-w-[86%] object-contain block"
-                            style={{ filter: 'saturate(1.05)' }}
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-[var(--surface)]">
-                          <div className="text-xs font-semibold text-white/50">Logo</div>
-                        </div>
-                      )}
-
-                      <div className="absolute left-0 right-0 bottom-0 p-3 bg-gradient-to-t from-black/70 to-transparent">
-                        <h4 className="text-sm font-bold text-white truncate">{entry.role}</h4>
-                        <p className="text-xs text-[#d1d1d1] truncate">{entry.org}</p>
-                      </div>
-                    </div>
-
-                    <div
-                      className="absolute inset-0 rounded-xl border p-5 bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-white flex flex-col overflow-y-auto"
-                      style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
-                    >
-                      <h4 className="text-base font-bold text-white leading-tight">{entry.org}</h4>
-                      <p className="mt-2 text-sm leading-relaxed text-[#e0e0e0] flex-1">{entry.companyAbout}</p>
-                      <div className="mt-3">
-                        <p className="text-xs font-semibold text-[#1db954] uppercase tracking-wide">Key highlights:</p>
-                        <ul className="mt-2 text-xs list-disc list-inside text-[#d0d0d0] space-y-1">
-                          {entry.highlights.slice(0, 3).map((h) => (
-                            <li key={h} className="text-[#d0d0d0]">{h}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </Motion.div>
-                </button>
-              </div>
-            )
-          })}
-        </div>
-      </section>
-
-      <section
-        id="education"
-        ref={(element) => registerSection('education', element)}
-      >
-        <h3 className="text-xl font-bold text-white">Education</h3>
-        <p className="mt-2 text-sm text-[var(--text-secondary)]">
-          Dynamic view: this section rotates automatically and can also be switched manually.
-        </p>
-        <div className="mt-4 grid gap-4 lg:grid-cols-[280px_1fr]">
-          <div className="space-y-3">
-            {educationItems.map((item) => {
-              const isActive = item.id === selectedEducationId
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setSelectedEducationId(item.id)}
-                  className={`w-full rounded-xl border p-4 text-left transition ${
-                    isActive
-                      ? 'border-[#1db954]/55 bg-[var(--surface-hover)] shadow-[0_14px_30px_rgba(29,185,84,0.22)]'
-                      : 'border-white/8 bg-[var(--surface)] hover:border-white/20 hover:bg-[var(--surface-hover)]'
-                  }`}
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{item.badge}</p>
-                  <h4 className="mt-2 text-sm font-bold text-white">{item.title}</h4>
-                  <p className="mt-1 text-xs text-[var(--text-secondary)]">{item.provider}</p>
-                </button>
-              )
-            })}
-          </div>
-
-          <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface)]">
-            <div className={`relative bg-gradient-to-br ${selectedEducation.color} p-5`}>
-              <div className="pointer-events-none absolute inset-0 bg-black/35" />
-              <div className="relative flex items-center gap-4">
-                {selectedEducation.logo && !educationLogoFailed ? (
-                  <img
-                    src={selectedEducation.logo}
-                    alt={`${selectedEducation.provider} logo`}
-                    className="h-14 w-14 rounded-md border border-white/20 bg-white/95 object-contain p-1"
-                    onError={() => setEducationLogoFailed(true)}
-                  />
-                ) : (
-                  <div className="grid h-14 w-14 place-items-center rounded-md border border-dashed border-white/45 bg-black/35 text-[10px] font-semibold uppercase tracking-[0.08em] text-white/85">
-                    Add UW Logo
-                  </div>
-                )}
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#d9d9d9]">Education Spotlight</p>
-                  <h4 className="mt-1 text-xl font-black text-white sm:text-2xl">{selectedEducation.title}</h4>
-                  <p className="text-sm text-[#d9d9d9]">{selectedEducation.provider} • {selectedEducation.period}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-5 p-5">
-              <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{selectedEducation.details}</p>
-
-              {selectedEducation.schoolHighlights ? (
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">School Accomplishments</p>
-                  <ul className="mt-2 space-y-2 text-sm text-[var(--text-secondary)]">
-                    {selectedEducation.schoolHighlights.map((item) => (
-                      <li key={item}>- {item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-
-              {selectedEducation.degreeOverview ? (
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Physics Degree Overview</p>
-                  <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{selectedEducation.degreeOverview}</p>
-                </div>
-              ) : null}
-
-              {selectedEducation.learningModules ? (
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">What I Learn</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {selectedEducation.learningModules.map((topic) => (
-                      <span key={topic} className="rounded-full bg-black/25 px-3 py-1 text-xs text-white">
-                        {topic}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              {selectedEducation.classesTaken ? (
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">Classes Taken</p>
-                  <ul className="mt-2 space-y-2 text-sm text-[var(--text-secondary)]">
-                    {selectedEducation.classesTaken.map((course) => (
-                      <li key={course}>- {course}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-            </div>
-          </article>
-        </div>
-      </section>
-
-      {/* TODO: Replace with real profile photo */}
-    </Motion.div>
-  )
-}
-
-function LoginView({ onEnter }) {
-  const [loginPhotoFailed, setLoginPhotoFailed] = useState(false)
-
-  return (
-    <Motion.div
-      key="login"
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -18 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--bg)] px-4"
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(29,185,84,0.08),transparent_60%)]" />
-      <div className="w-full max-w-md rounded-2xl border border-white/5 bg-[var(--surface)]/95 p-8 shadow-[0_30px_80px_rgba(0,0,0,0.6)] backdrop-blur-sm sm:p-10">
-        <div className="mb-10 text-center">
-          <div className="mx-auto mb-6 h-16 w-16 overflow-hidden rounded-full border border-white/20 bg-black/25">
-            {loginPhotoFailed ? (
-              <div className="flex h-full w-full items-center justify-center bg-white text-2xl font-extrabold text-black">S.</div>
-            ) : (
-              <img
-                src="/about/IMG_9431.jpeg"
-                alt="Saillesh"
-                className="h-full w-full object-cover"
-                onError={() => setLoginPhotoFailed(true)}
-              />
-            )}
-          </div>
-          <h1 className="text-balance text-3xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-4xl">
-            Welcome to Saillesh&apos;s Page
-          </h1>
-          <p className="mt-3 text-sm text-[var(--text-secondary)] sm:text-base">Developer. Creator. Explorer.</p>
-        </div>
-        <button
-          type="button"
-          onClick={onEnter}
-          className="w-full cursor-pointer rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-bold tracking-wide text-black transition duration-200 ease-out hover:scale-[1.01] hover:bg-[#22d060]"
-        >
-          Connect with Me
-        </button>
-        <p className="mt-8 text-center text-xs text-[var(--text-muted)] sm:text-sm">
-          Here to explore? You&apos;re already in.
-        </p>
-      </div>
-    </Motion.div>
-  )
-}
 
 function AppLayout() {
   const [activePill, setActivePill] = useState('About Me')
-  const [activeSide, setActiveSide] = useState('Projects')
   const [activePage, setActivePage] = useState('about')
   const [transitioning, setTransitioning] = useState(false)
   const [scrollTop, setScrollTop] = useState(0)
 
   const scrollContainerRef = useRef(null)
-  const sectionRefs = useRef({})
+  const scrollRAFRef = useRef(null)
 
-  const visitorGreeting = useMemo(() => getGreeting(), [])
-
-  useEffect(() => {
-    if (activePage !== 'home') return undefined
-
-    const root = scrollContainerRef.current
-    if (!root) return undefined
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let winningEntry = null
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            if (!winningEntry || entry.intersectionRatio > winningEntry.intersectionRatio) {
-              winningEntry = entry
-            }
-          }
-        }
-
-        if (!winningEntry) return
-
-        const nextPill = navPills.find((pill) => pillToId[pill] === winningEntry.target.id)
-        if (nextPill) {
-          setActivePill(nextPill)
-        }
-      },
-      {
-        root,
-        threshold: [0.25, 0.4, 0.6, 0.8],
-        rootMargin: '-88px 0px -30% 0px',
-      },
-    )
-
-    Object.keys(pillToId).forEach((pill) => {
-      const section = sectionRefs.current[pillToId[pill]]
-      if (section) observer.observe(section)
+  const handleScroll = (event) => {
+    if (scrollRAFRef.current) {
+      cancelAnimationFrame(scrollRAFRef.current)
+    }
+    scrollRAFRef.current = requestAnimationFrame(() => {
+      setScrollTop(event.currentTarget.scrollTop)
     })
-
-    return () => observer.disconnect()
-  }, [activePage])
-
-  const scrollToPillSection = (pill) => {
-    const container = scrollContainerRef.current
-    const sectionId = pillToId[pill]
-    const section = sectionRefs.current[sectionId]
-    if (!container || !section) return
-
-    const top = Math.max(section.offsetTop - 96, 0)
-    container.scrollTo({ top, behavior: 'smooth' })
-  }
-
-  const registerSection = (id, element) => {
-    sectionRefs.current[id] = element
-  }
-
-  const goHomeAndScrollTo = (pill) => {
-    setActivePage('home')
-    setTimeout(() => {
-      setActivePill(pill)
-      if (pill === 'Education' || pill === 'Experience') {
-        setActiveSide(pill)
-      }
-      scrollToPillSection(pill)
-      setTimeout(() => setTransitioning(false), 220)
-    }, 120)
   }
 
   const handlePillClick = (pill) => {
     setTransitioning(true)
+
+    if (pill === 'Hi') {
+      setActivePill('Hi')
+      setActivePage('about')
+      scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      setTimeout(() => setTransitioning(false), 400)
+      return
+    }
 
     if (pill === 'About Me') {
       setActivePill('About Me')
@@ -1963,31 +1102,14 @@ function AppLayout() {
 
     if (pill === 'Projects') {
       setActivePill('Projects')
-      setActiveSide('Projects')
       setActivePage('projects')
       scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
       setTimeout(() => setTransitioning(false), 400)
       return
     }
 
-    if (activePage !== 'home') {
-      goHomeAndScrollTo(pill)
-      return
-    }
 
-    setActivePill(pill)
-
-    if (pill === 'Projects' || pill === 'Education' || pill === 'Experience') {
-      setActiveSide(pill)
-    }
-
-    scrollToPillSection(pill)
-    setTimeout(() => setTransitioning(false), 220)
-  }
-
-  const handleSideClick = (label) => {
-    setActiveSide(label)
-    handlePillClick('Projects')
+    setTransitioning(false)
   }
 
   return (
@@ -2002,8 +1124,8 @@ function AppLayout() {
       <div className="grid min-h-screen grid-cols-1">
         <div
           ref={scrollContainerRef}
-          onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}
-          style={{ backgroundColor: activePage === 'projects' ? '#141414' : '#121212' }}
+          onScroll={handleScroll}
+          style={{ backgroundColor: activePage === 'projects' ? '#141414' : '#121212', scrollBehavior: 'smooth' }}
           className="relative h-screen overflow-y-auto transition-colors duration-300"
         >
           <Motion.header
@@ -2044,7 +1166,6 @@ function AppLayout() {
                 <ProjectsPage
                   key="projects-screen"
                   scrollTop={scrollTop}
-                  onBack={() => handlePillClick('About Me')}
                 />
               ) : activePage === 'about' ? (
                 <Motion.div
@@ -2058,13 +1179,7 @@ function AppLayout() {
                     onOpenProjects={() => handlePillClick('Projects')}
                   />
                 </Motion.div>
-              ) : (
-                <DefaultPortfolioContent
-                  key="home-screen"
-                  registerSection={registerSection}
-                  visitorGreeting={visitorGreeting}
-                />
-              )}
+              ) : null}
             </AnimatePresence>
           </Motion.main>
         </div>
