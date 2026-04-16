@@ -1303,10 +1303,7 @@ function AboutArtistPage({ onOpenProjects }) {
           return next
         })
       },
-      {
-        threshold: [0.2, 0.35, 0.55],
-        rootMargin: '-8% 0px -8% 0px',
-      },
+      { threshold: [0.2, 0.35, 0.55], rootMargin: '-10% 0px -10% 0px' },
     )
 
     const nodes = sectionRefs.current.filter(Boolean)
@@ -1324,64 +1321,34 @@ function AboutArtistPage({ onOpenProjects }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="-mx-4 sm:-mx-8"
+      className="-mx-4 bg-[#090909] text-white sm:-mx-8"
     >
-      <div className="snap-y snap-mandatory scroll-smooth bg-[#f5f5f7] text-[#111111]">
+      <div className="scroll-smooth bg-[#090909]">
         <section
           ref={(node) => {
             sectionRefs.current[0] = node
           }}
           data-story="intro"
-          className="relative flex min-h-screen snap-start items-center justify-center px-6 text-center sm:px-10"
+          className="relative min-h-[120vh]"
         >
-          <img
-            src="/about/IMG_6712.jpeg"
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_22%,rgba(0,113,227,0.28),transparent_34%),radial-gradient(circle_at_78%_76%,rgba(236,72,153,0.22),transparent_42%),linear-gradient(180deg,rgba(245,245,247,0.72),rgba(245,245,247,0.86))]" />
-          <Motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={isVisible('intro') ? { opacity: 1, y: 0 } : { opacity: 0.15, y: 18 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative max-w-4xl"
-          >
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-black/45">About</p>
-            <h1 className="mt-5 text-5xl font-semibold tracking-[-0.04em] text-black sm:text-7xl lg:text-8xl">Hi, I&apos;m Sai</h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base text-black/65 sm:text-xl">
-              I build thoughtful software experiences where physics precision meets product clarity.
-            </p>
-          </Motion.div>
-        </section>
-
-        <section
-          ref={(node) => {
-            sectionRefs.current[1] = node
-          }}
-          data-story="what-i-do"
-          className="relative flex min-h-screen snap-start items-center px-6 sm:px-10"
-        >
-          <img
-            src="/about/IMG_0268.jpeg"
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute right-0 top-0 h-full w-[60%] object-cover opacity-25"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_30%,rgba(249,115,22,0.22),transparent_42%),linear-gradient(120deg,rgba(245,245,247,0.94)_40%,rgba(245,245,247,0.66))]" />
-          <div className="mx-auto w-full max-w-5xl">
+          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center justify-center overflow-hidden px-6 text-center sm:px-10">
+            <img
+              src="/about/IMG_6712.jpeg"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_24%_18%,rgba(192,132,252,0.24),transparent_40%),radial-gradient(circle_at_78%_80%,rgba(251,191,36,0.18),transparent_44%),linear-gradient(180deg,rgba(5,5,5,0.62),rgba(5,5,5,0.9))]" />
             <Motion.div
-              initial={{ opacity: 0, y: 32 }}
-              animate={isVisible('what-i-do') ? { opacity: 1, y: 0 } : { opacity: 0.12, y: 20 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 36 }}
+              animate={isVisible('intro') ? { opacity: 1, y: 0 } : { opacity: 0.15, y: 20 }}
+              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
               className="relative"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-black/45">What I Do</p>
-              <h2 className="mt-5 max-w-4xl text-4xl font-semibold tracking-[-0.03em] text-black sm:text-6xl lg:text-7xl">
-                I design and ship systems that stay simple under real-world complexity.
-              </h2>
-              <p className="mt-6 max-w-2xl text-base text-black/65 sm:text-xl">
-                From quantitative tooling to modern web experiences, I focus on clarity, speed, and reliability.
+              <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-white/60">About Me</p>
+              <h1 className="mt-6 text-6xl font-semibold tracking-[-0.04em] text-white sm:text-8xl lg:text-9xl">Sai</h1>
+              <p className="mx-auto mt-6 max-w-2xl text-base tracking-[0.02em] text-white/70 sm:text-xl">
+                Software crafted with precision, calm, and intent.
               </p>
             </Motion.div>
           </div>
@@ -1389,33 +1356,63 @@ function AboutArtistPage({ onOpenProjects }) {
 
         <section
           ref={(node) => {
+            sectionRefs.current[1] = node
+          }}
+          data-story="identity"
+          className="relative min-h-[120vh]"
+        >
+          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
+            <img
+              src="/about/IMG_0235.jpeg"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-26"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_30%,rgba(14,165,233,0.2),transparent_38%),linear-gradient(170deg,rgba(9,9,9,0.75),rgba(9,9,9,0.92))]" />
+            <div className="relative mx-auto w-full max-w-6xl">
+              <div className="space-y-5 sm:space-y-7">
+                {['Developer', 'Designer', 'Builder'].map((word, index) => (
+                  <Motion.p
+                    key={word}
+                    initial={{ opacity: 0, y: 28 }}
+                    animate={isVisible('identity') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 16 }}
+                    transition={{ duration: 0.85, delay: index * 0.16, ease: [0.22, 1, 0.36, 1] }}
+                    className="text-4xl font-semibold tracking-[-0.02em] text-white/92 sm:text-6xl lg:text-7xl"
+                  >
+                    {word}
+                  </Motion.p>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          ref={(node) => {
             sectionRefs.current[2] = node
           }}
-          data-story="skills"
-          className="relative flex min-h-screen snap-start items-center px-6 sm:px-10"
+          data-story="build"
+          className="relative min-h-[120vh]"
         >
-          <img
-            src="/about/IMG_0235.jpeg"
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-18"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(34,197,94,0.24),transparent_36%),radial-gradient(circle_at_85%_30%,rgba(14,165,233,0.22),transparent_40%),linear-gradient(180deg,rgba(245,245,247,0.9),rgba(245,245,247,0.92))]" />
-          <div className="mx-auto w-full max-w-5xl">
-            <p className="relative text-xs font-semibold uppercase tracking-[0.22em] text-black/45">Skills</p>
-            <div className="mt-8 flex flex-wrap gap-3 sm:gap-4">
-              {['Python', 'Machine Learning', 'React', 'System Design', 'Data Modeling', 'Automation'].map((skill, index) => (
-                <Motion.span
-                  key={skill}
-                  initial={{ opacity: 0, y: 22 }}
-                  animate={isVisible('skills') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 14 }}
-                  transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                  className="rounded-full border border-black/10 bg-white/70 px-5 py-2 text-sm font-medium text-black/85 shadow-[0_6px_20px_rgba(0,0,0,0.05)] backdrop-blur-sm sm:text-base"
-                >
-                  {skill}
-                </Motion.span>
-              ))}
-            </div>
+          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
+            <img
+              src="/about/IMG_0268.jpeg"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-20"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_76%_24%,rgba(56,189,248,0.2),transparent_36%),linear-gradient(180deg,rgba(9,9,9,0.78),rgba(9,9,9,0.94))]" />
+            <Motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={isVisible('build') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 14 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="relative mx-auto w-full max-w-6xl"
+            >
+              <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/55">What I Build</p>
+              <h2 className="mt-6 max-w-5xl text-4xl font-semibold leading-[1.06] tracking-[-0.03em] text-white sm:text-6xl lg:text-7xl">
+                I build intelligent products that make complexity feel effortless.
+              </h2>
+            </Motion.div>
           </div>
         </section>
 
@@ -1423,25 +1420,33 @@ function AboutArtistPage({ onOpenProjects }) {
           ref={(node) => {
             sectionRefs.current[3] = node
           }}
-          data-story="philosophy"
-          className="relative flex min-h-screen snap-start items-center px-6 sm:px-10"
+          data-story="skills"
+          className="relative min-h-[120vh]"
         >
-          <img
-            src="/about/IMG_9654.jpeg"
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-24"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_78%,rgba(168,85,247,0.28),transparent_34%),linear-gradient(160deg,rgba(17,24,39,0.08),rgba(245,245,247,0.84))]" />
-          <div className="mx-auto w-full max-w-6xl">
-            <Motion.p
-              initial={{ opacity: 0, y: 24 }}
-              animate={isVisible('philosophy') ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 14 }}
-              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-              className="relative text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-black sm:text-6xl lg:text-8xl"
-            >
-              Build less noise. Ship more meaning.
-            </Motion.p>
+          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
+            <img
+              src="/about/IMG_9368.jpeg"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-18"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(192,132,252,0.2),transparent_35%),radial-gradient(circle_at_80%_76%,rgba(45,212,191,0.16),transparent_40%),linear-gradient(180deg,rgba(9,9,9,0.86),rgba(9,9,9,0.96))]" />
+            <div className="relative mx-auto w-full max-w-6xl">
+              <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/55">Skills</p>
+              <div className="mt-8 flex flex-wrap gap-4 sm:gap-5">
+                {['Python', 'ML Systems', 'React', 'Data Modeling', 'System Design', 'Automation'].map((skill, index) => (
+                  <Motion.span
+                    key={skill}
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={isVisible('skills') ? { opacity: 1, y: 0 } : { opacity: 0.07, y: 16 }}
+                    transition={{ duration: 0.72, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className="rounded-full border border-white/25 bg-white/10 px-6 py-2.5 text-sm font-medium tracking-[0.03em] text-white/90 backdrop-blur-sm sm:text-base"
+                  >
+                    {skill}
+                  </Motion.span>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1449,33 +1454,59 @@ function AboutArtistPage({ onOpenProjects }) {
           ref={(node) => {
             sectionRefs.current[4] = node
           }}
-          data-story="projects"
-          className="relative flex min-h-screen snap-start items-center px-6 pb-20 sm:px-10"
+          data-story="philosophy"
+          className="relative min-h-[120vh]"
         >
-          <img
-            src="/about/IMG_9368.jpeg"
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-28"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_24%,rgba(251,191,36,0.22),transparent_36%),radial-gradient(circle_at_20%_80%,rgba(16,185,129,0.22),transparent_42%),linear-gradient(180deg,rgba(245,245,247,0.74),rgba(245,245,247,0.88))]" />
-          <div className="mx-auto w-full max-w-5xl">
+          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
+            <img
+              src="/about/IMG_9654.jpeg"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-22"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_24%_70%,rgba(251,146,60,0.2),transparent_35%),linear-gradient(180deg,rgba(9,9,9,0.82),rgba(9,9,9,0.96))]" />
+            <div className="mx-auto w-full max-w-7xl">
+              <Motion.p
+                initial={{ opacity: 0, y: 28 }}
+                animate={isVisible('philosophy') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 18 }}
+                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                className="relative text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-white sm:text-7xl lg:text-9xl"
+              >
+                Quiet precision. Powerful outcomes.
+              </Motion.p>
+            </div>
+          </div>
+        </section>
+
+        <section
+          ref={(node) => {
+            sectionRefs.current[5] = node
+          }}
+          data-story="cta"
+          className="relative min-h-[120vh]"
+        >
+          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center justify-center overflow-hidden px-6 text-center sm:px-10">
+            <img
+              src="/about/IMG_0146.jpg"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-14"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(59,130,246,0.17),transparent_36%),linear-gradient(180deg,rgba(9,9,9,0.84),rgba(9,9,9,0.98))]" />
             <Motion.div
-              initial={{ opacity: 0, y: 28 }}
-              animate={isVisible('projects') ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 18 }}
-              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 24 }}
+              animate={isVisible('cta') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 16 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="relative"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-black/45">Projects</p>
-              <h3 className="mt-5 max-w-4xl text-4xl font-semibold tracking-[-0.03em] text-black sm:text-6xl lg:text-7xl">
-                Explore the systems, experiments, and products I&apos;ve been building.
-              </h3>
+              <p className="text-[11px] font-medium uppercase tracking-[0.32em] text-white/60">Next</p>
+              <h3 className="mt-6 text-4xl font-semibold tracking-[-0.03em] text-white sm:text-6xl">View My Work</h3>
               <button
                 type="button"
                 onClick={onOpenProjects}
-                className="mt-10 rounded-full bg-black px-7 py-3 text-sm font-semibold text-white transition hover:bg-black/85 sm:text-base"
+                className="mt-10 rounded-full border border-white/30 bg-white/10 px-8 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-black sm:text-base"
               >
-                View Projects
+                View My Work
               </button>
             </Motion.div>
           </div>
