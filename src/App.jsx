@@ -12,7 +12,6 @@ import {
   Info,
   Instagram,
   Linkedin,
-  Mail,
   MoreHorizontal,
   Play,
   Plus,
@@ -23,7 +22,7 @@ import {
 } from 'lucide-react'
 
 const Motion = motion
-const navPills = ['About Me', 'Projects', 'Contact']
+const navPills = ['About Me', 'Projects']
 const resumeUrl = '/resume/Saillesh_dev_resume.pdf'
 
 const aboutData = {
@@ -299,7 +298,6 @@ const contactData = {
 
 const sideNav = [
   { icon: Wrench, label: 'Projects' },
-  { icon: Mail, label: 'Contact' },
 ]
 
 const pinned = [
@@ -1288,7 +1286,7 @@ function CountUpValue({ value, suffix = '' }) {
   )
 }
 
-function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
+function AboutArtistPage({ onOpenProjects, setActivePill }) {
   const [activeTab, setActiveTab] = useState('About Me')
   const [expandedWho, setExpandedWho] = useState(1)
   const [activeInspiration, setActiveInspiration] = useState(null)
@@ -1431,12 +1429,11 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
           <button
             type="button"
             onClick={() => {
-              setActivePill('Contact')
-              onOpenContact()
+              onOpenProjects()
             }}
             className="rounded-full border border-white/30 px-6 py-2 text-sm font-semibold text-white transition hover:border-white/55"
           >
-            Connect
+            View Projects
           </button>
 
           <button
@@ -1575,13 +1572,13 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="relative overflow-hidden rounded-xl border border-white/8 bg-[#181818] p-6"
+              className="relative overflow-hidden rounded-[24px] bg-white/[0.04] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-7"
             >
-              <div className="pointer-events-none absolute inset-0 opacity-45">
-                <div className="h-full w-full bg-[radial-gradient(circle_at_80%_20%,rgba(29,185,84,0.18),transparent_44%),linear-gradient(150deg,#1f2937,#121212)] blur-sm" />
+              <div className="pointer-events-none absolute inset-0 opacity-65">
+                <div className="h-full w-full bg-[radial-gradient(circle_at_16%_22%,rgba(45,212,191,0.14),transparent_42%),radial-gradient(circle_at_83%_78%,rgba(99,102,241,0.14),transparent_50%),linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))]" />
               </div>
-              <div className="relative mx-auto grid max-w-5xl gap-6 lg:grid-cols-[280px_1fr]">
-                <div className="overflow-hidden rounded-xl border border-white/10 bg-black/30">
+              <div className="relative mx-auto grid max-w-5xl gap-7 lg:grid-cols-[280px_1fr] lg:gap-10">
+                <div className="overflow-hidden rounded-2xl bg-black/30 ring-1 ring-white/10">
                   {bioPhotoFailed ? (
                     <div className="grid aspect-[4/5] place-items-center text-xs uppercase tracking-[0.18em] text-[#8e8e8e]">
                       Photo Unavailable
@@ -1596,33 +1593,56 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
                   )}
                 </div>
 
-                <div>
-                  <h3 className="text-2xl font-bold text-white">Biography</h3>
-                  {aboutData.bio.map((paragraph) => (
-                    <p key={paragraph} className="mt-4 text-sm leading-relaxed text-[#dfdfdf] sm:text-base">
-                      {paragraph}
-                    </p>
-                  ))}
-                  <div className="mt-7">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9e9e9e]">Currently Obsessed With</p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {['Python', 'LLMs', 'Quantum Computing', 'Systems Design'].map((tag) => (
-                        <span key={tag} className="rounded-full bg-white/10 px-3 py-1 text-xs text-white">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                <div className="flex flex-col justify-center">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/65">About Me</p>
+                  <h3 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Physics-minded builder creating focused digital experiences.</h3>
+                  <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/82 sm:text-base">
+                    I blend first-principles thinking from physics with practical software engineering.
+                    I enjoy building systems that are clear, reliable, and genuinely useful.
+                    Most days I am exploring AI workflows, quantitative tooling, and polished product UX.
+                  </p>
+
+                  <div className="mt-6 flex flex-wrap gap-2.5">
+                    {['Python', 'Machine Learning', 'Systems Design', 'Quant Modeling', 'UI Engineering', 'Automation'].map((chip) => (
+                      <span
+                        key={chip}
+                        className="rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-medium tracking-[0.02em] text-white/92 transition hover:-translate-y-0.5 hover:bg-white/16"
+                      >
+                        {chip}
+                      </span>
+                    ))}
                   </div>
-                  <div className="mt-7 flex items-center gap-3">
-                    <a href="https://github.com/ssaillesh" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white hover:border-white/45">
-                      <Github size={16} />
-                    </a>
-                    <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white hover:border-white/45">
-                      <Linkedin size={16} />
-                    </a>
-                    <a href="https://instagram.com" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white hover:border-white/45">
-                      <Instagram size={16} />
-                    </a>
+
+                  <div className="mt-7 grid gap-3 sm:grid-cols-3">
+                    {[
+                      { label: 'Projects', value: '8+' },
+                      { label: 'Focus', value: 'AI + Physics' },
+                      { label: 'Interests', value: 'Build • Learn • Ship' },
+                    ].map((stat) => (
+                      <article key={stat.label} className="rounded-2xl bg-black/22 px-4 py-3 ring-1 ring-white/10">
+                        <p className="text-[11px] uppercase tracking-[0.16em] text-white/55">{stat.label}</p>
+                        <p className="mt-1 text-sm font-semibold text-white">{stat.value}</p>
+                      </article>
+                    ))}
+                  </div>
+
+                  <div className="mt-7 flex flex-wrap items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={onOpenProjects}
+                      className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90"
+                    >
+                      View Projects
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        window.open(`mailto:${contactData.email}`, '_self')
+                      }}
+                      className="rounded-full bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/16"
+                    >
+                      Contact
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1669,84 +1689,15 @@ function AboutArtistPage({ onOpenProjects, onOpenContact, setActivePill }) {
   )
 }
 
-function CombinedAboutJourneyPage({ onOpenProjects, onOpenContact, setActivePill, registerSection, visitorGreeting }) {
+function CombinedAboutJourneyPage({ onOpenProjects, setActivePill, registerSection, visitorGreeting }) {
   return (
     <>
       <AboutArtistPage
         onOpenProjects={onOpenProjects}
-        onOpenContact={onOpenContact}
         setActivePill={setActivePill}
       />
       <DefaultPortfolioContent registerSection={registerSection} visitorGreeting={visitorGreeting} />
     </>
-  )
-}
-
-function ContactPage() {
-  return (
-    <Motion.div
-      key="contact-page"
-      initial={{ opacity: 0, x: 24 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -18 }}
-      transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="-mx-4 -mt-6 min-h-[70vh] bg-[linear-gradient(180deg,#1a1a1a_0%,#121212_35%)] px-4 pb-10 pt-8 sm:-mx-8 sm:px-8"
-    >
-      <div className="mx-auto max-w-5xl">
-        <div className="rounded-2xl border border-white/8 bg-[var(--surface)] p-6 sm:p-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">Contact</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">{contactData.headline}</h2>
-              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] sm:text-base">{contactData.subheading}</p>
-            </div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-black/30 px-3 py-1.5 text-xs font-semibold text-[var(--text-secondary)] sm:text-sm">
-              <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
-              {contactData.status}
-            </span>
-          </div>
-
-          <div className="mt-7 grid gap-4 md:grid-cols-2">
-            <article className="rounded-xl border border-white/8 bg-black/20 p-5 transition hover:-translate-y-1 hover:border-[var(--accent)]/35 hover:shadow-[0_14px_30px_rgba(29,185,84,0.2)]">
-              <Linkedin size={24} className="text-white" />
-              <h3 className="mt-4 text-xl font-bold text-white">Let&apos;s Connect</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
-                Find me on LinkedIn. I am always happy to connect with fellow developers, physicists, and curious minds.
-              </p>
-              <a
-                href={contactData.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-flex items-center rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-black transition hover:bg-[#21ce60]"
-              >
-                Connect on LinkedIn
-              </a>
-            </article>
-
-            <article className="rounded-xl border border-white/8 bg-black/20 p-5 transition hover:-translate-y-1 hover:border-[var(--accent)]/35 hover:shadow-[0_14px_30px_rgba(29,185,84,0.2)]">
-              <Mail size={24} className="text-white" />
-              <h3 className="mt-4 text-xl font-bold text-white">Drop Me a Line</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
-                Slide into my inbox, whether it is a collaboration, opportunity, or just a good conversation. I read everything.
-              </p>
-              <p className="mt-4 inline-flex rounded-md bg-black/25 px-3 py-1.5 text-sm font-semibold text-[var(--accent)]">{contactData.email}</p>
-              <a
-                href={`mailto:${contactData.email}`}
-                className="mt-4 inline-flex items-center rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-black transition hover:bg-[#21ce60]"
-              >
-                Send an Email
-              </a>
-              <p className="mt-3 text-xs italic text-[var(--text-muted)]">P.S. I actually read my emails.</p>
-            </article>
-          </div>
-
-          <article className="mt-4 rounded-xl border border-white/8 bg-black/20 p-5">
-            <p className="text-sm leading-relaxed text-[var(--text-secondary)] sm:text-base">{contactData.personalNote} The worst I&apos;ll say is I&apos;m busy. The best? We build something cool together.</p>
-          </article>
-        </div>
-      </div>
-      {/* TODO: Add LinkedIn URL */}
-    </Motion.div>
   )
 }
 
@@ -2172,7 +2123,7 @@ function AppLayout() {
     setActivePage('home')
     setTimeout(() => {
       setActivePill(pill)
-      if (pill === 'Education' || pill === 'Experience' || pill === 'Contact') {
+      if (pill === 'Education' || pill === 'Experience') {
         setActiveSide(pill)
       }
       scrollToPillSection(pill)
@@ -2188,15 +2139,6 @@ function AppLayout() {
       setActivePage('about')
       scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
       setTimeout(() => setTransitioning(false), 400)
-      return
-    }
-
-    if (pill === 'Contact') {
-      setActivePill('Contact')
-      setActiveSide('Contact')
-      setActivePage('contact')
-      scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-      setTimeout(() => setTransitioning(false), 280)
       return
     }
 
@@ -2216,7 +2158,7 @@ function AppLayout() {
 
     setActivePill(pill)
 
-    if (pill === 'Projects' || pill === 'Education' || pill === 'Experience' || pill === 'Contact') {
+    if (pill === 'Projects' || pill === 'Education' || pill === 'Experience') {
       setActiveSide(pill)
     }
 
@@ -2226,11 +2168,7 @@ function AppLayout() {
 
   const handleSideClick = (label) => {
     setActiveSide(label)
-    if (label === 'Projects') {
-      handlePillClick('Projects')
-      return
-    }
-    handlePillClick('Contact')
+    handlePillClick('Projects')
   }
 
   return (
@@ -2303,8 +2241,6 @@ function AppLayout() {
                   scrollTop={scrollTop}
                   onBack={() => handlePillClick('About Me')}
                 />
-              ) : activePage === 'contact' ? (
-                <ContactPage key="contact-screen" />
               ) : activePage === 'about' ? (
                 <Motion.div
                   key="about-screen"
@@ -2315,7 +2251,6 @@ function AppLayout() {
                 >
                   <CombinedAboutJourneyPage
                     onOpenProjects={() => handlePillClick('Projects')}
-                    onOpenContact={() => handlePillClick('Contact')}
                     setActivePill={setActivePill}
                     registerSection={registerSection}
                     visitorGreeting={visitorGreeting}
@@ -2358,13 +2293,11 @@ function AppLayout() {
 
             <p className="ml-3">
               Now Playing:{' '}
-              <span className="font-semibold text-white">
-                {activePage === 'contact' ? 'Contact.mp3 - Saillesh Palani' : "Saillesh's Portfolio v1.0"}
-              </span>
+              <span className="font-semibold text-white">Saillesh&apos;s Portfolio v1.0</span>
             </p>
           </div>
 
-          <p>{activePage === 'contact' ? 'Signal strength: Stable' : 'Bottom playbar coming soon'}</p>
+          <p>Bottom playbar coming soon</p>
         </div>
       </div>
       {/* TODO: Add bottom playbar section */}
@@ -2373,26 +2306,15 @@ function AppLayout() {
 }
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-
   useEffect(() => {
     document.documentElement.style.background = '#121212'
   }, [])
 
-  const enterApp = () => {
-    // Force a clean state flip; avoids stale closures if rapid clicks happen.
-    setIsLoggedIn(() => true)
-  }
-
-  if (isLoggedIn) {
-    return (
-      <AppErrorBoundary>
-        <AppLayout />
-      </AppErrorBoundary>
-    )
-  }
-
-  return <LoginView onEnter={enterApp} />
+  return (
+    <AppErrorBoundary>
+      <AppLayout />
+    </AppErrorBoundary>
+  )
 }
 
 export default App
