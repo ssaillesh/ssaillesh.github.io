@@ -1131,8 +1131,11 @@ function AppLayout() {
                 <Motion.div
                   layout
                   layoutId="switch-background"
-                  className="absolute inset-y-1 left-1 right-1/2 rounded-full bg-white"
-                  animate={{ x: activePage === 'projects' ? '100%' : 0 }}
+                  className="absolute inset-y-1 left-1 right-1/2 rounded-full"
+                  animate={{
+                    x: activePage === 'projects' ? '100%' : 0,
+                    backgroundColor: activePage === 'about' ? '#3B82F6' : '#F59E0B',
+                  }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 />
                 <button
@@ -1140,7 +1143,7 @@ function AppLayout() {
                   onClick={() => handlePillClick('About Me')}
                   className={`relative z-10 rounded-full px-4 py-1.5 text-xs font-semibold transition sm:text-sm ${
                     activePage === 'about'
-                      ? 'text-black'
+                      ? 'text-white'
                       : 'text-white/80 hover:text-white'
                   }`}
                 >
@@ -1151,7 +1154,7 @@ function AppLayout() {
                   onClick={() => handlePillClick('Projects')}
                   className={`relative z-10 rounded-full px-4 py-1.5 text-xs font-semibold transition sm:text-sm ${
                     activePage === 'projects'
-                      ? 'text-black'
+                      ? 'text-white'
                       : 'text-white/80 hover:text-white'
                   }`}
                 >
