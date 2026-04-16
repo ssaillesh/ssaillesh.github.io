@@ -1286,39 +1286,36 @@ function CountUpValue({ value, suffix = '' }) {
   )
 }
 
-function AboutArtistPage({ onOpenProjects, setActivePill }) {
-  const [activeTab, setActiveTab] = useState('About Me')
-  const [expandedWho, setExpandedWho] = useState(1)
-  const [activeInspiration, setActiveInspiration] = useState(null)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [surpriseFlash, setSurpriseFlash] = useState(null)
-  const [portraitLoadFailed, setPortraitLoadFailed] = useState(false)
-  const [activeMomentIndex, setActiveMomentIndex] = useState(0)
-  const [momentLoadFailed, setMomentLoadFailed] = useState(false)
-  const [bioPhotoFailed, setBioPhotoFailed] = useState(false)
-
-  const activeMoment = aboutPhotoMoments[activeMomentIndex]
+function AboutArtistPage({ onOpenProjects }) {
+  const sectionRefs = useRef([])
+  const [visibleSections, setVisibleSections] = useState({})
 
   useEffect(() => {
-    if (aboutPhotoMoments.length <= 1) return undefined
+    const observer = new IntersectionObserver(
+      (entries) => {
+        setVisibleSections((prev) => {
+          const next = { ...prev }
+          for (const entry of entries) {
+            const key = entry.target.getAttribute('data-story')
+            if (!key) continue
+            next[key] = entry.isIntersecting && entry.intersectionRatio > 0.3
+          }
+          return next
+        })
+      },
+      {
+        threshold: [0.2, 0.35, 0.55],
+        rootMargin: '-8% 0px -8% 0px',
+      },
+    )
 
-    const timer = setInterval(() => {
-      setActiveMomentIndex((current) => (current + 1) % aboutPhotoMoments.length)
-    }, 4300)
+    const nodes = sectionRefs.current.filter(Boolean)
+    nodes.forEach((node) => observer.observe(node))
 
-    return () => clearInterval(timer)
+    return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    setMomentLoadFailed(false)
-  }, [activeMomentIndex])
-
-  const surpriseMe = () => {
-    const pick = aboutData.whoIAm[Math.floor(Math.random() * aboutData.whoIAm.length)]
-    setExpandedWho(pick.id)
-    setSurpriseFlash(pick.id)
-    setTimeout(() => setSurpriseFlash(null), 1200)
-  }
+  const isVisible = (id) => Boolean(visibleSections[id])
 
   return (
     <Motion.div
@@ -1326,379 +1323,170 @@ function AboutArtistPage({ onOpenProjects, setActivePill }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2, ease: 'easeOut' }}
-      className="-mx-4 -mt-6 pb-8 sm:-mx-8"
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="-mx-4 sm:-mx-8"
     >
-      <Motion.section
-        initial={{ opacity: 0, y: 22, scale: 1.02 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="relative h-[55vh] min-h-[390px] overflow-hidden"
-      >
-        <div className="absolute inset-0">
-          <InteractiveBanner />
-          <Motion.div
-            className="absolute inset-0 opacity-55"
-            animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-            transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
-            style={{
-              backgroundImage:
-                'radial-gradient(circle at 16% 18%, rgba(16,185,129,0.25), transparent 42%), radial-gradient(circle at 78% 74%, rgba(14,165,233,0.2), transparent 46%), radial-gradient(circle at 40% 88%, rgba(99,102,241,0.16), transparent 45%)',
-              backgroundSize: '180% 180%',
-            }}
-          />
-        </div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,#121212_15%,rgba(0,0,0,0.4)_60%,transparent_100%)]" />
-
-        <Motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="absolute bottom-10 left-4 right-4 sm:left-8"
+      <div className="snap-y snap-mandatory scroll-smooth bg-[#f5f5f7] text-[#111111]">
+        <section
+          ref={(node) => {
+            sectionRefs.current[0] = node
+          }}
+          data-story="intro"
+          className="relative flex min-h-screen snap-start items-center justify-center px-6 text-center sm:px-10"
         >
-          <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">{aboutData.name}</h1>
-          <p className="mt-4 text-sm text-white/90 sm:text-base">{aboutData.title}</p>
-          <p className="mt-2 text-xs font-medium text-[#b3b3b3] sm:text-sm">{aboutData.subtitle}</p>
-        </Motion.div>
-      </Motion.section>
-
-      <div className="px-4 pt-6 sm:px-8">
-        <div className="mb-5 flex flex-wrap items-center gap-3">
-          <Motion.button
-            type="button"
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            title="See My Work"
-            onClick={onOpenProjects}
-            className="grid h-14 w-14 place-items-center rounded-full bg-[#1db954] text-black shadow-[0_10px_28px_rgba(29,185,84,0.35)] transition hover:bg-[#21ce60]"
+          <img
+            src="/about/IMG_6712.jpeg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_22%,rgba(0,113,227,0.28),transparent_34%),radial-gradient(circle_at_78%_76%,rgba(236,72,153,0.22),transparent_42%),linear-gradient(180deg,rgba(245,245,247,0.72),rgba(245,245,247,0.86))]" />
+          <Motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={isVisible('intro') ? { opacity: 1, y: 0 } : { opacity: 0.15, y: 18 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="relative max-w-4xl"
           >
-            <Play size={25} fill="currentColor" />
-          </Motion.button>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-black/45">About</p>
+            <h1 className="mt-5 text-5xl font-semibold tracking-[-0.04em] text-black sm:text-7xl lg:text-8xl">Hi, I&apos;m Sai</h1>
+            <p className="mx-auto mt-6 max-w-2xl text-base text-black/65 sm:text-xl">
+              I build thoughtful software experiences where physics precision meets product clarity.
+            </p>
+          </Motion.div>
+        </section>
 
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setMenuOpen((current) => !current)}
-              className="grid h-10 w-10 place-items-center rounded-full border border-white/20 text-[#b3b3b3] transition hover:border-white/35 hover:text-white"
+        <section
+          ref={(node) => {
+            sectionRefs.current[1] = node
+          }}
+          data-story="what-i-do"
+          className="relative flex min-h-screen snap-start items-center px-6 sm:px-10"
+        >
+          <img
+            src="/about/IMG_0268.jpeg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute right-0 top-0 h-full w-[60%] object-cover opacity-25"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_30%,rgba(249,115,22,0.22),transparent_42%),linear-gradient(120deg,rgba(245,245,247,0.94)_40%,rgba(245,245,247,0.66))]" />
+          <div className="mx-auto w-full max-w-5xl">
+            <Motion.div
+              initial={{ opacity: 0, y: 32 }}
+              animate={isVisible('what-i-do') ? { opacity: 1, y: 0 } : { opacity: 0.12, y: 20 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="relative"
             >
-              <MoreHorizontal size={18} />
-            </button>
-            <AnimatePresence>
-              {menuOpen && (
-                <Motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  className="absolute left-0 top-12 z-30 w-48 rounded-md border border-white/10 bg-[#282828] p-1 text-sm shadow-xl"
-                >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      window.open(resumeUrl, '_blank', 'noreferrer')
-                      setMenuOpen(false)
-                    }}
-                    className="block w-full rounded px-3 py-2 text-left text-white hover:bg-white/10"
-                  >
-                    Download Resume
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard?.writeText(contactData.email)
-                      setMenuOpen(false)
-                    }}
-                    className="block w-full rounded px-3 py-2 text-left text-white hover:bg-white/10"
-                  >
-                    Copy Email
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard?.writeText(window.location.href)
-                      setMenuOpen(false)
-                    }}
-                    className="block w-full rounded px-3 py-2 text-left text-white hover:bg-white/10"
-                  >
-                    Share Profile
-                  </button>
-                </Motion.div>
-              )}
-            </AnimatePresence>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-black/45">What I Do</p>
+              <h2 className="mt-5 max-w-4xl text-4xl font-semibold tracking-[-0.03em] text-black sm:text-6xl lg:text-7xl">
+                I design and ship systems that stay simple under real-world complexity.
+              </h2>
+              <p className="mt-6 max-w-2xl text-base text-black/65 sm:text-xl">
+                From quantitative tooling to modern web experiences, I focus on clarity, speed, and reliability.
+              </p>
+            </Motion.div>
           </div>
+        </section>
 
-          <button
-            type="button"
-            onClick={() => {
-              onOpenProjects()
-            }}
-            className="rounded-full border border-white/30 px-6 py-2 text-sm font-semibold text-white transition hover:border-white/55"
-          >
-            View Projects
-          </button>
-
-          <button
-            type="button"
-            onClick={surpriseMe}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-[#b3b3b3] transition hover:border-white/35 hover:text-white"
-          >
-            <Shuffle size={15} />
-            Surprise Me
-          </button>
-        </div>
-
-        <div className="mb-6 flex items-center gap-3 border-b border-[#282828] pb-3">
-          {['About Me'].map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              className={`relative px-1 pb-2 text-sm font-semibold transition ${
-                activeTab === tab ? 'text-white' : 'text-[#a7a7a7] hover:text-white'
-              }`}
-            >
-              {tab}
-              {activeTab === tab ? <span className="absolute -bottom-[1px] left-0 h-0.5 w-full bg-[#1db954]" /> : null}
-            </button>
-          ))}
-        </div>
-
-        <AnimatePresence mode="wait">
-          {activeTab === 'Overview' && (
-            <Motion.section
-              key="about-overview"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h2 className="text-2xl font-bold text-white">Who I Am</h2>
-              <div className="mt-4 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-                <div className="space-y-1">
-                  {aboutData.whoIAm.map((item) => {
-                    const expanded = expandedWho === item.id
-                    const flashed = surpriseFlash === item.id
-                    return (
-                      <div
-                        key={item.id}
-                        className={`rounded-md border-l-2 transition ${
-                          expanded ? 'border-l-[#1db954] bg-[#1f1f1f]' : 'border-l-transparent'
-                        } ${flashed ? 'ring-1 ring-[#1db954]/80' : ''}`}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => setExpandedWho(expanded ? null : item.id)}
-                          className="grid w-full grid-cols-[36px_1fr_auto] items-center gap-3 rounded-md px-3 py-3 text-left hover:bg-[#282828]"
-                        >
-                          <span className="text-sm font-semibold text-[#b3b3b3]">{item.id}</span>
-                          <span className="text-sm font-semibold text-white sm:text-base">{item.title}</span>
-                          <span className="text-xs text-[#9a9a9a]">{item.meta}</span>
-                        </button>
-                        <AnimatePresence>
-                          {expanded && (
-                            <Motion.p
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.3, ease: 'easeOut' }}
-                              className="overflow-hidden px-12 pb-4 text-sm leading-relaxed text-[#c5c5c5]"
-                            >
-                              {item.detail}
-                            </Motion.p>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    )
-                  })}
-                </div>
-
-                <Motion.article
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden rounded-lg border border-white/10 bg-[#181818] shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
+        <section
+          ref={(node) => {
+            sectionRefs.current[2] = node
+          }}
+          data-story="skills"
+          className="relative flex min-h-screen snap-start items-center px-6 sm:px-10"
+        >
+          <img
+            src="/about/IMG_0235.jpeg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-18"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(34,197,94,0.24),transparent_36%),radial-gradient(circle_at_85%_30%,rgba(14,165,233,0.22),transparent_40%),linear-gradient(180deg,rgba(245,245,247,0.9),rgba(245,245,247,0.92))]" />
+          <div className="mx-auto w-full max-w-5xl">
+            <p className="relative text-xs font-semibold uppercase tracking-[0.22em] text-black/45">Skills</p>
+            <div className="mt-8 flex flex-wrap gap-3 sm:gap-4">
+              {['Python', 'Machine Learning', 'React', 'System Design', 'Data Modeling', 'Automation'].map((skill, index) => (
+                <Motion.span
+                  key={skill}
+                  initial={{ opacity: 0, y: 22 }}
+                  animate={isVisible('skills') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 14 }}
+                  transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                  className="rounded-full border border-black/10 bg-white/70 px-5 py-2 text-sm font-medium text-black/85 shadow-[0_6px_20px_rgba(0,0,0,0.05)] backdrop-blur-sm sm:text-base"
                 >
-                  <div className="aspect-[4/5] w-full">
-                    {activeMoment && !momentLoadFailed ? (
-                      <AnimatePresence mode="wait">
-                        <Motion.img
-                          key={activeMoment.src}
-                          src={activeMoment.src}
-                          alt={`Saillesh - ${activeMoment.label}`}
-                          className="h-full w-full object-cover"
-                          onError={() => setMomentLoadFailed(true)}
-                          initial={{ opacity: 0.2, scale: 1.03 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 1.02 }}
-                          transition={{ duration: 0.55, ease: 'easeOut' }}
-                        />
-                      </AnimatePresence>
-                    ) : aboutData.portraitPhoto && !portraitLoadFailed ? (
-                      <img
-                        src={aboutData.portraitPhoto}
-                        alt="Saillesh portrait"
-                        className="h-full w-full object-cover"
-                        onError={() => setPortraitLoadFailed(true)}
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(145deg,#242424,#101010)] text-xs uppercase tracking-[0.16em] text-[#7f7f7f]">
-                        Add Portrait
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <p className="text-sm font-semibold text-[#d5d5d5]">{activeMoment?.label || 'Saillesh Somasundaram'}</p>
-                    <p className="mt-1 text-sm italic text-[#a8a8a8]">
-                      {activeMoment?.caption || 'Building at the intersection of physics and code.'}
-                    </p>
-                    <div className="mt-3 flex gap-1.5">
-                      {aboutPhotoMoments.map((moment, index) => (
-                        <span
-                          key={moment.src}
-                          className={`h-1.5 rounded-full transition-all ${
-                            activeMomentIndex === index ? 'w-6 bg-[#1db954]' : 'w-2 bg-white/25'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </Motion.article>
-              </div>
-            </Motion.section>
-          )}
-
-          {activeTab === 'About Me' && (
-            <Motion.section
-              key="about-biography"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="relative overflow-hidden rounded-[24px] bg-white/[0.04] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-7"
-            >
-              <div className="pointer-events-none absolute inset-0 opacity-65">
-                <div className="h-full w-full bg-[radial-gradient(circle_at_16%_22%,rgba(45,212,191,0.14),transparent_42%),radial-gradient(circle_at_83%_78%,rgba(99,102,241,0.14),transparent_50%),linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))]" />
-              </div>
-              <div className="relative mx-auto grid max-w-5xl gap-7 lg:grid-cols-[280px_1fr] lg:gap-10">
-                <div className="overflow-hidden rounded-2xl bg-black/30 ring-1 ring-white/10">
-                  {bioPhotoFailed ? (
-                    <div className="grid aspect-[4/5] place-items-center text-xs uppercase tracking-[0.18em] text-[#8e8e8e]">
-                      Photo Unavailable
-                    </div>
-                  ) : (
-                    <img
-                      src="/about/IMG_0146.jpg"
-                      alt="Saillesh portrait in biography"
-                      className="aspect-[4/5] w-full object-cover"
-                      onError={() => setBioPhotoFailed(true)}
-                    />
-                  )}
-                </div>
-
-                <div className="flex flex-col justify-center">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/65">About Me</p>
-                  <h3 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Physics-minded builder creating focused digital experiences.</h3>
-                  <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/82 sm:text-base">
-                    I blend first-principles thinking from physics with practical software engineering.
-                    I enjoy building systems that are clear, reliable, and genuinely useful.
-                    Most days I am exploring AI workflows, quantitative tooling, and polished product UX.
-                  </p>
-
-                  <div className="mt-6 flex flex-wrap gap-2.5">
-                    {['Python', 'Machine Learning', 'Systems Design', 'Quant Modeling', 'UI Engineering', 'Automation'].map((chip) => (
-                      <span
-                        key={chip}
-                        className="rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-medium tracking-[0.02em] text-white/92 transition hover:-translate-y-0.5 hover:bg-white/16"
-                      >
-                        {chip}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="mt-7 grid gap-3 sm:grid-cols-3">
-                    {[
-                      { label: 'Projects', value: '8+' },
-                      { label: 'Focus', value: 'AI + Physics' },
-                      { label: 'Interests', value: 'Build • Learn • Ship' },
-                    ].map((stat) => (
-                      <article key={stat.label} className="rounded-2xl bg-black/22 px-4 py-3 ring-1 ring-white/10">
-                        <p className="text-[11px] uppercase tracking-[0.16em] text-white/55">{stat.label}</p>
-                        <p className="mt-1 text-sm font-semibold text-white">{stat.value}</p>
-                      </article>
-                    ))}
-                  </div>
-
-                  <div className="mt-7 flex flex-wrap items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={onOpenProjects}
-                      className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90"
-                    >
-                      View Projects
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        window.open(`mailto:${contactData.email}`, '_self')
-                      }}
-                      className="rounded-full bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/16"
-                    >
-                      Contact
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </Motion.section>
-          )}
-
-          {activeTab === 'Stats' && (
-            <Motion.section
-              key="about-stats"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            >
-              {[
-                { label: 'Languages Known', value: aboutData.stats.languages, suffix: '+' },
-                { label: 'Projects Shipped', value: aboutData.stats.projects, suffix: '+' },
-                { label: 'Cups of Coffee', value: aboutData.stats.coffee, suffix: '+' },
-                { label: 'Countries Visited', value: aboutData.stats.countries },
-                { label: 'Physics Courses Completed', value: aboutData.stats.physicsCourses },
-                { label: 'Years Coding', value: aboutData.stats.yearsOfCoding, suffix: '+' },
-              ].map((stat, index) => (
-                <Motion.article
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="rounded-xl bg-[#181818] p-5"
-                >
-                  <p className="text-3xl font-black text-white">
-                    <CountUpValue value={stat.value} suffix={stat.suffix} />
-                  </p>
-                  <p className="mt-2 text-sm text-[#9f9f9f]">{stat.label}</p>
-                </Motion.article>
+                  {skill}
+                </Motion.span>
               ))}
-            </Motion.section>
-          )}
-        </AnimatePresence>
+            </div>
+          </div>
+        </section>
 
+        <section
+          ref={(node) => {
+            sectionRefs.current[3] = node
+          }}
+          data-story="philosophy"
+          className="relative flex min-h-screen snap-start items-center px-6 sm:px-10"
+        >
+          <img
+            src="/about/IMG_9654.jpeg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-24"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_78%,rgba(168,85,247,0.28),transparent_34%),linear-gradient(160deg,rgba(17,24,39,0.08),rgba(245,245,247,0.84))]" />
+          <div className="mx-auto w-full max-w-6xl">
+            <Motion.p
+              initial={{ opacity: 0, y: 24 }}
+              animate={isVisible('philosophy') ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 14 }}
+              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+              className="relative text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-black sm:text-6xl lg:text-8xl"
+            >
+              Build less noise. Ship more meaning.
+            </Motion.p>
+          </div>
+        </section>
+
+        <section
+          ref={(node) => {
+            sectionRefs.current[4] = node
+          }}
+          data-story="projects"
+          className="relative flex min-h-screen snap-start items-center px-6 pb-20 sm:px-10"
+        >
+          <img
+            src="/about/IMG_9368.jpeg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-28"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_24%,rgba(251,191,36,0.22),transparent_36%),radial-gradient(circle_at_20%_80%,rgba(16,185,129,0.22),transparent_42%),linear-gradient(180deg,rgba(245,245,247,0.74),rgba(245,245,247,0.88))]" />
+          <div className="mx-auto w-full max-w-5xl">
+            <Motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={isVisible('projects') ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 18 }}
+              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+              className="relative"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-black/45">Projects</p>
+              <h3 className="mt-5 max-w-4xl text-4xl font-semibold tracking-[-0.03em] text-black sm:text-6xl lg:text-7xl">
+                Explore the systems, experiments, and products I&apos;ve been building.
+              </h3>
+              <button
+                type="button"
+                onClick={onOpenProjects}
+                className="mt-10 rounded-full bg-black px-7 py-3 text-sm font-semibold text-white transition hover:bg-black/85 sm:text-base"
+              >
+                View Projects
+              </button>
+            </Motion.div>
+          </div>
+        </section>
       </div>
-      {/* TODO: Swap in Saillesh's real bio */}
     </Motion.div>
   )
 }
 
-function CombinedAboutJourneyPage({ onOpenProjects, setActivePill, registerSection, visitorGreeting }) {
-  return (
-    <>
-      <AboutArtistPage
-        onOpenProjects={onOpenProjects}
-        setActivePill={setActivePill}
-      />
-      <DefaultPortfolioContent registerSection={registerSection} visitorGreeting={visitorGreeting} />
-    </>
-  )
+function CombinedAboutJourneyPage({ onOpenProjects }) {
+  return <AboutArtistPage onOpenProjects={onOpenProjects} />
 }
 
 function DefaultPortfolioContent({ registerSection, visitorGreeting }) {
@@ -2188,43 +1976,29 @@ function AppLayout() {
           className="relative h-screen overflow-y-auto transition-colors duration-300"
         >
           <Motion.header
-            initial={{ opacity: 0, y: -12 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="sticky top-0 z-20 border-b border-white/5 bg-[rgba(18,18,18,0.88)] px-4 py-4 backdrop-blur-md sm:px-8"
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            className="sticky top-0 z-30 border-b border-white/10 bg-[rgba(18,18,18,0.75)] px-4 py-3 backdrop-blur-xl sm:px-8"
           >
-            <div className="flex items-center justify-between gap-3">
-              {/* arrows removed per request */}
-
-              <div className="hide-scrollbar flex max-w-full items-center gap-2 overflow-x-auto rounded-full bg-black/30 p-1 absolute left-1/2 transform -translate-x-1/2">
-                {navPills.map((pill) => {
-                  const activeClass = pill === 'Projects' ? 'bg-[#e50914] text-white' : 'bg-[#1db954] text-black shadow-[0_6px_20px_rgba(29,185,84,0.35)]'
-                  return (
-                    <button
-                      key={pill}
-                      type="button"
-                      onClick={() => handlePillClick(pill)}
-                      className={`cursor-pointer rounded-full px-4 py-2 text-xs font-bold transition sm:text-sm ${
-                        activePill === pill
-                          ? activeClass
-                          : 'bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-white'
-                      }`}
-                    >
-                      {pill}
-                    </button>
-                  )
-                })}
+            <div className="mx-auto flex w-full max-w-screen-2xl items-center justify-between gap-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">Sai Portfolio</p>
+              <div className="inline-flex items-center gap-1 rounded-full bg-white/5 p-1">
+                {navPills.map((pill) => (
+                  <button
+                    key={pill}
+                    type="button"
+                    onClick={() => handlePillClick(pill)}
+                    className={`rounded-full px-4 py-1.5 text-xs font-semibold transition sm:text-sm ${
+                      activePill === pill
+                        ? 'bg-white text-black'
+                        : 'text-white/80 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    {pill}
+                  </button>
+                ))}
               </div>
-
-              <button
-                type="button"
-                className="flex cursor-pointer items-center gap-2 rounded-full bg-black/50 px-2 py-1 text-sm font-semibold text-white transition hover:bg-black/70"
-              >
-                <div className="grid h-8 w-8 place-items-center rounded-full bg-[var(--surface-hover)] text-xs font-bold text-[var(--accent)]">
-                  S
-                </div>
-                <span className="hidden sm:inline">Saillesh</span>
-              </button>
             </div>
           </Motion.header>
 
@@ -2232,7 +2006,7 @@ function AppLayout() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: transitioning ? 0.35 : 1, y: 0 }}
             transition={{ duration: 0.2, delay: 0.7 }}
-            className="px-4 pb-16 pt-6 sm:px-8"
+            className="px-4 pb-16 pt-4 sm:px-8"
           >
             <AnimatePresence mode="wait">
               {activePage === 'projects' ? (
@@ -2251,9 +2025,6 @@ function AppLayout() {
                 >
                   <CombinedAboutJourneyPage
                     onOpenProjects={() => handlePillClick('Projects')}
-                    setActivePill={setActivePill}
-                    registerSection={registerSection}
-                    visitorGreeting={visitorGreeting}
                   />
                 </Motion.div>
               ) : (
