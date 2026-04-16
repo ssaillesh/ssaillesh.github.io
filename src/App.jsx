@@ -1084,14 +1084,6 @@ function AppLayout() {
   const handlePillClick = (pill) => {
     setTransitioning(true)
 
-    if (pill === 'Hi') {
-      setActivePill('Hi')
-      setActivePage('about')
-      scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-      setTimeout(() => setTransitioning(false), 400)
-      return
-    }
-
     if (pill === 'About Me') {
       setActivePill('About Me')
       setActivePage('about')
@@ -1107,7 +1099,6 @@ function AppLayout() {
       setTimeout(() => setTransitioning(false), 400)
       return
     }
-
 
     setTransitioning(false)
   }
@@ -1136,21 +1127,36 @@ function AppLayout() {
           >
             <div className="mx-auto flex w-full max-w-screen-2xl items-center justify-between gap-3">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">Sai Portfolio</p>
-              <div className="inline-flex items-center gap-1 rounded-full bg-white/5 p-1">
-                {navPills.map((pill) => (
-                  <button
-                    key={pill}
-                    type="button"
-                    onClick={() => handlePillClick(pill)}
-                    className={`rounded-full px-4 py-1.5 text-xs font-semibold transition sm:text-sm ${
-                      activePill === pill
-                        ? 'bg-white text-black'
-                        : 'text-white/80 hover:bg-white/10 hover:text-white'
-                    }`}
-                  >
-                    {pill}
-                  </button>
-                ))}
+              <div className="relative inline-flex items-center rounded-full bg-white/5 p-1">
+                <Motion.div
+                  layout
+                  layoutId="switch-background"
+                  className="absolute inset-y-1 left-1 right-1/2 rounded-full bg-white"
+                  animate={{ x: activePage === 'projects' ? '100%' : 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+                <button
+                  type="button"
+                  onClick={() => handlePillClick('About Me')}
+                  className={`relative z-10 rounded-full px-4 py-1.5 text-xs font-semibold transition sm:text-sm ${
+                    activePage === 'about'
+                      ? 'text-black'
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  About Me
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePillClick('Projects')}
+                  className={`relative z-10 rounded-full px-4 py-1.5 text-xs font-semibold transition sm:text-sm ${
+                    activePage === 'projects'
+                      ? 'text-black'
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Projects
+                </button>
               </div>
             </div>
           </Motion.header>
