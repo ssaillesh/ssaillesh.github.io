@@ -11,7 +11,6 @@ import {
   GraduationCap,
   Info,
   Instagram,
-  Linkedin,
   MoreHorizontal,
   Play,
   Plus,
@@ -58,11 +57,6 @@ const techTags = [
   { name: 'Ruby', url: 'https://www.ruby-lang.org/en/documentation/', color: '#BE123C' },
   { name: 'Java', url: 'https://docs.oracle.com/en/java/', color: '#92400E' },
 ]
-
-const contactData = {
-  email: 's5somasu@uwaterloo.ca',
-  linkedin: 'https://www.linkedin.com/in/sailleshsomasundaram/',
-}
 
 const experienceEntries = [
   {
@@ -253,6 +247,7 @@ const projectCatalog = [
     tags: ['Python', 'LLM', 'RAG'],
     github: 'https://github.com/ssaillesh/CodeGraphRAG.git',
     liveUrl: '',
+    category: ['Trending in My World', 'Tools & Utilities', 'Web & Frontend'],
     year: 2026,
     status: 'In Progress',
     featured: true,
@@ -1247,7 +1242,7 @@ function AppLayout() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.65, ease: 'easeOut' }}
-      className="min-h-screen bg-[var(--bg)] pb-20"
+      className="min-h-screen bg-[var(--bg)]"
     >
       <div className="grid min-h-screen grid-cols-1">
         <div
@@ -1335,40 +1330,6 @@ function AppLayout() {
       </div>
 
       <WatchTransitionOverlay visible={showWatchLoader} />
-
-      <div className="fixed inset-x-0 bottom-0 border-t border-white/10 bg-[rgba(24,24,24,0.95)] px-4 py-3 backdrop-blur-md">
-        <div className="mx-auto flex max-w-screen-2xl items-center justify-between text-xs text-[var(--text-secondary)] sm:text-sm">
-          <div className="flex items-center gap-4">
-            <a
-              href={contactData.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium text-white hover:underline"
-            >
-              <Linkedin size={14} />
-              <span className="hidden sm:inline">LinkedIn</span>
-            </a>
-
-            <a
-              href="#" /* TODO: replace with your GitLab URL */
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium text-white/90 hover:underline"
-            >
-              <ExternalLink size={14} />
-              <span className="hidden sm:inline">GitLab</span>
-            </a>
-
-            <p className="ml-3">
-              Now Playing:{' '}
-              <span className="font-semibold text-white">Saillesh&apos;s Portfolio v1.0</span>
-            </p>
-          </div>
-
-          <p>Bottom playbar coming soon</p>
-        </div>
-      </div>
-      {/* TODO: Add bottom playbar section */}
     </Motion.div>
   )
 }
