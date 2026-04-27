@@ -243,6 +243,20 @@ const projectCatalog = [
     status: 'Completed',
     featured: true,
   },
+
+  {
+    id: 9,
+    title: 'RAGForge',
+    description: 'An AI-powered system that analyzes codebases, retrieves semantic structure through RAG, and generates production-ready documentation automatically. Built for engineers who want clarity, not manual documentation',
+    teaser: 'RAG documentation generator.',
+    image: '/project/RAGForge.png',
+    tags: ['Python', 'LLM', 'RAG'],
+    github: 'https://github.com/ssaillesh/CodeGraphRAG.git',
+    liveUrl: '',
+    year: 2026,
+    status: 'In Progress',
+    featured: true,
+  },
 ]
 
 const projectRows = ['Trending in My World', 'Web & Frontend', 'Tools & Utilities', 'Coming Soon']
@@ -798,9 +812,9 @@ function ProjectsPage({ scrollTop }) {
   return (
     <Motion.div
       key="projects-page"
-      initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -30 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
       className="-mx-4 -mt-6 bg-[#141414] px-4 pb-6 pt-6 sm:-mx-8 sm:px-8"
     >
@@ -859,9 +873,9 @@ function AboutArtistPage({ onOpenProjects }) {
             sectionRefs.current[0] = node
           }}
           data-story="intro"
-          className="relative min-h-[120vh]"
+          className="relative"
         >
-          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
+          <div className="relative flex min-h-[88vh] items-center overflow-hidden px-6 sm:px-10">
             <img
               src="/about/IMG_6712.jpeg"
               alt=""
@@ -902,9 +916,9 @@ function AboutArtistPage({ onOpenProjects }) {
             sectionRefs.current[1] = node
           }}
           data-story="skills"
-          className="relative min-h-[120vh]"
+          className="relative"
         >
-          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden px-6 sm:px-10">
+          <div className="relative flex min-h-[88vh] items-center overflow-hidden px-6 sm:px-10">
             <img
               src="/about/IMG_9368.jpeg"
               alt=""
@@ -960,9 +974,9 @@ function AboutArtistPage({ onOpenProjects }) {
             sectionRefs.current[2] = node
           }}
           data-story="experience"
-          className="relative min-h-[145vh]"
+          className="relative"
         >
-          <div className="sticky top-16 flex min-h-[calc(100vh-64px)] items-center px-6 py-10 sm:px-10 sm:py-12">
+          <div className="relative flex min-h-[95vh] items-center px-6 py-10 sm:px-10 sm:py-12">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_22%,rgba(45,212,191,0.14),transparent_34%),radial-gradient(circle_at_88%_70%,rgba(59,130,246,0.16),transparent_40%),linear-gradient(180deg,rgba(9,9,9,0.9),rgba(9,9,9,0.98))]" />
             <div className="relative mx-auto w-full max-w-6xl">
               <Motion.div
@@ -1024,9 +1038,9 @@ function AboutArtistPage({ onOpenProjects }) {
             sectionRefs.current[3] = node
           }}
           data-story="cta"
-          className="relative min-h-[120vh]"
+          className="relative"
         >
-          <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center justify-center overflow-hidden px-6 text-center sm:px-10">
+          <div className="relative flex min-h-[88vh] items-center justify-center overflow-hidden px-6 text-center sm:px-10">
             <img
               src="/about/IMG_0146.jpg"
               alt=""
@@ -1062,15 +1076,100 @@ function CombinedAboutJourneyPage({ onOpenProjects }) {
 }
 
 
+function WatchTransitionOverlay({ visible }) {
+  if (!visible) return null
+
+  const minuteTicks = Array.from({ length: 60 }, (_, index) => index)
+
+  return (
+    <AnimatePresence>
+      <Motion.div
+        className="fixed inset-0 z-[80] grid place-items-center bg-black"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.24, ease: 'easeOut' }}
+      >
+        <div className="relative grid place-items-center">
+          <Motion.div
+            className="absolute h-48 w-48 rounded-full border border-emerald-200/15"
+            initial={{ scale: 0.9, opacity: 0.1 }}
+            animate={{ scale: [0.94, 1.06, 0.94], opacity: [0.08, 0.26, 0.08] }}
+            transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
+          />
+
+          <div className="relative grid h-36 w-36 place-items-center rounded-full border-[3px] border-[#b08d57] bg-[radial-gradient(circle_at_35%_30%,#1e5f4f_0%,#0f3d32_58%,#092a22_100%)] shadow-[0_0_0_2px_#332812,0_12px_38px_rgba(0,0,0,0.8)]">
+            <div className="absolute inset-[5px] rounded-full border-2 border-[#caa76a]/80" />
+            <div className="absolute inset-[10px] rounded-full border border-[#e4c282]/50" />
+
+            {minuteTicks.map((tick) => (
+              <span
+                key={`tick-${tick}`}
+                className={`absolute left-1/2 top-1/2 block ${tick % 5 === 0 ? 'h-[10px] w-[2px] bg-[#f2dfa8]' : 'h-[4px] w-[1px] bg-[#d9c285]/65'}`}
+                style={{ transform: `translate(-50%, -50%) rotate(${tick * 6}deg) translateY(-62px)` }}
+              />
+            ))}
+
+            <p className="absolute top-[26%] text-[8px] font-semibold uppercase tracking-[0.24em] text-[#f4e2b0]">Rolex</p>
+            <p className="absolute top-[35%] text-[7px] font-medium uppercase tracking-[0.14em] text-[#e8d4a1]/90">Oyster Perpetual</p>
+
+            <div className="absolute h-3 w-3 rounded-full border border-[#5b4722] bg-[#d3b06a]" />
+
+            <Motion.div
+              className="absolute h-[44px] w-[2.5px] origin-bottom rounded-full bg-[#e7cf95]"
+              style={{ bottom: '50%' }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
+            />
+            <Motion.div
+              className="absolute h-[32px] w-[3px] origin-bottom rounded-full bg-[#cba56a]"
+              style={{ bottom: '50%' }}
+              animate={{ rotate: 720 }}
+              transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+            />
+            <Motion.div
+              className="absolute h-[54px] w-[1.5px] origin-bottom rounded-full bg-[#9f1d22]"
+              style={{ bottom: '50%' }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+            />
+            <div className="absolute top-[20px] right-[34px] h-3.5 w-5 rounded-sm border border-[#d7bc84]/85 bg-[#f7e8c1]" />
+          </div>
+
+          <Motion.p
+            className="mt-8 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#ddc997]"
+            initial={{ opacity: 0.45 }}
+            animate={{ opacity: [0.42, 0.95, 0.42] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            Loading Projects
+          </Motion.p>
+        </div>
+      </Motion.div>
+    </AnimatePresence>
+  )
+}
+
+
 
 function AppLayout() {
   const [activePill, setActivePill] = useState('About Me')
   const [activePage, setActivePage] = useState('about')
-  const [transitioning, setTransitioning] = useState(false)
+  const [pageDirection, setPageDirection] = useState(1)
+  const [showWatchLoader, setShowWatchLoader] = useState(false)
   const [scrollTop, setScrollTop] = useState(0)
 
   const scrollContainerRef = useRef(null)
   const scrollRAFRef = useRef(null)
+  const transitionTimeoutRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current)
+      }
+    }
+  }, [])
 
   const handleScroll = (event) => {
     if (scrollRAFRef.current) {
@@ -1082,25 +1181,63 @@ function AppLayout() {
   }
 
   const handlePillClick = (pill) => {
-    setTransitioning(true)
+    const nextPage = pill === 'Projects' ? 'projects' : 'about'
+    if (nextPage === activePage) return
+
+    setPageDirection(nextPage === 'projects' ? 1 : -1)
 
     if (pill === 'About Me') {
       setActivePill('About Me')
       setActivePage('about')
-      scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-      setTimeout(() => setTransitioning(false), 400)
+      scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'auto' })
       return
     }
 
     if (pill === 'Projects') {
       setActivePill('Projects')
       setActivePage('projects')
-      scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-      setTimeout(() => setTransitioning(false), 400)
+      scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'auto' })
       return
     }
+  }
 
-    setTransitioning(false)
+  const handleViewMyWorkTransition = () => {
+    if (activePage === 'projects') return
+
+    setShowWatchLoader(true)
+    setActivePill('Projects')
+    setPageDirection(0)
+    scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'auto' })
+
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current)
+    }
+
+    transitionTimeoutRef.current = setTimeout(() => {
+      setActivePage('projects')
+      transitionTimeoutRef.current = setTimeout(() => {
+        setShowWatchLoader(false)
+        transitionTimeoutRef.current = null
+      }, 280)
+    }, 1880)
+  }
+
+  const pageTransitionVariants = {
+    enter: (direction) => ({
+      x: direction === 0 ? 0 : direction > 0 ? '16%' : '-16%',
+      opacity: 0.6,
+      filter: 'blur(2px)',
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      filter: 'blur(0px)',
+    },
+    exit: (direction) => ({
+      x: direction === 0 ? 0 : direction > 0 ? '-16%' : '16%',
+      opacity: 0.55,
+      filter: 'blur(2px)',
+    }),
   }
 
   return (
@@ -1166,33 +1303,38 @@ function AppLayout() {
 
           <Motion.main
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: transitioning ? 0.35 : 1, y: 0 }}
-            transition={{ duration: 0.2, delay: 0.7 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
             className="px-4 pb-16 pt-4 sm:px-8"
           >
-            <AnimatePresence mode="wait">
-              {activePage === 'projects' ? (
-                <ProjectsPage
-                  key="projects-screen"
-                  scrollTop={scrollTop}
-                />
-              ) : activePage === 'about' ? (
-                <Motion.div
-                  key="about-screen"
-                  initial={{ opacity: 0, y: 22 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                >
-                  <CombinedAboutJourneyPage
-                    onOpenProjects={() => handlePillClick('Projects')}
+            <AnimatePresence mode="wait" initial={false} custom={pageDirection}>
+              <Motion.div
+                key={activePage}
+                custom={pageDirection}
+                variants={pageTransitionVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: pageDirection === 0 ? 0.3 : 0.42, ease: [0.22, 1, 0.36, 1] }}
+                className="will-change-transform"
+              >
+                {activePage === 'projects' ? (
+                  <ProjectsPage
+                    key="projects-screen"
+                    scrollTop={scrollTop}
                   />
-                </Motion.div>
-              ) : null}
+                ) : (
+                  <CombinedAboutJourneyPage
+                    onOpenProjects={handleViewMyWorkTransition}
+                  />
+                )}
+              </Motion.div>
             </AnimatePresence>
           </Motion.main>
         </div>
       </div>
+
+      <WatchTransitionOverlay visible={showWatchLoader} />
 
       <div className="fixed inset-x-0 bottom-0 border-t border-white/10 bg-[rgba(24,24,24,0.95)] px-4 py-3 backdrop-blur-md">
         <div className="mx-auto flex max-w-screen-2xl items-center justify-between text-xs text-[var(--text-secondary)] sm:text-sm">
