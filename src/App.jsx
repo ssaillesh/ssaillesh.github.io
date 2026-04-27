@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   BriefcaseBusiness,
@@ -595,7 +595,16 @@ function ProjectModal({ project, onClose, onOpenModal }) {
     return null
   }
 
-  const related = projectCatalog.filter((item) => item.id !== project.id).slice(0, 4)
+  const related = useMemo(() => {
+    const candidates = projectCatalog.filter((item) => item.id !== project.id)
+
+    for (let i = candidates.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[candidates[i], candidates[j]] = [candidates[j], candidates[i]]
+    }
+
+    return candidates.slice(0, 4)
+  }, [project.id])
 
   return (
     <AnimatePresence>
