@@ -1083,7 +1083,8 @@ function CombinedAboutJourneyPage({ onOpenProjects }) {
 function WatchTransitionOverlay({ visible }) {
   if (!visible) return null
 
-  const minuteTicks = Array.from({ length: 60 }, (_, index) => index)
+  const segments = Array.from({ length: 12 }, (_, i) => i)
+  const innerSegments = Array.from({ length: 24 }, (_, i) => i)
 
   return (
     <AnimatePresence>
@@ -1095,59 +1096,158 @@ function WatchTransitionOverlay({ visible }) {
         transition={{ duration: 0.24, ease: 'easeOut' }}
       >
         <div className="relative grid place-items-center">
+          {/* Outer holographic rings */}
           <Motion.div
-            className="absolute h-48 w-48 rounded-full border border-emerald-200/15"
-            initial={{ scale: 0.9, opacity: 0.1 }}
-            animate={{ scale: [0.94, 1.06, 0.94], opacity: [0.08, 0.26, 0.08] }}
-            transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute h-56 w-56 rounded-full border-2 border-cyan-400/30"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: [1.0, 1.1, 1.0], opacity: [0.15, 0.3, 0.15] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <Motion.div
+            className="absolute h-52 w-52 rounded-full border border-purple-500/20"
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: [1.0, 1.08, 1.0], opacity: [0.1, 0.2, 0.1] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut', delay: 0.1 }}
           />
 
-          <div className="relative grid h-36 w-36 place-items-center rounded-full border-[3px] border-[#b08d57] bg-[radial-gradient(circle_at_35%_30%,#1e5f4f_0%,#0f3d32_58%,#092a22_100%)] shadow-[0_0_0_2px_#332812,0_12px_38px_rgba(0,0,0,0.8)]">
-            <div className="absolute inset-[5px] rounded-full border-2 border-[#caa76a]/80" />
-            <div className="absolute inset-[10px] rounded-full border border-[#e4c282]/50" />
+          {/* Main sci-fi watch body */}
+          <div className="relative grid h-40 w-40 place-items-center">
+            {/* Outer glow */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/5 via-purple-500/5 to-transparent" />
 
-            {minuteTicks.map((tick) => (
-              <span
-                key={`tick-${tick}`}
-                className={`absolute left-1/2 top-1/2 block ${tick % 5 === 0 ? 'h-[10px] w-[2px] bg-[#f2dfa8]' : 'h-[4px] w-[1px] bg-[#d9c285]/65'}`}
-                style={{ transform: `translate(-50%, -50%) rotate(${tick * 6}deg) translateY(-62px)` }}
+            {/* Main watch circle */}
+            <div className="absolute inset-0 rounded-full border-2 border-cyan-400/60 bg-gradient-to-br from-slate-900 via-black to-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.3),inset_0_0_20px_rgba(34,211,238,0.1)]" />
+
+            {/* Inner accent ring */}
+            <div className="absolute inset-3 rounded-full border border-purple-500/40 shadow-[inset_0_0_15px_rgba(168,85,247,0.15)]" />
+
+            {/* Outer LED segments */}
+            {segments.map((i) => (
+              <Motion.div
+                key={`seg-${i}`}
+                className="absolute h-1 w-3 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300"
+                style={{
+                  left: '50%',
+                  top: '50%',
+                  transform: `translate(-50%, -50%) rotate(${(i * 30)}deg) translateY(-78px)`,
+                }}
+                animate={{
+                  opacity: [0.3, 0.8, 0.3],
+                }}
+                transition={{
+                  duration: 1.8,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: i * 0.08,
+                }}
               />
             ))}
 
-            <p className="absolute top-[26%] text-[8px] font-semibold uppercase tracking-[0.24em] text-[#f4e2b0]">Rolex</p>
-            <p className="absolute top-[35%] text-[7px] font-medium uppercase tracking-[0.14em] text-[#e8d4a1]/90">Oyster Perpetual</p>
+            {/* Inner pulsing segments */}
+            {innerSegments.map((i) => (
+              <Motion.div
+                key={`inner-${i}`}
+                className="absolute h-0.5 w-2 rounded-full bg-purple-400/60"
+                style={{
+                  left: '50%',
+                  top: '50%',
+                  transform: `translate(-50%, -50%) rotate(${(i * 15)}deg) translateY(-54px)`,
+                }}
+                animate={{
+                  opacity: [0.1, 0.5, 0.1],
+                }}
+                transition={{
+                  duration: 2.2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: (i * 0.04),
+                }}
+              />
+            ))}
 
-            <div className="absolute h-3 w-3 rounded-full border border-[#5b4722] bg-[#d3b06a]" />
+            {/* Center core */}
+            <div className="absolute h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.8)]" />
 
+            {/* Geometric hands - sci-fi minimalist */}
             <Motion.div
-              className="absolute h-[44px] w-[2.5px] origin-bottom rounded-full bg-[#e7cf95]"
+              className="absolute h-12 w-1 origin-bottom rounded-full bg-gradient-to-t from-cyan-300 via-cyan-400 to-cyan-200"
               style={{ bottom: '50%' }}
               animate={{ rotate: 360 }}
               transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
+              initial={{ opacity: 0.9 }}
             />
             <Motion.div
-              className="absolute h-[32px] w-[3px] origin-bottom rounded-full bg-[#cba56a]"
+              className="absolute h-9 w-1.5 origin-bottom rounded-full bg-gradient-to-t from-purple-400 via-purple-300 to-purple-200"
               style={{ bottom: '50%' }}
               animate={{ rotate: 720 }}
               transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+              initial={{ opacity: 0.85 }}
             />
             <Motion.div
-              className="absolute h-[54px] w-[1.5px] origin-bottom rounded-full bg-[#9f1d22]"
+              className="absolute h-14 w-0.5 origin-bottom rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.9)]"
               style={{ bottom: '50%' }}
               animate={{ rotate: 360 }}
               transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+              initial={{ opacity: 1 }}
             />
-            <div className="absolute top-[20px] right-[34px] h-3.5 w-5 rounded-sm border border-[#d7bc84]/85 bg-[#f7e8c1]" />
           </div>
 
-          <Motion.p
-            className="mt-8 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#ddc997]"
-            initial={{ opacity: 0.45 }}
-            animate={{ opacity: [0.42, 0.95, 0.42] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          {/* Status indicator - pulsing dot */}
+          <Motion.div
+            className="absolute right-12 top-1/2 h-2 w-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]"
+            animate={{
+              opacity: [0.4, 1, 0.4],
+              scale: [1, 1.3, 1],
+            }}
+            transition={{
+              duration: 1.2,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+
+          {/* Loading text with glow */}
+          <Motion.div
+            className="mt-12 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
           >
-            Loading Projects
-          </Motion.p>
+            <Motion.p
+              className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-300"
+              style={{
+                textShadow: '0 0 10px rgba(34,211,238,0.6)',
+              }}
+              initial={{ opacity: 0.45 }}
+              animate={{ opacity: [0.5, 0.95, 0.5] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              Loading Projects
+            </Motion.p>
+            <Motion.div
+              className="mt-3 flex justify-center gap-1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              {[0, 1, 2].map((dot) => (
+                <Motion.div
+                  key={`dot-${dot}`}
+                  className="h-1 w-1 rounded-full bg-purple-400"
+                  animate={{
+                    opacity: [0.3, 1, 0.3],
+                    scale: [1, 1.4, 1],
+                  }}
+                  transition={{
+                    duration: 1.4,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: dot * 0.2,
+                  }}
+                />
+              ))}
+            </Motion.div>
+          </Motion.div>
         </div>
       </Motion.div>
     </AnimatePresence>
