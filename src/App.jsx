@@ -1021,7 +1021,7 @@ function AboutArtistPage({ onOpenProjects }) {
                   className="mx-auto w-full max-w-[300px]"
                 >
                   <TiltPhoto
-                    src="/about/IMG_0146.jpg"
+                    src="/about/IMG_0718.jpg"
                     alt="Sai portrait"
                     className="overflow-hidden rounded-[24px] border border-white/20 bg-white/5 p-2 backdrop-blur-sm"
                     imgClassName="aspect-[4/5] w-full rounded-[18px] object-cover"
