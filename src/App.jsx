@@ -163,20 +163,23 @@ const projectCatalog = [
     status: 'Completed',
     featured: false,
   },
-  {
+
+   {
     id: 6,
-    title: 'Interactive-Hand-Gesture-Recognition',
-    description: 'Real-time hand gesture recognition with computer vision.',
-    teaser: 'Computer vision interaction.',
+    title: 'ASL Recognition',
+    description:
+      'Real-time American Sign Language recognition desktop app that tracks 21 hand landmarks with MediaPipe to predict fingerspelling gestures from a live webcam feed. Build sentences with text-to-speech output, sharpen skills in a scored practice mode with streaks, and train custom RandomForest models on the Kaggle ASL Fingerspelling dataset — all through a Tkinter interface with a built-in ASL reference guide.',
+    teaser: 'Live ASL fingerspelling to speech.',
     image: null,
-    tags: ['Python', 'FastAPI', 'OpenCV'],
-    github: 'https://github.com/ssaillesh/Interactive-Hand-Gesture-Recognition',
+    tags: ['Python', 'MediaPipe', 'scikit-learn'],
+    github: 'https://github.com/ssaillesh/ASL-Recognition-',
     liveUrl: '',
-    category: ['Trending in My World', 'Web & Frontend'],
-    year: 2024,
+    category: ['Trending in My World', 'Tools & Utilities'],
+    year: 2026,
     status: 'Completed',
-    featured: true,
+    featured: false,
   },
+  
   {
     id: 7,
     title: 'Invasion-game',
@@ -220,23 +223,9 @@ const projectCatalog = [
     status: 'In Progress',
     featured: true,
   },
+ 
   {
     id: 10,
-    title: 'ASL Recognition',
-    description:
-      'Real-time American Sign Language recognition desktop app that tracks 21 hand landmarks with MediaPipe to predict fingerspelling gestures from a live webcam feed. Build sentences with text-to-speech output, sharpen skills in a scored practice mode with streaks, and train custom RandomForest models on the Kaggle ASL Fingerspelling dataset — all through a Tkinter interface with a built-in ASL reference guide.',
-    teaser: 'Live ASL fingerspelling to speech.',
-    image: null,
-    tags: ['Python', 'MediaPipe', 'scikit-learn'],
-    github: 'https://github.com/ssaillesh/ASL-Recognition-',
-    liveUrl: '',
-    category: ['Trending in My World', 'Tools & Utilities'],
-    year: 2026,
-    status: 'Completed',
-    featured: false,
-  },
-  {
-    id: 11,
     title: 'Trekrank',
     description:
       'Travel-logging social platform where users record trips, auto-calculate distances with PostGIS spatial queries, and climb friend and global leaderboards powered by Redis sorted sets. Features a 20-badge achievement system, a social graph with friend requests and activity feeds, a world map of visited cities, and Instagram Story-format share cards — served by a FastAPI + Celery backend with a SwiftUI iOS client.',
