@@ -136,11 +136,12 @@ const projectCatalog = [
   },
   {
     id: 4,
-    title: 'Care_Loop',
-    description: 'Utility-oriented project for human-centered workflows and reliable execution.',
-    teaser: 'Human-centered utility solution.',
+    title: 'CareLoop',
+    description:
+      'Multi-tenant dental practice-management platform that unifies scheduling, patient intake, billing, and communications in one system. Includes appointment and availability management, document handling, payment processing, an AI phone assistant for automated reminders, Google Calendar sync, and practice analytics — built as a pnpm + Turborepo monorepo with a Next.js 15 / React 19 frontend, a NestJS-on-Fastify API, and BullMQ background workers.',
+    teaser: 'Dental practice management platform.',
     image: '/project/careloop_intro.png',
-    tags: ['React', 'Node.js', 'Python', 'Java'],
+    tags: ['React', 'Next.js', 'NestJS'],
     github: 'https://github.com/aarya127/CareLoop',
     liveUrl: '',
     category: ['Web & Frontend', 'Tools & Utilities', 'Trending in My World'],
@@ -219,6 +220,36 @@ const projectCatalog = [
     status: 'In Progress',
     featured: true,
   },
+  {
+    id: 10,
+    title: 'ASL Recognition',
+    description:
+      'Real-time American Sign Language recognition desktop app that tracks 21 hand landmarks with MediaPipe to predict fingerspelling gestures from a live webcam feed. Build sentences with text-to-speech output, sharpen skills in a scored practice mode with streaks, and train custom RandomForest models on the Kaggle ASL Fingerspelling dataset — all through a Tkinter interface with a built-in ASL reference guide.',
+    teaser: 'Live ASL fingerspelling to speech.',
+    image: null,
+    tags: ['Python', 'MediaPipe', 'scikit-learn'],
+    github: 'https://github.com/ssaillesh/ASL-Recognition-',
+    liveUrl: '',
+    category: ['Trending in My World', 'Tools & Utilities'],
+    year: 2026,
+    status: 'Completed',
+    featured: false,
+  },
+  {
+    id: 11,
+    title: 'Trekrank',
+    description:
+      'Travel-logging social platform where users record trips, auto-calculate distances with PostGIS spatial queries, and climb friend and global leaderboards powered by Redis sorted sets. Features a 20-badge achievement system, a social graph with friend requests and activity feeds, a world map of visited cities, and Instagram Story-format share cards — served by a FastAPI + Celery backend with a SwiftUI iOS client.',
+    teaser: 'Travel logging with leaderboards & badges.',
+    image: null,
+    tags: ['Python', 'FastAPI', 'SwiftUI'],
+    github: 'https://github.com/ssaillesh/trekrank',
+    liveUrl: '',
+    category: ['Web & Frontend', 'Tools & Utilities'],
+    year: 2026,
+    status: 'In Progress',
+    featured: false,
+  },
 ]
 
 const projectGradients = {
@@ -228,12 +259,6 @@ const projectGradients = {
   TypeScript: 'from-blue-500/40 via-sky-700/20 to-zinc-900/65',
   Kafka: 'from-rose-500/35 via-fuchsia-600/20 to-zinc-900/65',
   default: 'from-red-500/35 via-neutral-700/20 to-zinc-900/70',
-}
-
-const statusStyles = {
-  'Open Source': 'bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-400/30',
-  Completed: 'bg-sky-500/20 text-sky-200 ring-1 ring-sky-400/30',
-  default: 'bg-white/15 text-white ring-1 ring-white/20',
 }
 
 class AppErrorBoundary extends React.Component {
@@ -525,18 +550,6 @@ function ProjectCard({ project, index, onOpenModal }) {
           <ProjectCover project={project} />
         </div>
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-90" />
-
-        {project.status !== 'In Progress' && (
-          <span className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusStyles[project.status] || statusStyles.default}`}>
-            {project.status}
-          </span>
-        )}
-        {project.featured && (
-          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-amber-400/90 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-black shadow-sm">
-            <Sparkles size={11} />
-            Featured
-          </span>
-        )}
         <span className="absolute bottom-3 left-3 text-[11px] font-semibold text-white/80 drop-shadow">{project.year}</span>
       </div>
 
@@ -636,17 +649,6 @@ function ProjectModal({ project, onClose, onOpenModal }) {
             <div className="grid gap-8 p-6 md:grid-cols-[1.5fr_1fr]">
               <div>
                 <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#bcbcbc]">
-                  {project.featured && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/90 px-2 py-1 font-semibold text-black">
-                      <Sparkles size={11} />
-                      Featured
-                    </span>
-                  )}
-                  {project.status !== 'In Progress' && (
-                    <span className={`rounded-full px-2.5 py-1 font-semibold uppercase tracking-wide ${statusStyles[project.status] || statusStyles.default}`}>
-                      {project.status}
-                    </span>
-                  )}
                   <span className="rounded-md border border-white/20 px-2 py-0.5">{project.year}</span>
                 </div>
                 <p className="text-sm leading-relaxed text-[#bcbcbc]">{project.description}</p>
@@ -760,11 +762,6 @@ function NetflixProjectsView({ scrollTop }) {
             {heroProject.teaser || heroProject.description}
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-[#bcbcbc]">
-            {heroProject.status !== 'In Progress' && (
-              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-wide ${statusStyles[heroProject.status] || statusStyles.default}`}>
-                {heroProject.status}
-              </span>
-            )}
             <span>{heroProject.year}</span>
             {heroProject.tags.map((tag) => (
               <span key={tag} className="rounded-full bg-[#333333] px-2 py-1 text-xs">
