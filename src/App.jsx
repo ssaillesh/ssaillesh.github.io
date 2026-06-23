@@ -828,7 +828,7 @@ function ProjectsPage({ scrollTop }) {
   )
 }
 
-function TiltPhoto({ src, alt, className, imgClassName }) {
+function TiltPhoto({ src, alt, className, imgClassName, flipHorizontal = false }) {
   const px = useMotionValue(0)
   const py = useMotionValue(0)
   const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [9, -9]), { stiffness: 150, damping: 16 })
@@ -852,7 +852,13 @@ function TiltPhoto({ src, alt, className, imgClassName }) {
       style={{ rotateX, rotateY, transformPerspective: 900, transformStyle: 'preserve-3d' }}
       className={className}
     >
-      <img src={src} alt={alt} className={imgClassName} style={{ transform: 'translateZ(36px)' }} loading="lazy" />
+      <img
+        src={src}
+        alt={alt}
+        className={imgClassName}
+        style={{ transform: `translateZ(36px)${flipHorizontal ? ' scaleX(-1)' : ''}` }}
+        loading="lazy"
+      />
     </Motion.div>
   )
 }
@@ -995,8 +1001,8 @@ function AboutArtistPage({ onOpenProjects }) {
               alt=""
               aria-hidden="true"
               className="h-full w-full object-cover object-center will-change-transform"
-              initial={{ scale: 1.03 }}
-              animate={{ scale: [1.03, 1.09, 1.03] }}
+              initial={{ scale: 1.03, scaleX: -1 }}
+              animate={{ scale: [1.03, 1.09, 1.03], scaleX: -1 }}
               transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut' }}
             />
             {/* Vertical framing: dark under the header, clear/bright through the middle (the glowing skyline is the seam between the two sections), fading into the finale */}
@@ -1100,7 +1106,7 @@ function AboutArtistPage({ onOpenProjects }) {
                     </p>
                   </Motion.div>
 
-                  <div aria-hidden="true" className="hidden lg:block" />
+                  <div aria-hidden="true" className="hidden lg:block lg:col-start-2" />
                 </div>
 
                 <div className="relative mt-12">
