@@ -991,7 +991,7 @@ function AboutArtistPage({ onOpenProjects }) {
         <div className="relative overflow-hidden">
           <div className="absolute inset-0">
             <Motion.img
-              src="/about/IMG_6712.jpeg"
+              src="/about/IMG_4201.jpeg"
               alt=""
               aria-hidden="true"
               className="h-full w-full object-cover object-center will-change-transform"
@@ -1076,7 +1076,7 @@ function AboutArtistPage({ onOpenProjects }) {
                   transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-white/55">Experience</p>
-                  <h3 className="mt-5 text-4xl font-semibold tracking-[-0.03em] text-white sm:text-6xl">What I&apos;ve Done</h3>
+                  
                 </Motion.div>
 
                 <div className="mt-8 grid gap-10 lg:grid-cols-[1.05fr_0.95fr]">
