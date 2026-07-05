@@ -230,7 +230,7 @@ const projectCatalog = [
     description:
       'Travel-logging social platform where users record trips, auto-calculate distances with PostGIS spatial queries, and climb friend and global leaderboards powered by Redis sorted sets. Features a 20-badge achievement system, a social graph with friend requests and activity feeds, a world map of visited cities, and Instagram Story-format share cards — served by a FastAPI + Celery backend with a SwiftUI iOS client.',
     teaser: 'Travel logging with leaderboards & badges.',
-    image: null,
+    image: '/project/trekrank.png',
     tags: ['Python', 'FastAPI', 'SwiftUI'],
     github: 'https://github.com/ssaillesh/trekrank',
     liveUrl: '',
