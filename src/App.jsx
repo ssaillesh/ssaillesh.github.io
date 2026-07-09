@@ -226,13 +226,13 @@ const projectCatalog = [
  
   {
     id: 10,
-    title: 'Trekrank',
+    title: 'Roamly',
     description:
-      'Travel-logging social platform where users record trips, auto-calculate distances with PostGIS spatial queries, and climb friend and global leaderboards powered by Redis sorted sets. Features a 20-badge achievement system, a social graph with friend requests and activity feeds, a world map of visited cities, and Instagram Story-format share cards — served by a FastAPI + Celery backend with a SwiftUI iOS client.',
+      'Roamly is a hyper-local, budget-locked itinerary generator for spontaneous nights out. Instead of acting as a broad, all-knowing travel guide, it operates as a programmatic matchmaker between a users immediate liquid cash and a single neighborhoods active venue ecosystem. It does not curate everything, it solves a single, high-friction problem: "I have $60 and two hours right now—where do I go next so I dont waste my night staring at my phone?"',
     teaser: 'Travel logging with leaderboards & badges.',
-    image: '/project/trekrank.png',
-    tags: ['Python', 'FastAPI', 'SwiftUI'],
-    github: 'https://github.com/ssaillesh/trekrank',
+    image: '/project/roamly.png',
+    tags: ['Python', 'FastAPI', 'PostGIS'],
+    github: 'https://github.com/ssaillesh/sway',
     liveUrl: '',
     category: ['Web & Frontend', 'Tools & Utilities'],
     year: 2026,
