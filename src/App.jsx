@@ -229,8 +229,8 @@ const projectCatalog = [
     title: 'Roamly',
     description:
       'Roamly is a hyper-local, budget-locked itinerary generator for spontaneous nights out. Instead of acting as a broad, all-knowing travel guide, it operates as a programmatic matchmaker between a users immediate liquid cash and a single neighborhoods active venue ecosystem. It does not curate everything, it solves a single, high-friction problem: "I have $60 and two hours right now—where do I go next so I dont waste my night staring at my phone?"',
-    teaser: 'Travel logging with leaderboards & badges.',
-    image: '/project/roamly.png',
+    teaser: 'Give us a budget and a vibe. We’ll give you a real, mapped out night that actually sticks to it',
+    image: '/project/Roamly.png',
     tags: ['Python', 'FastAPI', 'PostGIS'],
     github: 'https://github.com/ssaillesh/sway',
     liveUrl: '',
