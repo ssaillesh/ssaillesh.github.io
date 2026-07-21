@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion'
 import {
   ArrowUpRight,
   BriefcaseBusiness,
@@ -135,7 +135,7 @@ const projectCatalog = [
     featured: true,
   },
   {
-    id: 4,
+    id: 11,
     title: 'CareLoop',
     description:
       'Multi-tenant dental practice-management platform: scheduling and availability, patient intake, documents, billing, reminders/notifications, an AI phone assistant (Twilio + ElevenLabs), Google Calendar sync, and analytics. For medical care.',
@@ -145,7 +145,7 @@ const projectCatalog = [
     github: 'https://github.com/aarya127/CareLoop',
     liveUrl: 'https://care-loop-api.vercel.app/',
     category: ['Web & Frontend', 'Tools & Utilities', 'Trending in My World'],
-    year: 2024,
+    year: 2026,
     status: 'Open Source',
     featured: false,
   },
@@ -238,6 +238,7 @@ const projectCatalog = [
     year: 2026,
     status: 'In Progress',
     featured: false,
+    hero: true,
   },
 ]
 
@@ -592,7 +593,7 @@ function ProjectModal({ project, onClose, onOpenModal }) {
     <AnimatePresence>
       {(
         <Motion.div
-          className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/75 p-4"
+          className="fixed inset-0 z-50 grid place-items-center bg-black/75 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -600,109 +601,111 @@ function ProjectModal({ project, onClose, onOpenModal }) {
           onClick={onClose}
         >
           <Motion.div
-            className="w-full max-w-4xl overflow-hidden rounded-xl bg-[#181818] shadow-[0_25px_80px_rgba(0,0,0,0.65)]"
+            className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl bg-[#181818] shadow-[0_25px_80px_rgba(0,0,0,0.65)]"
             initial={{ opacity: 0, scale: 0.95, y: 26 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 20 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="relative aspect-video">
-              <ProjectCover project={project} />
-              <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(24,24,24,1)_8%,rgba(24,24,24,0.25)_60%,transparent)]" />
-              <button
-                type="button"
-                onClick={onClose}
-                className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-black/70 text-white"
-              >
-                <X size={16} />
-              </button>
-              <div className="absolute bottom-5 left-5 right-5">
-                <h3 className="text-3xl font-black text-white sm:text-4xl">{project.title}</h3>
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-2 rounded-md bg-[#e50914] px-4 py-2 text-sm font-semibold text-white"
-                    onClick={() => window.open(project.liveUrl || project.github, '_blank', 'noreferrer')}
-                  >
-                    <Play size={15} fill="currentColor" />
-                    View Project
-                  </button>
-                  <button type="button" className="grid h-9 w-9 place-items-center rounded-full border border-white/40 text-white">
-                    <Plus size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-8 p-6 md:grid-cols-[1.5fr_1fr]">
-              <div>
-                <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#bcbcbc]">
-                  <span className="rounded-md border border-white/20 px-2 py-0.5">{project.year}</span>
-                </div>
-                <p className="text-sm leading-relaxed text-[#bcbcbc]">{project.description}</p>
-                <div className="mt-4">
-                  <p className="text-xs uppercase tracking-[0.16em] text-[#757575]">Built With</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="rounded-full bg-[#333333] px-2.5 py-1 text-xs text-[#bcbcbc]">
-                        {tag}
-                      </span>
-                    ))}
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <div className="relative aspect-video shrink-0 sm:aspect-[21/9]">
+                <ProjectCover project={project} />
+                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(24,24,24,1)_8%,rgba(24,24,24,0.25)_60%,transparent)]" />
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-black/70 text-white"
+                >
+                  <X size={16} />
+                </button>
+                <div className="absolute bottom-5 left-5 right-5">
+                  <h3 className="text-3xl font-black text-white sm:text-4xl">{project.title}</h3>
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-2 rounded-md bg-[#e50914] px-4 py-2 text-sm font-semibold text-white"
+                      onClick={() => window.open(project.liveUrl || project.github, '_blank', 'noreferrer')}
+                    >
+                      <Play size={15} fill="currentColor" />
+                      View Project
+                    </button>
+                    <button type="button" className="grid h-9 w-9 place-items-center rounded-full border border-white/40 text-white">
+                      <Plus size={16} />
+                    </button>
                   </div>
                 </div>
-                <p className="mt-4 text-sm text-[#bcbcbc]">
-                  <span className="text-[#757575]">Author:</span> Saillesh Somasundaram
-                </p>
               </div>
 
-              <div className="space-y-3 text-sm text-[#bcbcbc]">
-                <p>
-                  <span className="text-[#757575]">GitHub:</span>{' '}
-                  <a href={project.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white hover:underline">
-                    <Github size={14} />
-                    Repository
-                  </a>
-                </p>
-                <p>
-                  <span className="text-[#757575]">Live Demo:</span>{' '}
-                  {project.liveUrl ? (
-                    <a href={project.liveUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white hover:underline">
-                      <ExternalLink size={14} />
-                      Open Link
-                    </a>
-                  ) : (
-                    <span>Private / Not Deployed</span>
-                  )}
-                </p>
-                <p>
-                  <span className="text-[#757575]">Status:</span> {project.status}
-                </p>
-                <p>
-                  <span className="text-[#757575]">Tags:</span> {project.category.join(', ')}
-                </p>
-                <p>
-                  <span className="text-[#757575]">Year:</span> {project.year}
-                </p>
-              </div>
-            </div>
-
-            <div className="border-t border-white/10 px-6 pb-6 pt-5">
-              <h4 className="text-lg font-semibold text-white">More Projects</h4>
-              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
-                {related.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => onOpenModal(item)}
-                    className="overflow-hidden rounded-lg border border-white/10 bg-[#202020] text-left transition hover:bg-[#2a2a2a]"
-                  >
-                    <div className="aspect-video">
-                      <ProjectCover project={item} />
+              <div className="grid gap-6 p-6 md:grid-cols-[1.5fr_1fr]">
+                <div>
+                  <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#bcbcbc]">
+                    <span className="rounded-md border border-white/20 px-2 py-0.5">{project.year}</span>
+                  </div>
+                  <p className="text-sm leading-relaxed text-[#bcbcbc]">{project.description}</p>
+                  <div className="mt-4">
+                    <p className="text-xs uppercase tracking-[0.16em] text-[#757575]">Built With</p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span key={tag} className="rounded-full bg-[#333333] px-2.5 py-1 text-xs text-[#bcbcbc]">
+                          {tag}
+                        </span>
+                      ))}
                     </div>
-                    <p className="p-2 text-xs font-semibold text-white">{item.title}</p>
-                  </button>
-                ))}
+                  </div>
+                  <p className="mt-4 text-sm text-[#bcbcbc]">
+                    <span className="text-[#757575]">Author:</span> Saillesh Somasundaram
+                  </p>
+                </div>
+
+                <div className="space-y-3 text-sm text-[#bcbcbc]">
+                  <p>
+                    <span className="text-[#757575]">GitHub:</span>{' '}
+                    <a href={project.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white hover:underline">
+                      <Github size={14} />
+                      Repository
+                    </a>
+                  </p>
+                  <p>
+                    <span className="text-[#757575]">Live Demo:</span>{' '}
+                    {project.liveUrl ? (
+                      <a href={project.liveUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white hover:underline">
+                        <ExternalLink size={14} />
+                        Open Link
+                      </a>
+                    ) : (
+                      <span>Private / Not Deployed</span>
+                    )}
+                  </p>
+                  <p>
+                    <span className="text-[#757575]">Status:</span> {project.status}
+                  </p>
+                  <p>
+                    <span className="text-[#757575]">Tags:</span> {project.category.join(', ')}
+                  </p>
+                  <p>
+                    <span className="text-[#757575]">Year:</span> {project.year}
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-t border-white/10 px-6 pb-6 pt-5">
+                <h4 className="text-lg font-semibold text-white">More Projects</h4>
+                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
+                  {related.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => onOpenModal(item)}
+                      className="overflow-hidden rounded-lg border border-white/10 bg-[#202020] text-left transition hover:bg-[#2a2a2a]"
+                    >
+                      <div className="aspect-video">
+                        <ProjectCover project={item} />
+                      </div>
+                      <p className="p-2 text-xs font-semibold text-white">{item.title}</p>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </Motion.div>
@@ -719,7 +722,7 @@ function NetflixProjectsView({ scrollTop }) {
   const mostRecentProject = [...projectCatalog].sort((a, b) => (b.year - a.year) || (b.id - a.id))[0]
   const listedProjects = [...projectCatalog].sort((a, b) => (b.year - a.year) || (b.id - a.id))
   const heroProject = manualHeroProject || mostRecentProject || projectCatalog[0]
-  const heroScale = 1 + Math.min(scrollTop * 0.00012, 0.03)
+  const heroScale = useTransform(scrollTop, (value) => 1 + Math.min(value * 0.00012, 0.03))
 
   return (
     <Motion.div
@@ -814,217 +817,88 @@ function ProjectsPage({ scrollTop }) {
   )
 }
 
-function TiltPhoto({ src, alt, className, imgClassName, flipHorizontal = false }) {
-  const px = useMotionValue(0)
-  const py = useMotionValue(0)
-  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [9, -9]), { stiffness: 150, damping: 16 })
-  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-9, 9]), { stiffness: 150, damping: 16 })
-
-  const handleMove = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect()
-    px.set((event.clientX - rect.left) / rect.width - 0.5)
-    py.set((event.clientY - rect.top) / rect.height - 0.5)
-  }
-
-  const handleLeave = () => {
-    px.set(0)
-    py.set(0)
-  }
-
-  return (
-    <Motion.div
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      style={{ rotateX, rotateY, transformPerspective: 900, transformStyle: 'preserve-3d' }}
-      className={className}
-    >
-      <img
-        src={src}
-        alt={alt}
-        className={imgClassName}
-        style={{ transform: `translateZ(36px)${flipHorizontal ? ' scaleX(-1)' : ''}` }}
-        loading="lazy"
-      />
-    </Motion.div>
-  )
-}
-
-function InteractiveFinale({ onOpenProjects, active, sectionRef }) {
-  const mx = useMotionValue(50)
-  const my = useMotionValue(50)
-  const smx = useSpring(mx, { stiffness: 140, damping: 22 })
-  const smy = useSpring(my, { stiffness: 140, damping: 22 })
-
-  const imgX = useTransform(smx, [0, 100], [24, -24])
-  const imgY = useTransform(smy, [0, 100], [24, -24])
-  const btnX = useTransform(smx, [0, 100], [-16, 16])
-  const btnY = useTransform(smy, [0, 100], [-16, 16])
-  const spotlight = useMotionTemplate`radial-gradient(620px circle at ${smx}% ${smy}%, rgba(96,165,250,0.22), transparent 62%)`
-
-  const handleMove = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect()
-    mx.set(((event.clientX - rect.left) / rect.width) * 100)
-    my.set(((event.clientY - rect.top) / rect.height) * 100)
-  }
-
-  const handleLeave = () => {
-    mx.set(50)
-    my.set(50)
-  }
-
+function InteractiveFinale({ onOpenProjects }) {
   return (
     <section
-      ref={sectionRef}
       data-story="cta"
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 text-center sm:px-10"
     >
-      <Motion.div style={{ x: imgX, y: imgY }} className="absolute inset-[-8%] will-change-transform">
-        <Motion.img
+      <div className="absolute inset-0">
+        <img
           src="/about/IMG_0268.jpeg"
           alt=""
           aria-hidden="true"
           className="h-full w-full object-cover"
-          initial={{ scale: 1.08 }}
-          animate={{ scale: [1.08, 1.16, 1.08] }}
-          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
         />
-      </Motion.div>
+      </div>
 
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,#070707_0%,transparent_20%,transparent_76%,#070707_100%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,transparent_36%,rgba(3,3,10,0.62))]" />
-      <Motion.div className="pointer-events-none absolute inset-0 mix-blend-screen" style={{ background: spotlight }} />
 
-      <Motion.span
-        aria-hidden="true"
-        className="pointer-events-none absolute left-[16%] top-[26%] h-40 w-40 rounded-full bg-cyan-300/20 blur-3xl"
-        animate={{ y: [0, -26, 0], opacity: [0.3, 0.55, 0.3] }}
-        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <Motion.span
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-[20%] right-[18%] h-52 w-52 rounded-full bg-indigo-400/20 blur-3xl"
-        animate={{ y: [0, 28, 0], opacity: [0.28, 0.5, 0.28] }}
-        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
-      />
+      <span aria-hidden="true" className="pointer-events-none absolute left-[16%] top-[26%] h-40 w-40 rounded-full bg-cyan-300/20 blur-3xl" />
+      <span aria-hidden="true" className="pointer-events-none absolute bottom-[20%] right-[18%] h-52 w-52 rounded-full bg-indigo-400/20 blur-3xl" />
 
-      <Motion.div
-        initial={{ opacity: 0, y: 28 }}
-        animate={active ? { opacity: 1, y: 0 } : { opacity: 0.4, y: 18 }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10"
-      >
+      <div className="relative z-10">
         <p className="text-[11px] font-medium uppercase tracking-[0.34em] text-white/65">Next</p>
         <h3 className="mt-6 text-5xl font-semibold tracking-[-0.03em] text-white drop-shadow-[0_6px_34px_rgba(0,0,0,0.65)] sm:text-7xl">
           View My Work
         </h3>
         <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-white/72 sm:text-base">
-          A collection of things I&apos;ve designed, engineered, and shipped — move your cursor, then dive in.
+          A collection of things I&apos;ve designed, engineered, and shipped.
         </p>
-        <Motion.div style={{ x: btnX, y: btnY }} className="mt-10 inline-block will-change-transform">
-          <Motion.button
+        <div className="mt-10 inline-block">
+          <button
             type="button"
             onClick={onOpenProjects}
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-white/30 bg-white/10 px-9 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white hover:text-black sm:text-base"
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-white/30 bg-white/10 px-9 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition hover:scale-[1.06] hover:bg-white hover:text-black sm:text-base"
           >
             <span className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.55),transparent_70%)] opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
             <span className="relative">Explore Projects</span>
             <ArrowUpRight size={18} className="relative transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </Motion.button>
-        </Motion.div>
-      </Motion.div>
+          </button>
+        </div>
+      </div>
     </section>
   )
 }
 
 function AboutArtistPage({ onOpenProjects }) {
-  const sectionRefs = useRef([])
-  const [visibleSections, setVisibleSections] = useState({})
   const [selectedExperience, setSelectedExperience] = useState(null)
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        setVisibleSections((prev) => {
-          const next = { ...prev }
-          for (const entry of entries) {
-            const key = entry.target.getAttribute('data-story')
-            if (!key) continue
-            next[key] = entry.isIntersecting && entry.intersectionRatio > 0.3
-          }
-          return next
-        })
-      },
-      { threshold: [0.2, 0.35, 0.55], rootMargin: '-10% 0px -10% 0px' },
-    )
-
-    const nodes = sectionRefs.current.filter(Boolean)
-    nodes.forEach((node) => observer.observe(node))
-
-    return () => observer.disconnect()
-  }, [])
-
-  const isVisible = (id) => Boolean(visibleSections[id])
-
   return (
-    <Motion.div
-      key="about-artist"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="-mx-4 bg-[#070707] text-white sm:-mx-8"
-    >
+    <div className="-mx-4 bg-[#070707] text-white sm:-mx-8">
       <div className="bg-[#070707]">
         {/* One continuous photo flows from Welcome (sky + skyline) into Experience (looking at the city) */}
         <div className="relative overflow-hidden">
           <div className="absolute inset-0">
-            <Motion.img
+            <img
               src="/about/IMG_4201.jpeg"
               alt=""
               aria-hidden="true"
-              className="h-full w-full object-cover object-center will-change-transform"
-              initial={{ scale: 1.03, scaleX: -1 }}
-              animate={{ scale: [1.03, 1.09, 1.03], scaleX: -1 }}
-              transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut' }}
+              className="h-full w-full object-cover object-center"
+              style={{ transform: 'scaleX(-1)' }}
             />
             {/* Vertical framing: dark under the header, clear/bright through the middle (the glowing skyline is the seam between the two sections), fading into the finale */}
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,5,7,0.85)_0%,rgba(5,5,7,0.18)_12%,transparent_30%,transparent_58%,rgba(5,5,7,0.4)_82%,#070707_100%)]" />
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_14%,rgba(168,130,255,0.16),transparent_42%),radial-gradient(circle_at_82%_80%,rgba(56,130,246,0.16),transparent_46%)]" />
           </div>
 
-          <section
-            ref={(node) => {
-              sectionRefs.current[0] = node
-            }}
-            data-story="intro"
-            className="relative"
-          >
+          <section data-story="intro" className="relative">
             <div className="relative flex min-h-[92vh] items-center px-6 sm:px-10">
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(5,5,7,0.78),rgba(5,5,7,0.34)_48%,transparent_82%)]" />
               <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[300px_1fr]">
-                <Motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isVisible('intro') ? { opacity: 1, y: 0 } : { opacity: 0.12, y: 14 }}
-                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                  className="mx-auto w-full max-w-[300px]"
-                >
-                  <TiltPhoto
-                    src="/about/IMG_0718.jpg"
-                    alt="Sai portrait"
-                    className="overflow-hidden rounded-[24px] border border-white/20 bg-white/5 p-2 backdrop-blur-sm"
-                    imgClassName="aspect-[4/5] w-full rounded-[18px] object-cover"
-                  />
-                </Motion.div>
+                <div className="mx-auto w-full max-w-[300px]">
+                  <div className="overflow-hidden rounded-[24px] border border-white/20 bg-white/5 p-2 backdrop-blur-sm">
+                    <img
+                      src="/about/IMG_0718.jpg"
+                      alt="Sai portrait"
+                      className="aspect-[4/5] w-full rounded-[18px] object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
 
-                <Motion.div
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={isVisible('intro') ? { opacity: 1, y: 0 } : { opacity: 0.12, y: 16 }}
-                  transition={{ duration: 1, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
-                >
+                <div>
                   <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-white/60">Welcome.</p>
                   <h1 className="mt-5 text-5xl font-semibold tracking-[-0.04em] text-white sm:text-7xl lg:text-8xl">Saillesh</h1>
                   <p className="mt-4 text-sm font-medium uppercase tracking-[0.18em] text-white/70 sm:text-base">
@@ -1033,50 +907,26 @@ function AboutArtistPage({ onOpenProjects }) {
                   <p className="mt-5 max-w-3xl text-base leading-relaxed tracking-[0.02em] text-white/74 sm:text-xl">
                     I design and deliver production-ready software across DevOps, data, and full-stack engineering, combining analytical rigor with execution speed to build secure, scalable systems that create measurable business impact.
                   </p>
-                </Motion.div>
+                </div>
               </div>
 
-              <Motion.div
-                className="absolute bottom-7 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-white/50"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1, duration: 0.8 }}
-              >
+              <div className="absolute bottom-7 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-white/50">
                 <span className="text-[10px] font-medium uppercase tracking-[0.3em]">Scroll</span>
-                <Motion.span animate={{ y: [0, 8, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
-                  <ChevronDown size={20} />
-                </Motion.span>
-              </Motion.div>
+                <ChevronDown size={20} />
+              </div>
             </div>
           </section>
 
-          <section
-            ref={(node) => {
-              sectionRefs.current[1] = node
-            }}
-            data-story="experience"
-            className="relative"
-          >
+          <section data-story="experience" className="relative">
             <div className="relative flex min-h-[100vh] flex-col justify-center px-6 py-20 sm:px-10">
               {/* Left scrim keeps the text legible while the right of the frame — me looking at the skyline — stays visible */}
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(5,5,7,0.92),rgba(5,5,7,0.55)_44%,transparent_80%)]" />
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_top,#070707,transparent)]" />
               <div className="relative mx-auto w-full max-w-6xl">
-                <Motion.div
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={isVisible('experience') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 14 }}
-                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-white/55">Experience</p>
-                  
-                </Motion.div>
+                <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-white/55">Experience</p>
 
                 <div className="mt-8 grid gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-                  <Motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={isVisible('experience') ? { opacity: 1, y: 0 } : { opacity: 0.08, y: 14 }}
-                    transition={{ duration: 0.85, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-                  >
+                  <div>
                     <h4 className="text-3xl font-semibold tracking-[-0.02em] text-white sm:text-4xl">Biography</h4>
                     <p className="mt-6 max-w-xl text-base leading-relaxed text-white/82 sm:text-[1.08rem]">
                       Saillesh is an Honors Physics student at the University of Waterloo and a software engineer focused on high-impact execution.
@@ -1090,7 +940,7 @@ function AboutArtistPage({ onOpenProjects }) {
                     <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/74 sm:text-base">
                       Platform engineering, CI/CD reliability, cloud infrastructure, software development, and optimization through data.
                     </p>
-                  </Motion.div>
+                  </div>
 
                   <div aria-hidden="true" className="hidden lg:block lg:col-start-2" />
                 </div>
@@ -1101,16 +951,11 @@ function AboutArtistPage({ onOpenProjects }) {
                     <p className="hidden text-[11px] text-white/40 sm:block">Tap a role for details</p>
                   </div>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {experienceEntries.map((entry, index) => (
-                      <Motion.button
+                    {experienceEntries.map((entry) => (
+                      <button
                         key={entry.id}
                         type="button"
                         onClick={() => setSelectedExperience(entry)}
-                        initial={{ opacity: 0, y: 18 }}
-                        animate={isVisible('experience') ? { opacity: 1, y: 0 } : { opacity: 0.12, y: 12 }}
-                        transition={{ duration: 0.5, delay: 0.12 + index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                        whileHover={{ y: -6 }}
-                        whileTap={{ scale: 0.98 }}
                         className="group relative overflow-hidden rounded-2xl border border-white/12 bg-black/40 p-4 text-left backdrop-blur-md transition-colors hover:border-white/30"
                       >
                         <span
@@ -1132,7 +977,7 @@ function AboutArtistPage({ onOpenProjects }) {
                         </div>
                         <p className="relative mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45">{entry.period}</p>
                         <p className="relative mt-2 line-clamp-2 text-xs leading-relaxed text-white/60">{entry.description}</p>
-                      </Motion.button>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -1141,17 +986,11 @@ function AboutArtistPage({ onOpenProjects }) {
           </section>
         </div>
 
-        <InteractiveFinale
-          onOpenProjects={onOpenProjects}
-          active={isVisible('cta')}
-          sectionRef={(node) => {
-            sectionRefs.current[2] = node
-          }}
-        />
+        <InteractiveFinale onOpenProjects={onOpenProjects} />
       </div>
 
       <ExperienceModal experience={selectedExperience} onClose={() => setSelectedExperience(null)} />
-    </Motion.div>
+    </div>
   )
 }
 
@@ -1164,18 +1003,12 @@ function AppLayout() {
   const [activePill, setActivePill] = useState('About Me')
   const [activePage, setActivePage] = useState('about')
   const [pageDirection, setPageDirection] = useState(1)
-  const [scrollTop, setScrollTop] = useState(0)
+  const scrollTop = useMotionValue(0)
 
   const scrollContainerRef = useRef(null)
-  const scrollRAFRef = useRef(null)
 
   const handleScroll = (event) => {
-    if (scrollRAFRef.current) {
-      cancelAnimationFrame(scrollRAFRef.current)
-    }
-    scrollRAFRef.current = requestAnimationFrame(() => {
-      setScrollTop(event.currentTarget.scrollTop)
-    })
+    scrollTop.set(event.currentTarget.scrollTop)
   }
 
   const handlePillClick = (pill) => {
