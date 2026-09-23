@@ -6,18 +6,24 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Compass,
   Code2,
   ExternalLink,
   Github,
   GraduationCap,
   Info,
   Instagram,
+  Linkedin,
+  Mail,
   MoreHorizontal,
   Play,
   Plus,
+  Server,
+  ShieldCheck,
   Shuffle,
   Sparkles,
   ThumbsUp,
+  Workflow,
   Wrench,
   X,
 } from 'lucide-react'
@@ -34,60 +40,165 @@ const experienceEntries = [
     accent: '#0072ce',
     companyUrl: 'https://www.symcor.ca/',
     companyAbout: 'Symcor builds secure technology and operations for highly regulated industries.',
-    period: 'Sep 2025 - Apr 2026',
+    period: 'Sep 2025 - May 2026',
+    location: 'Toronto, ON',
     highlights: [
-      'Implemented CI/CD quality gates and secret scanning across 100+ repositories.',
-      'Built GitLab Runner telemetry reducing pipeline brownouts by 40%.',
-      'Modernized Java pipelines with Maven + JaCoCo and reusable automation.',
+      'Owned identity and access for a 200-repository self-managed GitLab estate: shipped an idempotent Python/GitLab IAM/RBAC provisioning REST API with dry-run preview, collapsing access-grant SLA from 1 hour to 10 seconds.',
+      'Kept 60+ GitLab CI runners healthy with a Python fleet-management tool driving Ansible auto-remediation, cutting failures 40%; configured shell and Docker executors, autoscaling, and tag-based job routing.',
+      'Closed the credential-incident gap to zero: automated end-to-end PAT rotation, audited 80+ GitLab subgroups, and ran secrets through HashiCorp Vault and Ansible Vault.',
+      'Hardened the merge path with YAML GitLab CI pipelines gated by test suites, SonarQube, SAST, and DAST; configured caching and artifacts against JFrog Artifactory.',
+      'Built Grafana dashboards for runner health, CI job failure rates, and version currency across hosts, and migrated the team off SVN onto Git.',
     ],
-    stack: ['GitLab CI/CD', 'SonarQube', 'Bash', 'Ansible', 'Maven', 'JaCoCo'],
+    stack: ['Python', 'GitLab CI/CD', 'Ansible', 'HashiCorp Vault', 'Grafana', 'SonarQube', 'JFrog Artifactory', 'Linux'],
     description:
-      'Hardened CI/CD across 100+ repositories by enforcing quality gates, secret scanning, and SonarQube reporting.',
+      'Owned IAM/RBAC automation, CI runner fleet health, and secrets hygiene across a 200-repository self-managed GitLab estate.',
   },
   {
     id: 'omniabio-qa',
     role: 'Quality Automation Engineer',
-    org: 'OmniaBio',
+    org: 'OmniaBio Inc',
     logo: '/logos/omniabio.png',
     accent: '#2b6cb0',
     companyUrl: 'https://omniabio.com/',
     companyAbout: 'OmniaBio is a cell and gene therapy CDMO focused on AI-enabled development and GMP manufacturing.',
     period: 'Aug 2024 - Dec 2024',
+    location: 'Hamilton, ON',
     highlights: [
-      'Engineered Python anomaly detection for 8K+ pharmaceutical samples.',
-      'Automated validation and outlier checks to cut GMP turnaround by 35%.',
-      'Delivered 99.8% compliance while reducing manual QC cycles by 60%.',
+      'Built a Python/pandas ETL pipeline over SAP CSV and Excel exports for 500+ SKUs in a GMP-regulated environment, eliminating a full week of manual reconciliation every cycle.',
+      'Engineered validation gates spanning schema conformance, row counts, null constraints, referential integrity, and duplicate detection, surfacing 10 record mismatches that triggered a VP-led investigation.',
+      'Built Python anomaly and outlier detection over QC sample data, catching out-of-range records that the rule-based gates alone would pass through.',
+      'Shipped a recurring Power BI inventory report and status-flag logic sequencing 500+ SKUs into daily inspection queues by priority; both stayed in production after the term.',
+      'Designed for non-technical adoption: kept execution manual so QC staff could run it unaided, version-controlled on GitHub, and authored SOPs reused to onboard new hires.',
     ],
-    stack: ['Python', 'SPC', 'Validation', 'Automation'],
-    description: 'Built anomaly detection and automated quality checks for GMP data pipelines.',
+    stack: ['Python', 'pandas', 'NumPy', 'Anomaly detection', 'SAP exports', 'Power BI', 'GitHub'],
+    description:
+      'Built anomaly detection and a validated ETL pipeline over SAP data, replacing a week of manual reconciliation per cycle in a GMP-regulated environment.',
+  },
+  {
+    id: 'pepsico-swe',
+    role: 'Software Developer, Operations Manager',
+    org: 'PepsiCo Inc',
+    logo: '/logos/pepsico.png',
+    accent: '#003e7e',
+    companyUrl: 'https://www.pepsico.com/',
+    companyAbout: 'PepsiCo is a global food and beverage company operating large-scale manufacturing and analytics.',
+    period: 'Jan 2024 - Apr 2024',
+    location: 'Lethbridge, AB',
+    highlights: [
+      'Built a Python/OpenCV/YOLOv8 stall-detection pipeline over 100+ hours of plant footage, pairing detection with BoT-SORT tracking and scoring precision, recall, and F1 against 40 hours of hand-labeled ground truth.',
+      'Derived a 10-second stall threshold from observed self-clearing behaviour, using OpenCV VideoCapture for ingest and contour detection to isolate box geometry while tuning against false positives.',
+      'Published detections to a Power BI dashboard maintenance leads used to rank work orders; still in active use after the term.',
+      'Ran floor operations for 70+ operators across three shifts, owning scheduling and contractor coordination, and led facility readiness for a CEO site visit.',
+    ],
+    stack: ['Python', 'OpenCV', 'YOLOv8', 'BoT-SORT', 'Power BI'],
+    description:
+      'Shipped a computer-vision stall-detection pipeline over plant footage while running floor operations for 70+ operators.',
   },
   {
     id: 'pepsico-data',
     role: 'Data Analyst',
     org: 'PepsiCo Inc',
     logo: '/logos/pepsico.png',
-    accent: '#003e7e',
+    accent: '#0d4f9e',
     companyUrl: 'https://www.pepsico.com/',
     companyAbout: 'PepsiCo is a global food and beverage company with large-scale analytics operations.',
-    period: 'Jan 2023 - Apr 2024',
+    period: 'Jan 2023 - Apr 2023',
+    location: 'Mississauga, ON',
     highlights: [
-      'Built optimized SQL layers for faster BI drill-down and reporting.',
-      'Applied regression and time-series analysis to uncover bottlenecks.',
-      'Automated SLA-critical reporting for 500K+ users across 15 markets.',
+      'Closed a cross-vendor notification gap with an event-driven Python/Power Automate pipeline flagging tasks due within 5 days, cutting 15+ past-due orders per month.',
+      'Automated truckload planning with a pandas/NumPy engine over SQL Server; validated a scikit-learn regression by cross-validation to project $180K in annual savings.',
+      'Modeled whether reducing box dimensions and rearranging trailer load configuration would raise shippable volume, presenting the analysis to managers and directors.',
+      'Owned four monthly Power BI KPI dashboards reporting to headquarters, transforming SQL sources through Power Query and DAX measures.',
     ],
-    stack: ['SQL', 'Power BI', 'Regression', 'Time-Series'],
-    description: 'Designed analytics and reporting systems with high SLA reliability.',
+    stack: ['Python', 'pandas', 'NumPy', 'SQL Server', 'scikit-learn', 'Power BI', 'DAX'],
+    description:
+      'Automated planning and reporting over SQL Server, projecting $180K in annual savings through a cross-validated model.',
+  },
+  {
+    id: 'uwaft-swe',
+    role: 'Software Engineer',
+    org: 'UWAFT',
+    logo: '/logos/uwaft.png',
+    accent: '#c8a44b',
+    companyUrl: 'https://uwaft.ca/',
+    companyAbout:
+      'The University of Waterloo Alternative Fuels Team builds autonomous and low-emission vehicle technology for intercollegiate competition.',
+    period: 'Sep 2022 - Jan 2023',
+    location: 'Waterloo, ON',
+    highlights: [
+      'Built a C++ Extended Kalman Filter fusing LiDAR and camera input on OpenCV, tracking position, velocity, acceleration, and bearing to cut obstacle-detection false positives 15%.',
+      'Handled coordinate frame transforms and LiDAR-to-camera calibration so both sensors resolved into a common frame; integrated over ROS 2 with rosbag replay against recorded drives.',
+      'Architected a containerized Docker simulation harness across a 10-node cluster, orchestrated with Docker Compose for parallel perception-model testing in CARLA and MATLAB.',
+      'Instrumented a real-time telemetry pipeline processing 10+ GB/hr of camera and CAN bus data, with Prometheus P99 alerting on latency and drop rate.',
+    ],
+    stack: ['C++', 'OpenCV', 'ROS 2', 'Docker Compose', 'Prometheus', 'Bazel', 'GoogleTest', 'CARLA'],
+    description:
+      'Fused LiDAR and camera perception in C++ and distributed simulation across a 10-node containerized cluster.',
+  },
+]
+
+const skillGroups = [
+  {
+    id: 'languages',
+    label: 'Languages & Frameworks',
+    icon: Code2,
+    accent: '#60a5fa',
+    blurb: 'What I build the systems in.',
+    items: ['Python', 'Bash', 'SQL', 'YAML', 'C++', 'TypeScript/JavaScript', 'React/Next.js', 'FastAPI'],
+  },
+  {
+    id: 'cicd',
+    label: 'CI/CD & Automation',
+    icon: Workflow,
+    accent: '#34d399',
+    blurb: 'How code gets from a merge request to production.',
+    items: ['GitLab CI/CD', 'GitHub Actions', 'Ansible', 'Ansible Vault', 'JFrog Artifactory', 'Bazel', 'Merge gates', 'cron'],
+  },
+  {
+    id: 'infrastructure',
+    label: 'Infrastructure',
+    icon: Server,
+    accent: '#a78bfa',
+    blurb: 'Where it runs and how it is wired together.',
+    items: ['Docker', 'Docker Compose', 'Nginx', 'AWS (EC2, S3)', 'Linux (Ubuntu, RHEL)', 'VM administration', 'REST APIs'],
+  },
+  {
+    id: 'observability',
+    label: 'Observability & Security',
+    icon: ShieldCheck,
+    accent: '#f59e0b',
+    blurb: 'Keeping it visible, credentialed, and hardened.',
+    items: ['Prometheus', 'Grafana', 'HashiCorp Vault', 'RBAC/IAM provisioning', 'PAT rotation', 'SonarQube', 'SAST', 'DAST'],
+  },
+  {
+    id: 'tooling',
+    label: 'Tooling & Testing',
+    icon: Wrench,
+    accent: '#f472b6',
+    blurb: 'The day-to-day bench and the safety net under it.',
+    items: ['Git', 'GitLab', 'GitHub', 'SVN', 'pytest', 'GoogleTest', 'Catch2', 'PostgreSQL', 'Redis', 'Jira', 'Confluence'],
+  },
+  {
+    id: 'familiarity',
+    label: 'Working Familiarity',
+    icon: Compass,
+    accent: '#22d3ee',
+    blurb: 'Shipped with, still deepening.',
+    items: ['Kubernetes', 'OpenShift', 'Terraform', 'Azure'],
   },
 ]
 
 const educationItems = [
   {
     id: 'uw-physics',
-    period: '2021 - Present',
-    title: 'Bachelor of Science in Honors Physics',
+    period: 'Expected August 2026',
+    badge: 'Education',
+    title: 'Bachelor of Science, Honours Physics (Co-op)',
     provider: 'University of Waterloo',
+    color: 'from-amber-500/70 via-yellow-700/40 to-zinc-900/80',
+    link: 'https://uwaterloo.ca/',
     details:
-      'Focused on computational physics, signals and systems, and mathematical modeling with practical software applications.',
+      'Honours Physics with co-op, graduating August 2026. Relevant coursework: Data Structures & Algorithms, Computational Physics, Linear Algebra, and Probability & Statistics — the computational and statistical grounding behind the modeling, detection, and data work in my roles.',
   },
 ]
 
@@ -400,9 +511,11 @@ function ExperienceModal({ experience, onClose }) {
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#bcbcbc]">Experience Spotlight</p>
-                <h3 className="truncate text-2xl font-black text-white sm:text-3xl">{experience.role}</h3>
+                <h3 className="text-2xl font-black leading-tight text-white sm:text-3xl">{experience.role}</h3>
                 <p className="truncate text-sm text-[#bcbcbc]">{experience.org}</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#757575]">{experience.period}</p>
+                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#757575]">
+                  {experience.period} &middot; {experience.location}
+                </p>
               </div>
             </div>
             <div className="relative z-10 mt-5 flex flex-wrap gap-2">
@@ -441,6 +554,9 @@ function ExperienceModal({ experience, onClose }) {
             <div className="space-y-3 text-sm text-[#bcbcbc]">
               <p>
                 <span className="text-[#757575]">Company:</span> {experience.org}
+              </p>
+              <p>
+                <span className="text-[#757575]">Location:</span> {experience.location}
               </p>
               <p>
                 <span className="text-[#757575]">Website:</span>{' '}
@@ -817,6 +933,119 @@ function ProjectsPage({ scrollTop }) {
   )
 }
 
+function SkillGroupCard({ group, index }) {
+  const Icon = group.icon
+
+  return (
+    <Motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay: Math.min(index * 0.07, 0.35) }}
+      className="group relative overflow-hidden rounded-2xl border border-white/12 bg-white/[0.035] p-5 backdrop-blur-md transition-colors duration-300 hover:border-white/30"
+    >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-60"
+        style={{ backgroundColor: group.accent }}
+      />
+
+      <div className="relative flex items-center gap-3">
+        <span
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/15"
+          style={{ backgroundColor: `${group.accent}1f`, color: group.accent }}
+        >
+          <Icon size={18} />
+        </span>
+        <div className="min-w-0">
+          <h4 className="truncate text-sm font-semibold tracking-[-0.01em] text-white sm:text-base">{group.label}</h4>
+          <p className="truncate text-[11px] text-white/50">{group.blurb}</p>
+        </div>
+      </div>
+
+      <ul className="relative mt-4 flex flex-wrap gap-2">
+        {group.items.map((item) => (
+          <li
+            key={item}
+            className="rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] font-medium text-white/75 transition-colors duration-200 group-hover:border-white/20 group-hover:text-white/90 sm:text-xs"
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+    </Motion.div>
+  )
+}
+
+function CapabilitiesSection() {
+  const [selectedEducation, setSelectedEducation] = useState(null)
+
+  return (
+    <section data-story="skills" className="relative bg-[#070707] px-6 py-24 sm:px-10">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(96,165,250,0.10),transparent_45%),radial-gradient(circle_at_84%_72%,rgba(167,139,250,0.10),transparent_48%)]"
+      />
+
+      <div className="relative mx-auto w-full max-w-6xl">
+        <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-white/55">Toolkit</p>
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_0.85fr] lg:items-end">
+          <h3 className="text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
+            The stack behind the work
+          </h3>
+          <p className="text-sm leading-relaxed text-white/70 sm:text-base">
+            Platform engineering and CI/CD reliability at the center, with the data, infrastructure, and security tooling
+            I reach for to make delivery fast, observable, and safe.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {skillGroups.map((group, index) => (
+            <SkillGroupCard key={group.id} group={group} index={index} />
+          ))}
+        </div>
+
+        <div className="mt-16">
+          <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-white/55">Education</p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            {educationItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setSelectedEducation(item)}
+                className="group relative overflow-hidden rounded-2xl border border-white/12 bg-white/[0.035] p-5 text-left backdrop-blur-md transition-colors duration-300 hover:border-white/30"
+              >
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-amber-400 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-40"
+                />
+                <div className="relative flex items-center gap-3">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/15 bg-amber-400/15 text-amber-300">
+                    <GraduationCap size={18} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-white sm:text-base">{item.title}</p>
+                    <p className="truncate text-xs text-white/55">{item.provider}</p>
+                  </div>
+                  <ArrowUpRight
+                    size={18}
+                    className="ml-auto shrink-0 text-white/35 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white"
+                  />
+                </div>
+                <p className="relative mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45">
+                  {item.period}
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <EducationModal item={selectedEducation} onClose={() => setSelectedEducation(null)} />
+    </section>
+  )
+}
+
 function InteractiveFinale({ onOpenProjects }) {
   return (
     <section
@@ -933,12 +1162,13 @@ function AboutArtistPage({ onOpenProjects }) {
                       He combines analytical rigor with product-minded engineering to build systems that are reliable, scalable, and measurable in real business environments.
                     </p>
                     <p className="mt-5 max-w-xl text-base leading-relaxed text-white/82 sm:text-[1.08rem]">
-                      Across DevOps, automation, and analytics, he has strengthened CI/CD quality and security controls at scale, shipped anomaly detection pipelines,
-                      and delivered data-driven tooling that improves delivery speed, operational resilience, and decision quality.
+                      Across DevOps, automation, and analytics he has automated identity and access for a 200-repository GitLab estate, kept a 60+ runner CI fleet
+                      healthy through Ansible remediation, driven credential incidents to zero, and shipped anomaly detection and validated data pipelines that replaced manual reconciliation
+                      outright &mdash; work measured in delivery speed, operational resilience, and decision quality.
                     </p>
                     <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-white/62">Core Focus</p>
                     <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/74 sm:text-base">
-                      Platform engineering, CI/CD reliability, cloud infrastructure, software development, and optimization through data.
+                      Platform engineering, CI/CD reliability, infrastructure and secrets automation, full-stack development, and optimization through data.
                     </p>
                   </div>
 
@@ -967,7 +1197,7 @@ function AboutArtistPage({ onOpenProjects }) {
                             <ExperienceAlbumCover logo={entry.logo} org={entry.org} />
                           </div>
                           <div className="min-w-0">
-                            <p className="truncate text-sm font-semibold text-white">{entry.role}</p>
+                            <p className="text-sm font-semibold leading-snug text-white">{entry.role}</p>
                             <p className="truncate text-xs text-white/55">{entry.org}</p>
                           </div>
                           <ArrowUpRight
@@ -975,7 +1205,9 @@ function AboutArtistPage({ onOpenProjects }) {
                             className="ml-auto shrink-0 text-white/35 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white"
                           />
                         </div>
-                        <p className="relative mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45">{entry.period}</p>
+                        <p className="relative mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45">
+                          {entry.period} &middot; {entry.location}
+                        </p>
                         <p className="relative mt-2 line-clamp-2 text-xs leading-relaxed text-white/60">{entry.description}</p>
                       </button>
                     ))}
@@ -985,6 +1217,8 @@ function AboutArtistPage({ onOpenProjects }) {
             </div>
           </section>
         </div>
+
+        <CapabilitiesSection />
 
         <InteractiveFinale onOpenProjects={onOpenProjects} />
       </div>
@@ -998,6 +1232,129 @@ function CombinedAboutJourneyPage({ onOpenProjects }) {
   return <AboutArtistPage onOpenProjects={onOpenProjects} />
 }
 
+
+const contactChannels = [
+  {
+    id: 'email',
+    value: 's5somasu@uwaterloo.ca',
+    href: 'mailto:s5somasu@uwaterloo.ca',
+    icon: Mail,
+    accent: '#60a5fa',
+    external: false,
+  },
+  {
+    id: 'github',
+    value: '@ssaillesh',
+    href: 'https://github.com/ssaillesh',
+    icon: Github,
+    accent: '#a78bfa',
+    external: true,
+  },
+  {
+    id: 'linkedin',
+    value: 'in/saillesh',
+    href: 'https://www.linkedin.com/in/saillesh',
+    icon: Linkedin,
+    accent: '#38bdf8',
+    external: true,
+  },
+]
+
+function TrademarkLockup() {
+  const [logoFailed, setLogoFailed] = useState(false)
+
+  return (
+    <div className="flex items-end gap-1.5">
+      {logoFailed ? (
+        <span className="text-2xl font-black leading-none tracking-[-0.04em] text-white/90">SM</span>
+      ) : (
+        <img
+          src="/logos/sai-logo.png"
+          alt="Saillesh Somasundaram monogram"
+          className="h-9 w-auto object-contain"
+          onError={() => setLogoFailed(true)}
+        />
+      )}
+      <span className="pb-0.5 text-[9px] font-semibold text-white/40" aria-hidden="true">
+        &trade;
+      </span>
+    </div>
+  )
+}
+
+function SiteFooter() {
+  const year = new Date().getFullYear()
+
+  return (
+    <footer id="contact" className="relative border-t border-white/10 bg-[#070707] px-6 py-12 sm:px-10">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_25%_0%,rgba(96,165,250,0.07),transparent_50%)]"
+      />
+
+      <div className="relative mx-auto w-full max-w-6xl">
+        <div className="flex flex-col gap-7 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-white/45">Contact</p>
+            <h3 className="mt-2.5 text-2xl font-semibold tracking-[-0.02em] text-white sm:text-3xl">
+              Let&apos;s build something
+            </h3>
+            <p className="mt-2 text-sm text-white/50">Toronto, ON &middot; open to new grad and co-op roles</p>
+          </div>
+
+          <div className="flex flex-wrap gap-2.5">
+            {contactChannels.map((channel) => {
+              const Icon = channel.icon
+              return (
+                <a
+                  key={channel.id}
+                  href={channel.href}
+                  {...(channel.external ? { target: '_blank', rel: 'noreferrer' } : {})}
+                  className="group inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.04] py-1.5 pl-1.5 pr-4 transition-colors duration-300 hover:border-white/30 hover:bg-white/[0.08]"
+                >
+                  <span
+                    className="grid h-7 w-7 shrink-0 place-items-center rounded-full"
+                    style={{ backgroundColor: `${channel.accent}24`, color: channel.accent }}
+                  >
+                    <Icon size={14} />
+                  </span>
+                  <span className="text-sm font-medium text-white/80 transition-colors duration-300 group-hover:text-white">
+                    {channel.value}
+                  </span>
+                </a>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="mt-9 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <TrademarkLockup />
+            <p className="text-xs text-white/35">Saillesh Somasundaram</p>
+          </div>
+          <p className="text-xs text-white/30">&copy; {year} Saillesh Somasundaram. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+function BrandMark() {
+  const [logoFailed, setLogoFailed] = useState(false)
+
+  if (logoFailed) {
+    return <span className="text-lg font-black leading-none tracking-[-0.04em] text-white/85">SM</span>
+  }
+
+  return (
+    <img
+      src="/logos/sai-logo.png"
+      alt="Saillesh Somasundaram"
+      className="h-7 w-auto object-contain sm:h-8"
+      onError={() => setLogoFailed(true)}
+    />
+  )
+}
 
 function AppLayout() {
   const [activePill, setActivePill] = useState('About Me')
@@ -1082,7 +1439,7 @@ function AppLayout() {
             className="sticky top-0 z-30 border-b border-white/10 bg-[rgba(18,18,18,0.75)] px-4 py-3 backdrop-blur-xl sm:px-8"
           >
             <div className="mx-auto flex w-full max-w-screen-2xl items-center justify-between gap-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">Sai Portfolio</p>
+              <BrandMark />
               <div className="relative inline-flex items-center rounded-full bg-white/5 p-1">
                 <Motion.div
                   layout
@@ -1150,6 +1507,8 @@ function AppLayout() {
               </Motion.div>
             </AnimatePresence>
           </Motion.main>
+
+          <SiteFooter />
         </div>
       </div>
     </Motion.div>
