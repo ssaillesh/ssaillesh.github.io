@@ -1,9 +1,12 @@
 export const profile = {
   name: 'Saillesh Somasundaram',
-  role: 'Software engineer across DevOps, data, and full-stack',
-  meta: ['Toronto, ON', 'Waterloo Honours Physics 2026', 'Open to new grad roles'],
-  intro:
-    'I build the automation and data systems teams depend on, then the products on top of them. At Symcor I cut access grants across a 200-repository GitLab estate from an hour to 10 seconds; at OmniaBio I replaced a week of manual reconciliation per cycle with a validated ETL pipeline. I am looking for new grad roles in software, solutions, forward-deployed, and data engineering.',
+  firstName: 'Saillesh',
+  // The first screen: a hello and a little about me.
+  about: [
+    'I just finished Honours Physics at the University of Waterloo, and I build software across DevOps, data and full-stack.',
+    'At Symcor I cut access grants across a 200-repository GitLab estate from an hour to 10 seconds. At OmniaBio I replaced a week of manual reconciliation with a validated data pipeline.',
+    'I work mostly in Python, TypeScript, SQL and C++, with GitLab CI, Docker, Ansible and AWS. I am in Toronto and open to new grad roles in software, solutions, forward-deployed and data engineering.',
+  ],
   location: 'Toronto, ON',
   availability: 'open to new grad roles',
   // Still the University of Waterloo address: no permanent personal address has been supplied yet.
@@ -24,8 +27,7 @@ export const profile = {
 }
 
 export const navigation = [
-  { id: 'work', label: 'Work' },
+  { id: 'tapes', label: 'Tapes' },
   { id: 'experience', label: 'Experience' },
-  { id: 'skills', label: 'Skills' },
   { id: 'contact', label: 'Contact' },
 ]

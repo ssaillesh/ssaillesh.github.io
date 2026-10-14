@@ -116,7 +116,7 @@ export function ExperienceSection() {
         <Reveal>
           <SectionHeading
             id="experience-title"
-            title="Experience"
+            title="Where I've worked"
             description="Five roles across platform engineering, quality automation, computer vision and analytics."
           />
         </Reveal>

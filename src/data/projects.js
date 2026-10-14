@@ -2,11 +2,10 @@
 // history), my résumé, or the previous version of this site. Optional fields that could not be
 // verified (live URLs, repositories, metrics) are left out rather than guessed.
 
-// Card images come in 640, 960 and 1600px widths; gallery-only images need just the 1600px file.
+// Screenshots come in 960 and 1600px widths; gallery-only images need just the 1600px file.
 const img = (name, width, height, alt, { thumb = true } = {}) => ({
   full: `/images/projects/${name}-1600.webp`,
   thumb: thumb ? `/images/projects/${name}-960.webp` : null,
-  small: thumb ? `/images/projects/${name}-640.webp` : null,
   width,
   height,
   alt,
@@ -15,6 +14,7 @@ const img = (name, width, height, alt, { thumb = true } = {}) => ({
 export const projects = [
   {
     slug: 'reposcribe',
+    tape: { shell: '#2a2a2e', stripe: '#d9472b' },
     title: 'RepoScribe',
     formerNames: ['RAGForge', 'CodeGraphRAG'],
     pitch: 'A codebase-to-README generator grounded in retrieval over the repository itself.',
@@ -56,6 +56,7 @@ export const projects = [
   },
   {
     slug: 'automl-researcher',
+    tape: { shell: '#e6e1d6', stripe: '#2d6a8f' },
     title: 'AutoML Researcher',
     pitch: 'A local multi-agent AutoML lab that trains, tunes and ranks models on tabular data.',
     teaser: 'Agents that train, tune and rank models.',
@@ -96,8 +97,8 @@ export const projects = [
   },
   {
     slug: 'careloop',
+    tape: { shell: '#f0a830', stripe: '#1c1c1f' },
     title: 'CareLoop',
-    featured: true,
     pitch: 'A multi-tenant practice-management platform for dental clinics.',
     teaser: 'Practice management for dental clinics.',
     description:
@@ -151,6 +152,7 @@ export const projects = [
   },
   {
     slug: 'roamly',
+    tape: { shell: '#d4563a', stripe: '#f0a830' },
     title: 'Roamly',
     pitch: 'Give it a budget and a vibe, and get a real, mapped night out that sticks to it.',
     teaser: 'A budget-locked plan for tonight.',
@@ -167,6 +169,7 @@ export const projects = [
   },
   {
     slug: 'heston-engine',
+    tape: { shell: '#2c4f73', stripe: '#c9a227' },
     title: 'Heston Engine',
     pitch: 'Option pricing under the Heston model, with three independent solvers and an audited validation suite.',
     teaser: 'Stochastic volatility, priced three ways.',
@@ -214,6 +217,7 @@ export const projects = [
   },
   {
     slug: 'news-engine',
+    tape: { shell: '#3d6b52', stripe: '#26262a' },
     title: 'News Engine',
     pitch: 'Entity-level sentiment on financial news, clustered into events and ranked by a hot score.',
     teaser: 'Financial news, scored per company.',
@@ -276,6 +280,7 @@ export const projects = [
   },
   {
     slug: 'asl-recognition',
+    tape: { shell: '#b7b0a1', stripe: '#d4563a' },
     title: 'ASL Recognition',
     pitch: 'Real-time ASL fingerspelling recognition with sentence building and text-to-speech.',
     teaser: 'Live ASL fingerspelling to speech.',
@@ -301,4 +306,15 @@ export const projects = [
     ],
     results: [],
   },
+]
+
+// Shelf order: the strongest, most complete work first.
+export const tapeOrder = [
+  'careloop',
+  'reposcribe',
+  'automl-researcher',
+  'news-engine',
+  'heston-engine',
+  'roamly',
+  'asl-recognition',
 ]

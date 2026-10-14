@@ -12,9 +12,9 @@ const channels = [
   { label: 'Resume', value: 'PDF, one page', href: asset(profile.resume), icon: FileText, external: true },
 ]
 
-export function ContactSection({ inert }) {
+export function ContactSection() {
   return (
-    <footer id="contact" aria-labelledby="contact-title" className="section section-end bg-surface" inert={inert}>
+    <footer id="contact" aria-labelledby="contact-title" className="section section-end bg-surface">
       <div className="page-width">
         <Reveal>
           <h2 id="contact-title" className="text-display font-bold text-ink">

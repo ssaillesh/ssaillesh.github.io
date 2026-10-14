@@ -6,6 +6,8 @@ const variants = {
   primary: 'bg-accent text-accent-ink hover:bg-accent-hover',
   secondary: 'bg-raised text-ink hover:bg-[#28282c]',
   quiet: 'text-ink-2 hover:bg-raised hover:text-ink',
+  // Dark button for use on the paper liner notes.
+  ink: 'bg-[#1b1b1b] text-[#f2ede1] hover:bg-black',
 }
 
 const sizes = {

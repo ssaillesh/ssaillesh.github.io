@@ -3,6 +3,6 @@
 export const HOME_LOCATION = { pathname: '/', search: '', hash: '', state: null, key: 'home' }
 
 // Section ids that can also arrive as hash routes (for example /#work opened in a new tab).
-export const SECTION_IDS = ['work', 'experience', 'skills', 'education', 'contact', 'main']
+export const SECTION_IDS = ['tapes', 'experience', 'contact', 'main']
 
 export const projectPath = (slug) => `/project/${slug}`
