@@ -1,50 +1,263 @@
 @import 'tailwindcss';
 
+/* Design tokens. Every colour, size and curve on the site comes from here. */
 :root {
-  --bg: #121212;
-  --surface: #181818;
-  --surface-hover: #282828;
-  --accent: #1db954;
-  --text-primary: #ffffff;
-  --text-secondary: #b3b3b3;
-  --text-muted: #535353;
+  --background: #0b0b0c;
+  --surface: #141416;
+  --surface-raised: #1c1c1f;
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f5f5f5;
+  --text-secondary: #a1a1aa;
+  /* Lifted from #71717a so small muted text keeps 4.5:1 on --background. */
+  --text-muted: #8b8b94;
+
+  --accent: #f5a524;
+  --accent-hover: #f8b850;
+  --accent-foreground: #141416;
+
+  --header-height: 64px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --content-max: 1240px;
+  /* Left and right edge of all content: the gutter, or wider on large screens to centre a 1240px column. */
+  --edge: max(var(--gutter), calc((100vw - var(--content-max)) / 2));
+
+  /* Strong ease-out for entrances, softer ease for hover colour changes. */
+  --ease-out-strong: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-strong: cubic-bezier(0.76, 0, 0.24, 1);
+
+  color-scheme: dark;
 }
 
-* {
-  box-sizing: border-box;
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
+  --color-line: var(--border);
+  --color-ink: var(--text-primary);
+  --color-ink-2: var(--text-secondary);
+  --color-ink-3: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-foreground);
+
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+
+  /* Five sizes, far apart: display, head, lead, body, small. */
+  --text-display: clamp(2.75rem, 0.5rem + 5.6vw, 6rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.045em;
+  --text-head: clamp(1.75rem, 1.3rem + 1.2vw, 2.25rem);
+  --text-head--line-height: 1.12;
+  --text-head--letter-spacing: -0.03em;
+  --text-lead: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  --text-lead--line-height: 1.45;
+  --text-lead--letter-spacing: -0.01em;
+  --text-body: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+  --text-body--line-height: 1.6;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+
+  --radius-card: 12px;
+  --radius-panel: 20px;
+
+  --ease-out: var(--ease-out-strong);
+  --ease-in-out: var(--ease-in-out-strong);
 }
 
-html,
-body,
-#root {
-  width: 100%;
-  min-height: 100%;
+@layer base {
+  html {
+    background: var(--background);
+    scrollbar-gutter: stable;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--background);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Programmatic focus on headings after in-page navigation should not draw a ring. */
+  [tabindex='-1']:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
-}
+@layer components {
+  .page-width {
+    width: 100%;
+    padding-inline: var(--edge);
+  }
 
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text-primary);
-  font-family: 'Figtree', sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  /* One gap between sections: 64px on phones, 96px from tablet up. Sections pad their top only,
+     so neighbouring paddings never stack into a dead band. */
+  .section {
+    padding-top: 64px;
+    scroll-margin-top: var(--header-height);
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  .section-end {
+    padding-bottom: 64px;
+  }
 
-.hide-scrollbar {
-  scrollbar-width: none;
-}
+  @media (min-width: 768px) {
+    .section {
+      padding-top: 96px;
+    }
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+    .section-end {
+      padding-bottom: 96px;
+    }
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Press feedback on anything pressable. */
+  .pressable {
+    transition:
+      transform 140ms var(--ease-out-strong),
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+
+  .pressable:active {
+    transform: scale(0.97);
+  }
+
+  /* Horizontal collections. Full-bleed so cards never clip against the page edge. */
+  .row-scroller {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge);
+    padding-inline: var(--edge);
+    /* Room for the 1.08 hover scale and its shadow. */
+    padding-block: 28px;
+    margin-block: -28px;
+    scrollbar-width: none;
+  }
+
+  .row-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (pointer: fine) {
+    .row-scroller {
+      scroll-snap-type: x proximity;
+    }
+  }
+
+  .project-card {
+    position: relative;
+    flex: none;
+    scroll-snap-align: start;
+    transform-origin: center;
+    transition:
+      transform 260ms var(--ease-out-strong),
+      box-shadow 260ms var(--ease-out-strong),
+      z-index 0s linear 260ms;
+    border-radius: var(--radius-card);
+  }
+
+  .project-card[data-origin='start'] {
+    transform-origin: left center;
+  }
+
+  .project-card[data-origin='end'] {
+    transform-origin: right center;
+  }
+
+  .card-reveal {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 180ms ease,
+      visibility 0s linear 180ms;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .project-card:hover {
+      z-index: 20;
+      transform: scale(1.08);
+      box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.75);
+      transition-delay: 300ms, 300ms, 0s;
+    }
+
+    .project-card:hover .card-reveal {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 300ms, 300ms;
+    }
+
+    /* Once one preview is open, neighbours open instantly (no second wait). */
+    [data-warm='true'] .project-card:hover,
+    [data-warm='true'] .project-card:hover .card-reveal {
+      transition-delay: 0s;
+    }
+  }
+
+  .project-card:has(:focus-visible) {
+    z-index: 20;
+    transform: scale(1.08);
+    box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.75);
+    transition-delay: 0s;
+  }
+
+  .project-card:has(:focus-visible) .card-reveal {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  /* While a project is open (and while it closes), cards hold still so the shared image lands cleanly. */
+  html[data-overlay] .project-card {
+    transform: none !important;
+    box-shadow: none !important;
+    transition: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card,
+    .project-card:hover,
+    .project-card:has(:focus-visible) {
+      transform: none;
+      transition-property: box-shadow, z-index;
+    }
+
+    .pressable:active {
+      transform: none;
+    }
+  }
 }
