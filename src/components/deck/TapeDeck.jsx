@@ -22,7 +22,8 @@ function EjectIcon(props) {
   )
 }
 
-function DeckKey({ label, ariaLabel, onClick, icon: Icon, accent = false, pressed }) {
+function DeckKey({ label, ariaLabel, onClick, icon, accent = false, pressed }) {
+  const Icon = icon
   return (
     <button
       type="button"

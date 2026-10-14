@@ -14,6 +14,8 @@ const img = (name, width, height, alt, { thumb = true } = {}) => ({
 export const projects = [
   {
     slug: 'reposcribe',
+    // Side B tracklist. Status is carried over from the previous site; the result is verified above or below.
+    sideB: { scope: 'Solo · RAG pipeline and web UI', status: 'In progress', result: 'Re-embeds only changed files' },
     tape: { shell: '#2a2a2e', stripe: '#d9472b' },
     title: 'RepoScribe',
     formerNames: ['RAGForge', 'CodeGraphRAG'],
@@ -56,6 +58,7 @@ export const projects = [
   },
   {
     slug: 'automl-researcher',
+    sideB: { scope: 'Solo · six-agent AutoML loop', status: 'Completed', result: 'Stops itself when gains stall' },
     tape: { shell: '#e6e1d6', stripe: '#2d6a8f' },
     title: 'AutoML Researcher',
     pitch: 'A local multi-agent AutoML lab that trains, tunes and ranks models on tabular data.',
@@ -97,6 +100,7 @@ export const projects = [
   },
   {
     slug: 'careloop',
+    sideB: { scope: 'Team of two · auth, voice, schema', status: 'Live demo', result: 'Tenant isolation and RBAC under test' },
     tape: { shell: '#f0a830', stripe: '#1c1c1f' },
     title: 'CareLoop',
     pitch: 'A multi-tenant practice-management platform for dental clinics.',
@@ -152,6 +156,7 @@ export const projects = [
   },
   {
     slug: 'roamly',
+    sideB: { scope: 'Budget-locked night planner', status: 'In progress', result: 'A mapped plan inside a set budget' },
     tape: { shell: '#d4563a', stripe: '#f0a830' },
     title: 'Roamly',
     pitch: 'Give it a budget and a vibe, and get a real, mapped night out that sticks to it.',
@@ -169,6 +174,7 @@ export const projects = [
   },
   {
     slug: 'heston-engine',
+    sideB: { scope: 'Solo · three pricers and a web UI', status: 'Open source', result: '9 audited validation cases' },
     tape: { shell: '#2c4f73', stripe: '#c9a227' },
     title: 'Heston Engine',
     pitch: 'Option pricing under the Heston model, with three independent solvers and an audited validation suite.',
@@ -217,6 +223,7 @@ export const projects = [
   },
   {
     slug: 'news-engine',
+    sideB: { scope: 'Solo · NLP pipeline and dashboard', status: 'In progress', result: 'Built for 10K+ articles a day' },
     tape: { shell: '#3d6b52', stripe: '#26262a' },
     title: 'News Engine',
     pitch: 'Entity-level sentiment on financial news, clustered into events and ranked by a hot score.',
@@ -280,6 +287,7 @@ export const projects = [
   },
   {
     slug: 'asl-recognition',
+    sideB: { scope: 'Solo · desktop app', status: 'Completed', result: 'Tracks 21 hand landmarks live' },
     tape: { shell: '#b7b0a1', stripe: '#d4563a' },
     title: 'ASL Recognition',
     pitch: 'Real-time ASL fingerspelling recognition with sentence building and text-to-speech.',

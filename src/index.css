@@ -41,6 +41,8 @@
   --color-accent-ink: var(--accent-foreground);
 
   --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  /* Hand-lettered labels, in the spirit of the street-style SM logo. */
+  --font-marker: 'Permanent Marker', 'Figtree', cursive;
 
   /* Five sizes, far apart: display, head, lead, body, small. */
   --text-display: clamp(2.75rem, 0.5rem + 5.6vw, 6rem);
@@ -154,110 +156,101 @@
     transform: scale(0.97);
   }
 
-  /* Horizontal collections. Full-bleed so cards never clip against the page edge. */
-  .row-scroller {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--edge);
-    padding-inline: var(--edge);
-    /* Room for the 1.08 hover scale and its shadow. */
-    padding-block: 28px;
-    margin-block: -28px;
-    scrollbar-width: none;
-  }
-
-  .row-scroller::-webkit-scrollbar {
-    display: none;
-  }
-
-  @media (pointer: fine) {
-    .row-scroller {
-      scroll-snap-type: x proximity;
-    }
-  }
-
-  .project-card {
-    position: relative;
-    flex: none;
-    scroll-snap-align: start;
+  /* Cassettes. Hubs turn around their own centre. */
+  .reel {
+    transform-box: fill-box;
     transform-origin: center;
+  }
+
+  .cassette[data-spin='slow'] .reel {
+    animation: reel-spin 2.6s linear infinite;
+  }
+
+  .cassette[data-spin='fast'] .reel {
+    animation: reel-spin 0.4s linear infinite;
+  }
+
+  /* On the shelf: a contact shadow under each tape, and a play hint that appears on hover or focus. */
+  .tape-shadow {
+    opacity: 0.45;
     transition:
-      transform 260ms var(--ease-out-strong),
-      box-shadow 260ms var(--ease-out-strong),
-      z-index 0s linear 260ms;
-    border-radius: var(--radius-card);
+      opacity 220ms ease,
+      transform 260ms var(--ease-out-strong);
   }
 
-  .project-card[data-origin='start'] {
-    transform-origin: left center;
-  }
-
-  .project-card[data-origin='end'] {
-    transform-origin: right center;
-  }
-
-  .card-reveal {
+  .play-hint {
     opacity: 0;
-    visibility: hidden;
-    transition:
-      opacity 180ms ease,
-      visibility 0s linear 180ms;
+    transition: opacity 180ms ease;
+  }
+
+  .tape-link:focus-visible .play-hint {
+    opacity: 1;
+  }
+
+  .tape-link:focus-visible .reel {
+    animation: reel-spin 2.6s linear infinite;
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .project-card:hover {
-      z-index: 20;
-      transform: scale(1.08);
-      box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.75);
-      transition-delay: 300ms, 300ms, 0s;
+    .tape-link:hover .reel {
+      animation: reel-spin 2.6s linear infinite;
     }
 
-    .project-card:hover .card-reveal {
+    .tape-link:hover .play-hint {
       opacity: 1;
-      visibility: visible;
-      transition-delay: 300ms, 300ms;
     }
 
-    /* Once one preview is open, neighbours open instantly (no second wait). */
-    [data-warm='true'] .project-card:hover,
-    [data-warm='true'] .project-card:hover .card-reveal {
-      transition-delay: 0s;
+    .tape-link:hover .tape-shadow {
+      opacity: 0.7;
+      transform: translateY(10px) scale(1.06);
     }
   }
 
-  .project-card:has(:focus-visible) {
-    z-index: 20;
-    transform: scale(1.08);
-    box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.75);
-    transition-delay: 0s;
+  /* Touch screens have no hover, so the hint is always shown. */
+  @media (hover: none) {
+    .play-hint {
+      opacity: 1;
+    }
   }
 
-  .project-card:has(:focus-visible) .card-reveal {
-    opacity: 1;
-    visibility: visible;
-    transition-delay: 0s;
+  /* While the deck is open (and while it closes), shelf tapes stop reacting to the pointer. */
+  html[data-overlay] .tape-link {
+    pointer-events: none;
   }
 
-  /* While a project is open (and while it closes), cards hold still so the shared image lands cleanly. */
-  html[data-overlay] .project-card {
-    transform: none !important;
-    box-shadow: none !important;
-    transition: none !important;
+  /* Deck keys travel down when pressed, like real transport buttons. */
+  .deck-key {
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.6);
+    transition:
+      transform 120ms var(--ease-out-strong),
+      box-shadow 120ms var(--ease-out-strong),
+      background-color 180ms ease;
+  }
+
+  .deck-key:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  }
+
+  .deck-key[aria-pressed='true'] {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+    transform: translateY(1px);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .project-card,
-    .project-card:hover,
-    .project-card:has(:focus-visible) {
-      transform: none;
-      transition-property: box-shadow, z-index;
+    .reel {
+      animation: none !important;
     }
 
-    .pressable:active {
+    .pressable:active,
+    .deck-key:active {
       transform: none;
     }
+  }
+}
+
+@keyframes reel-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
