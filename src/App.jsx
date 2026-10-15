@@ -339,17 +339,35 @@ const projectCatalog = [
     id: 10,
     title: 'Roamly',
     description:
-      'Roamly is a hyper-local, budget-locked itinerary generator for spontaneous nights out. Instead of acting as a broad, all-knowing travel guide, it operates as a programmatic matchmaker between a users immediate liquid cash and a single neighborhoods active venue ecosystem. It does not curate everything, it solves a single, high-friction problem: "I have $60 and two hours right now—where do I go next so I dont waste my night staring at my phone?"',
-    teaser: 'Give us a budget and a vibe. We’ll give you a real, mapped out night that actually sticks to it',
-    image: '/project/Roamly.png',
+      'An AI outing planner for every mood. Tell Roamly what you are in the mood for, or tap the quick controls for where, budget, radius, who and mood, and it builds a real, timed plan from live venues and events nearby, with a route map of the stops. A "What\'s on" view lists live events from Ticketmaster and the City of Toronto festivals feed, and an optional taste survey turns your answers into planner defaults. A FastAPI backend with PostgreSQL/PostGIS and Redis serves a static web front end.',
+    teaser: 'Tell it your mood and get a real, timed night out from places near you.',
+    image: '/project/roamly.jpg',
+    // Text-free backdrop for the featured billboard, so the site's own headline doesn't sit behind the title.
+    heroImage: '/project/roamly-hero.jpg',
     tags: ['Python', 'FastAPI', 'PostGIS'],
-    github: 'https://github.com/ssaillesh/sway',
-    liveUrl: 'https://trekrank.vercel.app/',
+    github: '',
+    liveUrl: '',
     category: ['Web & Frontend', 'Tools & Utilities'],
     year: 2026,
     status: 'In Progress',
     featured: false,
     hero: true,
+  },
+
+  {
+    id: 12,
+    title: 'LapZero',
+    description:
+      'An autonomous racing policy for the F1TENTH simulator. It learns from human laps with behaviour cloning, then fine-tunes with PPO across several tracks and randomized tyre friction. A release gate promotes a new champion only if it passes a friction-sweep robustness check and a pace check, and the MLflow model registry records the evidence. Champion v8 finished 120 of 120 laps on a track it never trained on, across tyre friction 0.50 to 1.05, and was 1.71% faster than the model it replaced. A FastAPI and PostgreSQL backend feeds a React dashboard with a leaderboard, lap replays you can race against each other, and model governance.',
+    teaser: 'Reinforcement-learning race driver with a robustness release gate.',
+    image: '/project/lapzero.png',
+    tags: ['Python', 'PyTorch', 'Reinforcement Learning'],
+    github: 'https://github.com/ssaillesh/lapzero',
+    liveUrl: 'https://lapzero-six.vercel.app/',
+    category: ['Trending in My World', 'Tools & Utilities'],
+    year: 2026,
+    status: 'Open Source',
+    featured: true,
   },
 ]
 
@@ -396,6 +414,10 @@ class AppErrorBoundary extends React.Component {
 
     return this.props.children
   }
+}
+
+function getProjectLink(project) {
+  return project.liveUrl || project.github
 }
 
 function getProjectGradient(project) {
@@ -670,14 +692,16 @@ function ProjectCard({ project, index, onOpenModal }) {
           ))}
         </div>
         <div className="mt-auto flex items-center gap-2 pt-1">
-          <button
-            type="button"
-            className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-zinc-200"
-            onClick={() => window.open(project.liveUrl || project.github, '_blank', 'noreferrer')}
-          >
-            <Play size={12} fill="currentColor" />
-            View
-          </button>
+          {getProjectLink(project) ? (
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-zinc-200"
+              onClick={() => window.open(getProjectLink(project), '_blank', 'noreferrer')}
+            >
+              <Play size={12} fill="currentColor" />
+              View
+            </button>
+          ) : null}
           <button
             type="button"
             className="inline-flex items-center gap-1.5 rounded-md border border-white/30 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/10"
@@ -738,14 +762,16 @@ function ProjectModal({ project, onClose, onOpenModal }) {
                 <div className="absolute bottom-5 left-5 right-5">
                   <h3 className="text-3xl font-black text-white sm:text-4xl">{project.title}</h3>
                   <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-2 rounded-md bg-[#e50914] px-4 py-2 text-sm font-semibold text-white"
-                      onClick={() => window.open(project.liveUrl || project.github, '_blank', 'noreferrer')}
-                    >
-                      <Play size={15} fill="currentColor" />
-                      View Project
-                    </button>
+                    {getProjectLink(project) ? (
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-2 rounded-md bg-[#e50914] px-4 py-2 text-sm font-semibold text-white"
+                        onClick={() => window.open(getProjectLink(project), '_blank', 'noreferrer')}
+                      >
+                        <Play size={15} fill="currentColor" />
+                        View Project
+                      </button>
+                    ) : null}
                     <button type="button" className="grid h-9 w-9 place-items-center rounded-full border border-white/40 text-white">
                       <Plus size={16} />
                     </button>
@@ -777,10 +803,14 @@ function ProjectModal({ project, onClose, onOpenModal }) {
                 <div className="space-y-3 text-sm text-[#bcbcbc]">
                   <p>
                     <span className="text-[#757575]">GitHub:</span>{' '}
-                    <a href={project.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white hover:underline">
-                      <Github size={14} />
-                      Repository
-                    </a>
+                    {project.github ? (
+                      <a href={project.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white hover:underline">
+                        <Github size={14} />
+                        Repository
+                      </a>
+                    ) : (
+                      <span>Private repository</span>
+                    )}
                   </p>
                   <p>
                     <span className="text-[#757575]">Live Demo:</span>{' '}
@@ -851,7 +881,7 @@ function NetflixProjectsView({ scrollTop }) {
     >
       <section className="relative -mx-4 -mt-6 h-[65vh] min-h-[420px] overflow-hidden sm:-mx-8">
         <Motion.div style={{ scale: heroScale }} className="absolute inset-0 saturate-125 brightness-110 contrast-110 will-change-transform">
-          <ProjectCover project={heroProject} />
+          <ProjectCover project={{ ...heroProject, image: heroProject.heroImage || heroProject.image }} />
         </Motion.div>
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#141414_10%,transparent_48%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_top,#141414_2%,transparent_45%)]" />
@@ -878,14 +908,16 @@ function NetflixProjectsView({ scrollTop }) {
             ))}
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:scale-[1.02] hover:bg-zinc-200"
-              onClick={() => window.open(heroProject.liveUrl || heroProject.github, '_blank', 'noreferrer')}
-            >
-              <Play size={15} fill="currentColor" />
-              View Project
-            </button>
+            {getProjectLink(heroProject) ? (
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:scale-[1.02] hover:bg-zinc-200"
+                onClick={() => window.open(getProjectLink(heroProject), '_blank', 'noreferrer')}
+              >
+                <Play size={15} fill="currentColor" />
+                View Project
+              </button>
+            ) : null}
             <button
               type="button"
               className="inline-flex items-center gap-2 rounded-md bg-zinc-500/50 px-5 py-2.5 text-sm font-semibold text-white transition hover:scale-[1.02] hover:bg-zinc-400/55"
