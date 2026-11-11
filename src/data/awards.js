@@ -1,18 +1,13 @@
-// Awards, shown in the Study's glass display table. As given by the owner.
+// Awards, shown around the Study (achievement shelf and desk). As given by the owner.
 // `display` is how each one is shown in the 3D room.
 
 export const awards = [
   {
     id: 'ideal',
-    name: 'IDEAL Scholarship',
+    name: 'IDEAL Scholar Award',
+    detail: 'Cobalt Medallion',
     kind: 'Scholarship',
-    display: 'Gold medal',
-  },
-  {
-    id: 'cobalt',
-    name: 'Cobalt Medallion',
-    kind: 'Medallion',
-    display: 'Cobalt medallion',
+    display: 'Cobalt medal',
   },
   {
     id: 'robotics-excellence',

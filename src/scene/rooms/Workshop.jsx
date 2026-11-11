@@ -15,6 +15,11 @@ export default function Workshop({ mats, ctx }) {
         <Monitor p={[-10.1, 0.77, -8.15]} mats={mats} w={0.7} />
         <Monitor p={[-9.4, 0.77, -8.1]} rot={-0.25} mats={mats} />
         <Chair p={[-10.1, 0, -7.15]} rot={Math.PI} mats={mats} />
+        {/* laptop and a hardware security key */}
+        <Box p={[-9.25, 0.77, -7.7]} s={[0.42, 0.02, 0.3]} m={mats.steel} />
+        <Box p={[-9.25, 0.79, -7.85]} s={[0.42, 0.28, 0.015]} m={mats.blackMatte} r={[-0.25, 0, 0]} />
+        <Box p={[-9.25, 0.82, -7.83]} s={[0.38, 0.22, 0.002]} m={mats.screenCool} r={[-0.25, 0, 0]} cast={false} />
+        <Box p={[-8.98, 0.77, -7.55]} s={[0.05, 0.012, 0.09]} m={mats.brass} />
         <Box p={[-11.55, 0, -6.4]} s={[0.62, 2.0, 0.9]} m={mats.blackMatte} />
         {[0.3, 0.6, 0.9, 1.2, 1.5, 1.8].map((y, i) => (
           <Box key={y} p={[-11.23, y, -6.4]} s={[0.01, 0.03, 0.6]} m={i % 3 === 1 ? mats.ledGreen : mats.led} cast={false} />
@@ -87,11 +92,13 @@ export default function Workshop({ mats, ctx }) {
         <Monitor p={[-5.2, 0.9, -2.4]} rot={-0.8} mats={mats} screen="screenCool" />
       </Interactive>
 
-      {/* Tool wall and work lamp */}
-      <Box p={[-8.0, 0, -8.6]} s={[1.0, 1.1, 0.5]} m={mats.carRed} />
-      {[0.25, 0.5, 0.75, 1.0].map((y) => (
-        <Box key={y} p={[-8.0, y, -8.34]} s={[0.9, 0.015, 0.01]} m={mats.steel} cast={false} />
-      ))}
+      {/* Tool chest: the toolkit */}
+      <Interactive {...it('toolkit')} label="A tool chest" sub="Pick up" ring={[-8.0, -8.2, 0.8]}>
+        <Box p={[-8.0, 0, -8.6]} s={[1.0, 1.1, 0.5]} m={mats.carRed} />
+        {[0.25, 0.5, 0.75, 1.0].map((y) => (
+          <Box key={y} p={[-8.0, y, -8.34]} s={[0.9, 0.015, 0.01]} m={mats.steel} cast={false} />
+        ))}
+      </Interactive>
     </group>
   )
 }

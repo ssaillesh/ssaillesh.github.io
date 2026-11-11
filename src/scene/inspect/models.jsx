@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
-import { bookCoverTexture, certificateTexture, foilBagTexture, labelTexture, ledStripTexture, medalFaceTexture, resumePageTexture } from './textures.js'
+import { bookCoverTexture, certificateTexture, drawerLabelTexture, foilBagTexture, labelTexture, ledStripTexture, medalFaceTexture, phoneCardTexture, pipelineScreenTexture, resumePageTexture, spineTexture, sqlScreenTexture } from './textures.js'
 
 // Close-up models for the inspection view. Each is authored to fit roughly a
 // 2.4-unit box centred on the origin, facing +z (towards the viewer).
@@ -146,13 +146,9 @@ function Medal({ face, metal = 'gold', ribbon = '#7a2420' }) {
   )
 }
 
+// IDEAL Scholar Award, presented as the Cobalt Medallion
 export function IdealMedal() {
-  const face = medalFaceTexture({ key: 'ideal', base: ['#f1d68f', '#b88d3e'], ink: '#6a4f1d', ring: 'IDEAL SCHOLARSHIP', center: 'IDEAL', sub: 'SCHOLAR' })
-  return <Medal face={face} />
-}
-
-export function CobaltMedallion() {
-  const face = medalFaceTexture({ key: 'cobalt', base: ['#5a7fc0', '#1f3a6b'], ink: '#d8e2f2', ring: 'COBALT MEDALLION', center: 'Co' })
+  const face = medalFaceTexture({ key: 'ideal-cobalt', base: ['#5a7fc0', '#1f3a6b'], ink: '#e2e9f4', ring: 'IDEAL SCHOLAR · COBALT MEDALLION', center: 'IDEAL', sub: 'SCHOLAR' })
   return <Medal face={face} metal="silver" ribbon="#263d63" />
 }
 
@@ -603,6 +599,270 @@ export function Photograph() {
       <mesh position={[0, 0, 0.045]}>
         <planeGeometry args={[1.9, 1.42]} />
         <meshStandardMaterial map={tex} roughness={0.7} />
+      </mesh>
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------- new artifacts
+function Screen({ texture, w = 2.2, h = 1.375 }) {
+  return (
+    <mesh position={[0, 0, 0.026]}>
+      <planeGeometry args={[w, h]} />
+      <meshStandardMaterial map={texture} emissive="#ffffff" emissiveMap={texture} emissiveIntensity={0.75} roughness={0.35} toneMapped={false} />
+    </mesh>
+  )
+}
+
+// PepsiCo, Data Analyst: a monitor full of SQL
+export function SqlMonitor() {
+  const m = useMats()
+  const tex = sqlScreenTexture()
+  return (
+    <group rotation={[0.05, -0.3, 0]} position={[0, 0.1, 0]}>
+      <mesh material={m.black} castShadow>
+        <boxGeometry args={[2.34, 1.5, 0.05]} />
+      </mesh>
+      <Screen texture={tex} />
+      <mesh position={[0, -0.95, -0.1]} material={m.steel}>
+        <boxGeometry args={[0.12, 0.45, 0.06]} />
+      </mesh>
+      <mesh position={[0, -1.18, 0]} material={m.steel} castShadow>
+        <boxGeometry args={[0.8, 0.04, 0.45]} />
+      </mesh>
+    </group>
+  )
+}
+
+// Symcor: a laptop running a passing CI pipeline, and a hardware security key
+export function LaptopKey() {
+  const m = useMats()
+  const tex = pipelineScreenTexture()
+  const keyLabel = labelTexture({ key: 'key-label', w: 256, h: 128, bg: '#c6a96c', lines: [{ text: 'IAM', size: 64, font: 'mono', weight: 600, color: '#1b1a17' }] })
+  return (
+    <group rotation={[0.35, -0.45, 0]} position={[0, -0.25, 0]}>
+      {/* base with keyboard */}
+      <mesh material={m.steel} castShadow>
+        <boxGeometry args={[2.2, 0.06, 1.45]} />
+      </mesh>
+      <mesh position={[0, 0.032, 0.12]} rotation={[-Math.PI / 2, 0, 0]} material={m.black}>
+        <planeGeometry args={[1.9, 0.7]} />
+      </mesh>
+      <mesh position={[0, 0.032, 0.6]} rotation={[-Math.PI / 2, 0, 0]} material={m.black}>
+        <planeGeometry args={[0.6, 0.3]} />
+      </mesh>
+      {/* lid */}
+      <group position={[0, 0.03, -0.72]} rotation={[-0.32, 0, 0]}>
+        <mesh position={[0, 0.7, -0.02]} material={m.steel} castShadow>
+          <boxGeometry args={[2.2, 1.4, 0.04]} />
+        </mesh>
+        <group position={[0, 0.7, 0]}>
+          <Screen texture={tex} w={2.04} h={1.27} />
+        </group>
+      </group>
+      {/* security key */}
+      <group position={[1.45, 0.02, 0.5]} rotation={[0, -0.5, 0]}>
+        <mesh material={m.black} castShadow>
+          <boxGeometry args={[0.22, 0.05, 0.5]} />
+        </mesh>
+        <mesh position={[0, 0.026, 0.06]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.07, 24]} />
+          <meshStandardMaterial color="#c6a96c" metalness={1} roughness={0.25} />
+        </mesh>
+        <mesh position={[0, 0, -0.3]} material={m.silver}>
+          <boxGeometry args={[0.14, 0.03, 0.14]} />
+        </mesh>
+        <mesh position={[0, 0.026, 0.16]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[0.16, 0.08]} />
+          <meshStandardMaterial map={keyLabel} />
+        </mesh>
+      </group>
+    </group>
+  )
+}
+
+function Shoe({ x, r, flip, m, knit, accent }) {
+  // rounded sole + a curved knit upper, laces and a brass side stripe
+  return (
+    <group position={[x, -0.55, 0]} rotation={[0, r, 0]} scale={[flip ? -1 : 1, 1, 1]}>
+      <mesh position={[0, 0.07, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 1, 0.32]} material={m.ivory} castShadow>
+        <capsuleGeometry args={[0.26, 1.0, 8, 24]} />
+      </mesh>
+      <mesh position={[0, 0.25, -0.12]} scale={[0.25, 0.24, 0.62]} material={knit} castShadow>
+        <sphereGeometry args={[1, 32, 24]} />
+      </mesh>
+      <mesh position={[0, 0.36, -0.42]} rotation={[0.3, 0, 0]} material={knit}>
+        <torusGeometry args={[0.17, 0.035, 10, 28]} />
+      </mesh>
+      <mesh position={[flip ? -0.245 : 0.245, 0.24, -0.08]} rotation={[0, Math.PI / 2, -0.12]} material={accent}>
+        <planeGeometry args={[0.8, 0.05]} />
+      </mesh>
+      {[0, 1, 2, 3].map((i) => (
+        <mesh key={i} position={[0, 0.49 - i * 0.012, -0.12 + i * 0.1]} rotation={[0.2, 0, 0]} material={m.ivory}>
+          <boxGeometry args={[0.2, 0.015, 0.025]} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+export function RunningShoes() {
+  const m = useMats()
+  const knit = useMemo(() => new THREE.MeshStandardMaterial({ color: '#3a4652', roughness: 0.9 }), [])
+  const accent = useMemo(() => new THREE.MeshStandardMaterial({ color: '#c6a96c', roughness: 0.5, metalness: 0.3 }), [])
+  return (
+    <group rotation={[0.25, 0.75, 0]} position={[0, 0.15, 0]} scale={1.2}>
+      <Shoe x={-0.4} r={0.25} m={m} knit={knit} accent={accent} />
+      <Shoe x={0.45} r={-0.15} flip m={m} knit={knit} accent={accent} />
+    </group>
+  )
+}
+
+export function Textbooks() {
+  const books = [
+    { title: 'Signals & Systems', color: '#2f3b3a', h: 0.32 },
+    { title: 'Data Structures', color: '#5b3a2a', h: 0.28 },
+    { title: 'Algorithms', color: '#3a2e2a', h: 0.34 },
+    { title: 'Computational Physics', color: '#4a4f4a', h: 0.3 },
+    { title: 'Computational Modeling', color: '#6b3c2c', h: 0.27 },
+  ]
+  let y = -0.9
+  return (
+    <group rotation={[0.25, -0.5, 0]}>
+      {books.map((b, i) => {
+        const yy = y + b.h / 2
+        y += b.h
+        const spine = spineTexture({ key: `spine-${i}`, title: b.title, color: b.color })
+        return (
+          <group key={b.title} position={[(i % 2 ? 0.06 : -0.05), yy, 0]} rotation={[0, (i - 2) * 0.06, 0]}>
+            <mesh castShadow>
+              <boxGeometry args={[2.0, b.h, 1.4]} />
+              <meshStandardMaterial color={b.color} roughness={0.7} />
+            </mesh>
+            <mesh position={[0, 0, 0.701]}>
+              <planeGeometry args={[2.0, b.h]} />
+              <meshStandardMaterial map={spine} roughness={0.6} />
+            </mesh>
+            <mesh position={[1.001, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+              <planeGeometry args={[1.36, b.h - 0.04]} />
+              <meshStandardMaterial color="#efe6d2" roughness={0.95} />
+            </mesh>
+          </group>
+        )
+      })}
+    </group>
+  )
+}
+
+export function Microscope() {
+  const m = useMats()
+  const enamel = useMemo(() => new THREE.MeshStandardMaterial({ color: '#e9e5dd', roughness: 0.35 }), [])
+  return (
+    <group position={[0, -1.1, 0]} rotation={[0, -0.6, 0]}>
+      <mesh position={[0, 0.06, 0.1]} material={enamel} castShadow>
+        <boxGeometry args={[1.0, 0.12, 1.1]} />
+      </mesh>
+      <mesh position={[0, 0.8, -0.3]} rotation={[0.15, 0, 0]} material={enamel} castShadow>
+        <boxGeometry args={[0.26, 1.5, 0.3]} />
+      </mesh>
+      <mesh position={[0, 0.75, 0.15]} material={m.black}>
+        <boxGeometry args={[0.7, 0.05, 0.6]} />
+      </mesh>
+      <mesh position={[0, 0.79, 0.15]}>
+        <boxGeometry args={[0.36, 0.01, 0.12]} />
+        <meshPhysicalMaterial color="#cfe0ea" transparent opacity={0.6} roughness={0.05} />
+      </mesh>
+      <mesh position={[0, 1.45, 0.05]} rotation={[0.55, 0, 0]} material={m.black} castShadow>
+        <cylinderGeometry args={[0.11, 0.13, 0.9, 32]} />
+      </mesh>
+      <mesh position={[0, 1.86, -0.2]} rotation={[0.55, 0, 0]} material={m.silver}>
+        <cylinderGeometry args={[0.07, 0.07, 0.25, 24]} />
+      </mesh>
+      {[-0.08, 0, 0.08].map((x, i) => (
+        <mesh key={x} position={[x, 1.02, 0.3]} material={m.silver}>
+          <cylinderGeometry args={[0.03, 0.025, 0.18 + i * 0.03, 16]} />
+        </mesh>
+      ))}
+      <mesh position={[0.19, 0.55, -0.3]} rotation={[0, 0, Math.PI / 2]} material={m.silver}>
+        <cylinderGeometry args={[0.12, 0.12, 0.06, 24]} />
+      </mesh>
+    </group>
+  )
+}
+
+export function ToolChest() {
+  const m = useMats()
+  const red = useMemo(() => new THREE.MeshStandardMaterial({ color: '#8f2a22', roughness: 0.35, metalness: 0.4 }), [])
+  const drawers = ['PYTHON · SQL · BASH', 'GITLAB CI · DOCKER', 'K8S · TERRAFORM', 'ANSIBLE · VAULT', 'PROMETHEUS · GRAFANA']
+  return (
+    <group rotation={[0.15, -0.5, 0]} position={[0, -0.1, 0]}>
+      <mesh material={red} castShadow>
+        <boxGeometry args={[1.9, 2.0, 1.0]} />
+      </mesh>
+      {drawers.map((d, i) => {
+        const y = 0.72 - i * 0.36
+        const label = drawerLabelTexture({ key: `drawer-${i}`, text: d })
+        return (
+          <group key={d} position={[0, y, 0.505]}>
+            <mesh>
+              <boxGeometry args={[1.75, 0.3, 0.02]} />
+              <primitive object={red} attach="material" />
+            </mesh>
+            <mesh position={[0, 0.06, 0.012]}>
+              <planeGeometry args={[1.5, 0.12]} />
+              <meshStandardMaterial map={label} />
+            </mesh>
+            <mesh position={[0, -0.07, 0.03]} material={m.silver}>
+              <boxGeometry args={[1.2, 0.035, 0.04]} />
+            </mesh>
+          </group>
+        )
+      })}
+      <mesh position={[0, 1.03, 0]} material={m.black}>
+        <boxGeometry args={[1.94, 0.06, 1.04]} />
+      </mesh>
+    </group>
+  )
+}
+
+export function RotaryPhone() {
+  const m = useMats()
+  const card = phoneCardTexture()
+  const handset = useMemo(() => {
+    const curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.8, 0.0, 0),
+      new THREE.Vector3(-0.55, 0.22, 0),
+      new THREE.Vector3(0, 0.3, 0),
+      new THREE.Vector3(0.55, 0.22, 0),
+      new THREE.Vector3(0.8, 0.0, 0),
+    ])
+    return new THREE.TubeGeometry(curve, 40, 0.09, 16, false)
+  }, [])
+  return (
+    <group rotation={[0.45, -0.4, 0]} position={[0, -0.5, 0]}>
+      <mesh position={[0, 0.25, 0]} material={m.black} castShadow>
+        <boxGeometry args={[1.5, 0.5, 1.2]} />
+      </mesh>
+      <mesh position={[0, 0.52, 0.18]} rotation={[0.5, 0, 0]} material={m.silver}>
+        <cylinderGeometry args={[0.42, 0.42, 0.05, 48]} />
+      </mesh>
+      {Array.from({ length: 10 }, (_, i) => {
+        const a = (i / 12) * Math.PI * 2 + 0.6
+        return (
+          <mesh key={i} position={[Math.cos(a) * 0.3, 0.56 + Math.sin(a) * 0.3 * Math.sin(0.5) * -1, 0.18 + Math.sin(a) * 0.3 * Math.cos(0.5)]} rotation={[0.5, 0, 0]} material={m.black}>
+            <cylinderGeometry args={[0.05, 0.05, 0.02, 16]} />
+          </mesh>
+        )
+      })}
+      <mesh geometry={handset} position={[0, 0.62, -0.32]} material={m.black} castShadow />
+      {[-0.8, 0.8].map((x) => (
+        <mesh key={x} position={[x, 0.6, -0.32]} material={m.black}>
+          <cylinderGeometry args={[0.16, 0.13, 0.12, 24]} />
+        </mesh>
+      ))}
+      <mesh position={[1.3, 0.02, 0.5]} rotation={[-Math.PI / 2, 0, -0.25]}>
+        <planeGeometry args={[0.9, 0.45]} />
+        <meshStandardMaterial map={card} roughness={0.9} />
       </mesh>
     </group>
   )

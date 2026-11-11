@@ -42,6 +42,12 @@ export default function Lounge({ mats, ctx }) {
       <Box p={[6.0, 0, 3.3]} s={[0.9, 0.42, 0.85]} m={mats.leather} r={[0, 0.6, 0]} />
       <FloorLamp p={[11.3, 0, 3.3]} mats={mats} />
       <Plant p={[11.4, 0, 8.5]} mats={mats} scale={1.2} />
+      <Cyl p={[7.1, 0, 8.35]} radius={0.28} h={0.52} m={mats.walnut} />
+      <Interactive {...it('contact')} label="A rotary phone" sub="Pick up" ring={[7.1, 8.35, 0.5]}>
+        <Box p={[7.1, 0.52, 8.35]} s={[0.26, 0.1, 0.2]} m={mats.blackMatte} />
+        <Cyl p={[7.1, 0.62, 8.39]} radius={0.07} h={0.01} m={mats.brass} />
+        <Box p={[7.1, 0.65, 8.3]} s={[0.3, 0.05, 0.07]} m={mats.blackMatte} />
+      </Interactive>
       <Plant p={[4.9, 0, 8.5]} mats={mats} />
 
       {/* Credenza with photographs */}

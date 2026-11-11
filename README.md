@@ -7,11 +7,11 @@ Live: https://ssaillesh.github.io/
 
 | Room | Purpose | What's in it |
 | --- | --- | --- |
-| 01 Foyer | Introduction | Name monolith, résumé folio, links |
-| 02 Study | Education & awards | The degree framed on the wall, awards in a glass display table |
-| 03 Workshop | Experience | One workstation per role (Symcor, OmniaBio, PepsiCo ×2 with chip bags, UWAFT) |
+| 01 Foyer | Introduction | Brass nameplate, résumé folio, running shoes |
+| 02 Study | Education & awards | Degree and letter on the wall, achievement shelf, crystal and transcript on the desk, textbooks, microscope |
+| 03 Workshop | Experience | Laptop + security key, sample vials, bag of chips, SQL monitor, lidar sensor, tool chest |
 | 04 Vault | Projects | A bank vault; opening it reveals the Vault page (Rova archive, LapZero circuit, a sealed third box) |
-| 05 Lounge | Personal & contact | Interests as objects, photographs, contact |
+| 05 Lounge | Personal & contact | Scale car, dumbbells, cast-iron pan, bicycle, photographs, rotary phone |
 
 ## Stack
 
@@ -26,7 +26,9 @@ src/
     education.js   degree and honours
     experience.js  workshop stations (from the résumé and previous site)
     projects.js    projects + vaultBoxes (which projects the Vault shows)
-    awards.js      awards in the Study display table
+    awards.js      awards (shown around the Study)
+    artifacts.js   every object in the house: what it is, where it is, what it opens
+    inspect.js     close-up copy, derived from artifacts.js
     lounge.js      interests and photos
     rooms.js       floor plan: room ids and bounds in metres
   scene/           the 3D residence (lazy-loaded chunk)

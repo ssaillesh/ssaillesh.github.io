@@ -9,6 +9,7 @@ import SceneBoundary from './SceneBoundary.jsx'
 import VaultPage from './VaultPage.jsx'
 import InspectOverlay from './InspectOverlay.jsx'
 import { INSPECTABLE, inspectLabel } from '../data/inspect.js'
+import { artifactById } from '../data/artifacts.js'
 
 const Residence = lazy(() => import('../scene/Residence.jsx'))
 const Motion = motion
@@ -44,9 +45,9 @@ export default function ResidenceView({ route, go, onFail }) {
   const caption = hover
     ? hover.kind === 'room'
       ? { eyebrow: `${roomById[hover.id].number} · ${roomById[hover.id].kicker}`, text: `Enter the ${roomById[hover.id].name}` }
-      : { eyebrow: hover.sub, text: hover.label }
+      : { eyebrow: artifactById[hover.id]?.where || hover.sub, text: artifactById[hover.id]?.object || hover.label }
     : route.room
-      ? { eyebrow: roomById[route.room].name, text: 'Hover an object to light it · click to open' }
+      ? { eyebrow: roomById[route.room].name, text: 'Hover an object to light it · click to pick it up' }
       : { eyebrow: 'Five rooms', text: 'Hover a room to light it · click to enter' }
 
   return (

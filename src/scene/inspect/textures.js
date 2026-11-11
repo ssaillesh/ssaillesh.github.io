@@ -212,3 +212,134 @@ export const bookCoverTexture = ({ key, title, sub }) =>
     centered(g, title, h * 0.44, `400 84px ${SERIF}`, '#d9bd7e')
     centered(g, sub, h * 0.56, `500 28px ${SANS}`, '#c6a96c', 8)
   })
+
+// Code editor screen: SQL with syntax colours, plus a small results chart.
+export const sqlScreenTexture = () =>
+  make('sql-screen', 1280, 800, (g, w, h) => {
+    g.fillStyle = '#0f1216'
+    g.fillRect(0, 0, w, h)
+    g.fillStyle = '#171b21'
+    g.fillRect(0, 0, w, 46)
+    ;['#d97757', '#e8a35a', '#7fcf98'].forEach((c, i) => {
+      g.fillStyle = c
+      g.beginPath()
+      g.arc(26 + i * 24, 23, 7, 0, Math.PI * 2)
+      g.fill()
+    })
+    g.font = `400 20px ${MONO}`
+    g.fillStyle = '#8e8a84'
+    g.textAlign = 'left'
+    g.textBaseline = 'middle'
+    g.fillText('truckload_planning.sql — SQL Server', 110, 23)
+    const K = '#c6a96c', F = '#9fb4c2', N = '#e8a35a', T = '#e6e1d6', C = '#5c574d'
+    const lines = [
+      [[C, '-- weekly load plan by lane']],
+      [[K, 'SELECT '], [T, 'lane_id,']],
+      [[T, '       '], [F, 'SUM'], [T, '(cases) '], [K, 'AS '], [T, 'cases,']],
+      [[T, '       '], [F, 'AVG'], [T, '(fill_rate) '], [K, 'AS '], [T, 'avg_fill']],
+      [[K, 'FROM '], [T, 'ops.shipments s']],
+      [[K, 'JOIN '], [T, 'ops.lanes l '], [K, 'ON '], [T, 'l.id = s.lane_id']],
+      [[K, 'WHERE '], [T, 'ship_date >= '], [F, 'DATEADD'], [T, '(week, '], [N, '-12'], [T, ', '], [F, 'GETDATE'], [T, '())']],
+      [[K, 'GROUP BY '], [T, 'lane_id']],
+      [[K, 'ORDER BY '], [T, 'avg_fill '], [K, 'DESC'], [T, ';']],
+    ]
+    g.font = `400 30px ${MONO}`
+    lines.forEach((parts, i) => {
+      let x = 90
+      g.fillStyle = '#3a3631'
+      g.fillText(String(i + 1).padStart(2, ' '), 30, 100 + i * 44)
+      for (const [c, s] of parts) {
+        g.fillStyle = c
+        g.fillText(s, x, 100 + i * 44)
+        x += g.measureText(s).width
+      }
+    })
+    // results chart
+    g.fillStyle = '#171b21'
+    g.fillRect(0, h - 290, w, 290)
+    g.fillStyle = '#8e8a84'
+    g.font = `400 20px ${MONO}`
+    g.fillText('RESULTS · avg_fill by lane', 40, h - 260)
+    const bars = [0.92, 0.86, 0.81, 0.77, 0.7, 0.66, 0.6, 0.52, 0.47, 0.41]
+    bars.forEach((v, i) => {
+      g.fillStyle = i === 0 ? '#c6a96c' : '#4d5a66'
+      const bh = v * 190
+      g.fillRect(40 + i * 118, h - 40 - bh, 84, bh)
+    })
+  })
+
+// CI pipeline on a dark terminal: every stage passing.
+export const pipelineScreenTexture = () =>
+  make('pipeline-screen', 1280, 800, (g, w, h) => {
+    g.fillStyle = '#0f1114'
+    g.fillRect(0, 0, w, h)
+    g.font = `400 22px ${MONO}`
+    g.fillStyle = '#8e8a84'
+    g.textAlign = 'left'
+    g.textBaseline = 'middle'
+    g.fillText('pipeline #4821 · main · passed', 60, 60)
+    const stages = ['lint', 'test', 'sonarqube', 'secrets', 'build', 'deploy']
+    stages.forEach((s, i) => {
+      const x = 60 + i * 200
+      g.strokeStyle = '#7fcf98'
+      g.lineWidth = 4
+      g.beginPath()
+      g.arc(x + 40, 200, 34, 0, Math.PI * 2)
+      g.stroke()
+      g.beginPath()
+      g.moveTo(x + 24, 200)
+      g.lineTo(x + 36, 214)
+      g.lineTo(x + 58, 186)
+      g.stroke()
+      if (i < stages.length - 1) {
+        g.strokeStyle = '#2b3a30'
+        g.beginPath()
+        g.moveTo(x + 80, 200)
+        g.lineTo(x + 196, 200)
+        g.stroke()
+      }
+      g.fillStyle = '#e6e1d6'
+      g.font = `400 24px ${MONO}`
+      g.textAlign = 'center'
+      g.fillText(s, x + 40, 270)
+      g.textAlign = 'left'
+    })
+    const log = [
+      ['#7fcf98', '✓ quality gate passed'],
+      ['#7fcf98', '✓ no secrets detected in diff'],
+      ['#c6a96c', '→ rbac: grant reviewer on group/platform (dry run ok)'],
+      ['#7fcf98', '✓ runner pool healthy · 0 stalled jobs'],
+    ]
+    g.font = `400 28px ${MONO}`
+    log.forEach(([c, s], i) => {
+      g.fillStyle = c
+      g.fillText(s, 60, 400 + i * 56)
+    })
+    g.fillStyle = '#c6a96c'
+    g.fillRect(60, h - 120, 18, 34)
+  })
+
+export const spineTexture = ({ key, title, color }) =>
+  make(key, 1024, 128, (g, w, h) => {
+    g.fillStyle = color
+    g.fillRect(0, 0, w, h)
+    g.fillStyle = '#c6a96c'
+    g.fillRect(0, 10, w, 4)
+    g.fillRect(0, h - 14, w, 4)
+    centered(g, title, h / 2, `400 58px ${SERIF}`, '#ead9b0', 2)
+  })
+
+export const drawerLabelTexture = ({ key, text }) =>
+  make(key, 1024, 82, (g, w, h) => {
+    g.fillStyle = '#e9e2d2'
+    g.fillRect(0, 0, w, h)
+    centered(g, text, h / 2, `600 40px ${MONO}`, '#2a2118', 3)
+  })
+
+export const phoneCardTexture = () =>
+  make('phone-card', 768, 384, (g, w, h) => {
+    paperGrain(g, w, h, '#f3ecdc')
+    centered(g, 'Saillesh', 120, `400 84px ${SERIF}`, '#1b1a17')
+    centered(g, 's5somasu@uwaterloo.ca', 220, `400 34px ${MONO}`, '#4a3a22')
+    centered(g, 'TORONTO · OPEN TO NEW GRAD ROLES', 300, `600 24px ${SANS}`, '#7a5a22', 4)
+  })

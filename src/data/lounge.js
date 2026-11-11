@@ -6,7 +6,7 @@ export const interests = [
   { id: 'gym', name: 'The gym', object: 'Dumbbell rack', note: 'Training, consistently.' },
   { id: 'cooking', name: 'Cooking', object: 'Kitchen island', note: 'Cooking at home.' },
   { id: 'biking', name: 'Biking', object: 'Bike by the window', note: 'Getting out on the bike.' },
-  { id: 'active', name: 'Walking & staying active', object: 'The long windows', note: 'Walking and staying active.' },
+  { id: 'active', name: 'Walking & staying active', object: 'Running shoes', note: 'Walking and staying active.' },
   { id: 'exploring', name: 'Exploring new things', object: 'Photographs', note: 'New places, new tools, new problems.' },
 ]
 
