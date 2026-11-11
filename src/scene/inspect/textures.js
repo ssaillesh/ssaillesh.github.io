@@ -343,3 +343,20 @@ export const phoneCardTexture = () =>
     centered(g, 's5somasu@uwaterloo.ca', 220, `400 34px ${MONO}`, '#4a3a22')
     centered(g, 'TORONTO · OPEN TO NEW GRAD ROLES', 300, `600 24px ${SANS}`, '#7a5a22', 4)
   })
+
+// The intro card that slides out of the Foyer envelope.
+export const introCardTexture = ({ name, motto, descriptor, lines }) =>
+  make('intro-card', 1100, 760, (g, w, h) => {
+    paperGrain(g, w, h, '#f6f1e6')
+    g.strokeStyle = '#c6a96c'
+    g.lineWidth = 3
+    g.strokeRect(34, 34, w - 68, h - 68)
+    centered(g, name, 150, `400 120px ${SERIF}`, '#1b1a17')
+    centered(g, motto.toUpperCase(), 232, `600 26px ${SANS}`, '#7a5a22', 8)
+    centered(g, descriptor, 320, `italic 400 44px ${SERIF}`, '#3a3226')
+    g.font = `400 31px ${SANS}`
+    g.fillStyle = '#3a3226'
+    g.textAlign = 'center'
+    lines.forEach((l, i) => g.fillText(l, w / 2, 420 + i * 48))
+    centered(g, '— welcome in', h - 90, `italic 400 36px ${SERIF}`, '#7a5a22')
+  })

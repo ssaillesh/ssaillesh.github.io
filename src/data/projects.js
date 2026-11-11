@@ -1,6 +1,6 @@
 // Projects. Descriptions come from the previous site's project data.
 // `contribution` stays null until confirmed by the owner, and the UI hides it when null.
-// The Vault shows the projects listed in `vaultBoxes`, in order; a null slot is sealed.
+// The Vault shows the projects listed in `vaultDisplays`, in order.
 
 export const projects = [
   {
@@ -80,4 +80,112 @@ export const projects = [
   },
 ]
 
-export const vaultBoxes = ['rova', 'lapzero', null]
+// The rest of the GitHub work, shown as displays inside the Vault. Details come
+// from the résumé and the previous site. `image: null` uses the repository's
+// GitHub preview image when there is a repo, otherwise a placeholder.
+projects.push(
+  {
+    id: 'heston',
+    name: 'Heston Engine',
+    kind: 'Stochastic volatility pricing',
+    status: 'Open source',
+    year: 2024,
+    image: '/residence/heston.jpg',
+    oneLiner: 'A pricing engine for the Heston stochastic volatility model, solved three independent ways.',
+    description: 'Implements the Heston model with three independent solvers: ADI finite differences, Fourier inversion, and Monte Carlo with the QE scheme.',
+    architecture: ['ADI finite-difference solver', 'Fourier inversion pricer', 'Monte Carlo with the QE discretisation scheme'],
+    stack: ['Python', 'Numerical methods', 'Stochastic calculus'],
+    contribution: null,
+    links: { github: 'https://github.com/ssaillesh/heston_engine' },
+  },
+  {
+    id: 'ict',
+    name: 'ICT Sweep Detector',
+    kind: 'Market structure signals',
+    status: 'In progress',
+    year: 2024,
+    image: '/residence/ict.jpg',
+    oneLiner: 'Detects market displacement and liquidity sweeps as they happen.',
+    description: 'A stateful streaming signal engine that uses custom data structures to track sweep events and displacement confirmation, with deterministic long/short setups and configurable sensitivity for systematic backtesting.',
+    architecture: ['Stateful streaming signal engine', 'Custom data structures for sweep and displacement events', 'Deterministic long/short setups with configurable sensitivity'],
+    stack: ['TradingView', 'Pine Script'],
+    contribution: null,
+    links: { github: 'https://github.com/ssaillesh/ICT-Displacement-and-Liquidity-Sweep-Detector' },
+  },
+  {
+    id: 'news',
+    name: 'News Sentiment',
+    kind: 'Event-driven NLP',
+    status: 'In progress',
+    year: 2024,
+    image: '/residence/news.jpg',
+    oneLiner: 'Financial headlines, scored and set against how the stock moved.',
+    description: 'An event-driven NLP pipeline ingesting 10K+ news articles a day from Finnhub and Alpha Vantage over REST, using asyncio for concurrent processing, with sentiment correlated to stock movement and dashboards.',
+    architecture: ['REST ingestion from Finnhub and Alpha Vantage', 'asyncio for concurrent processing', 'Sentiment scoring correlated with price movement'],
+    stack: ['Python', 'REST APIs', 'asyncio', 'NLP'],
+    contribution: null,
+    links: {},
+  },
+  {
+    id: 'automl',
+    name: 'AutoML Researcher',
+    kind: 'Model optimisation lab',
+    status: 'Completed',
+    year: 2026,
+    image: '/residence/automl.jpg',
+    oneLiner: 'Train, compare and rank models in one guided lab.',
+    description: 'A guided optimisation lab to train, compare and rank models, with a leaderboard of the results.',
+    stack: ['Python', 'AutoML', 'Classification'],
+    contribution: null,
+    links: {},
+  },
+  {
+    id: 'asl',
+    name: 'ASL Recognition',
+    kind: 'Computer vision',
+    status: 'Completed',
+    year: 2026,
+    image: null,
+    oneLiner: 'Live ASL fingerspelling, turned into sentences and speech.',
+    description: 'A real-time American Sign Language recognition desktop app that tracks 21 hand landmarks with MediaPipe to predict fingerspelling from a live webcam feed. Build sentences with text-to-speech, practise in a scored mode with streaks, and train custom RandomForest models on the Kaggle ASL Fingerspelling dataset, all through a Tkinter interface with a built-in reference guide.',
+    stack: ['Python', 'MediaPipe', 'scikit-learn', 'Tkinter'],
+    contribution: null,
+    links: { github: 'https://github.com/ssaillesh/ASL-Recognition-' },
+  },
+  {
+    id: 'padlock',
+    name: 'Pad-Lock',
+    kind: 'Access & credentials',
+    status: 'Completed',
+    year: 2024,
+    image: null,
+    oneLiner: 'Access management and credential handling.',
+    description: 'An access management and credential-handling project.',
+    stack: ['React', 'Node.js', 'Security'],
+    contribution: null,
+    links: { github: 'https://github.com/ssaillesh/Pad-Lock' },
+  },
+  {
+    id: 'invasion',
+    name: 'Invasion',
+    kind: 'Arcade game',
+    status: 'In progress',
+    year: 2024,
+    image: null,
+    oneLiner: 'An arcade game built around real-time logic and a responsive UI.',
+    description: 'An arcade-style game focused on real-time game logic and UI responsiveness.',
+    stack: ['JavaScript', 'Game dev', 'Frontend'],
+    contribution: null,
+    links: { github: 'https://github.com/ssaillesh/Invasion-game' },
+  },
+)
+
+// Order of the displays inside the Vault.
+export const vaultDisplays = ['rova', 'lapzero', 'codegraphrag', 'heston', 'ict', 'news', 'automl', 'asl', 'padlock', 'invasion']
+
+// GitHub's own social preview image for a repository, used when there is no screenshot.
+export const githubPreview = (url) => {
+  const m = url && url.match(/github\.com\/([^/]+)\/([^/.]+)/)
+  return m ? `https://opengraph.githubassets.com/1/${m[1]}/${m[2]}` : null
+}
+

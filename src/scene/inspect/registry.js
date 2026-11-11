@@ -9,7 +9,6 @@ import {
   VialRack,
   ChipsOps,
   LidarPuck,
-  NamePlate,
   ResumeFolio,
   ScaleCar,
   Dumbbell,
@@ -23,6 +22,7 @@ import {
   Microscope,
   ToolChest,
   RotaryPhone,
+  Envelope,
 } from './models.jsx'
 
 // Registry: route item id -> close-up model (see src/data/inspect.js for copy).
@@ -39,7 +39,7 @@ export const INSPECT = {
   'pepsico-ops': { Model: ChipsOps },
   'pepsico-data': { Model: SqlMonitor },
   uwaft: { Model: LidarPuck },
-  intro: { Model: NamePlate },
+  intro: { Model: Envelope },
   resume: { Model: ResumeFolio },
   cars: { Model: ScaleCar },
   gym: { Model: Dumbbell },

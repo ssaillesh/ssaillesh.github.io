@@ -5,9 +5,12 @@ import { ResumeButton } from './bits.jsx'
 export default function TopNav({ route, go }) {
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-start justify-between gap-6 px-6 pt-5 lg:px-8">
-      <a href="#/" onClick={(e) => (e.preventDefault(), go(null))} className="pointer-events-auto flex flex-col leading-none">
-        <span className="font-serif text-[30px] text-ivory">{profile.name}.</span>
-        <span className="label-mono mt-1.5 text-[10px] text-stone">{profile.residence}</span>
+      <a href="#/" onClick={(e) => (e.preventDefault(), go(null))} className="pointer-events-auto flex items-center gap-3 leading-none">
+        <img src="/logos/sai-logo.png" alt="SM" className="h-11 w-auto" />
+        <span className="flex flex-col">
+          <span className="font-serif text-[28px] text-ivory">{profile.name}.</span>
+          <span className="label-mono mt-1.5 text-[10px] text-stone">{profile.residence}</span>
+        </span>
       </a>
 
       <nav aria-label="Rooms" className="pointer-events-auto hidden items-center gap-1 rounded-full border border-line bg-charcoal/70 p-1 backdrop-blur-md xl:flex">

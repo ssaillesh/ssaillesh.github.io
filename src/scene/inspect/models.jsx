@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
-import { bookCoverTexture, certificateTexture, drawerLabelTexture, foilBagTexture, labelTexture, ledStripTexture, medalFaceTexture, phoneCardTexture, pipelineScreenTexture, resumePageTexture, spineTexture, sqlScreenTexture } from './textures.js'
+import { introCardTexture, bookCoverTexture, certificateTexture, drawerLabelTexture, foilBagTexture, labelTexture, ledStripTexture, medalFaceTexture, phoneCardTexture, pipelineScreenTexture, resumePageTexture, spineTexture, sqlScreenTexture } from './textures.js'
 
 // Close-up models for the inspection view. Each is authored to fit roughly a
 // 2.4-unit box centred on the origin, facing +z (towards the viewer).
@@ -864,6 +864,62 @@ export function RotaryPhone() {
         <planeGeometry args={[0.9, 0.45]} />
         <meshStandardMaterial map={card} roughness={0.9} />
       </mesh>
+    </group>
+  )
+}
+
+// Foyer: the envelope left on the console, a card sliding out with a short intro
+export function Envelope() {
+  const card = introCardTexture({
+    name: 'Saillesh.',
+    motto: 'Engineering through curiosity',
+    descriptor: 'Physics-trained. Systems-minded. Builder by nature.',
+    lines: ['A multidisciplinary engineer with a foundation in physics,', 'working across software, DevOps, automation, data', 'and intelligent systems. Have a look around.'],
+  })
+  const paper = useMemo(() => new THREE.MeshStandardMaterial({ color: '#e9dfca', roughness: 0.9 }), [])
+  const wax = useMemo(() => new THREE.MeshStandardMaterial({ color: '#7a1f17', roughness: 0.4, metalness: 0.1 }), [])
+  const logo = useTexture('/logos/sai-logo.png', (t) => {
+    t.colorSpace = THREE.SRGBColorSpace
+  })
+  const slide = useRef()
+  const t0 = useRef(0)
+  useFrame((_, dt) => {
+    if (!slide.current) return
+    t0.current = Math.min(1, t0.current + dt * 0.7)
+    const e = 1 - Math.pow(1 - t0.current, 3)
+    slide.current.position.y = THREE.MathUtils.lerp(-0.25, 0.82, e)
+  })
+  return (
+    <group rotation={[-0.2, -0.25, 0]} position={[0, -0.25, 0]}>
+      {/* back of the envelope */}
+      <mesh position={[0, 0, -0.02]} material={paper} castShadow>
+        <boxGeometry args={[2.4, 1.5, 0.02]} />
+      </mesh>
+      {/* the card */}
+      <group ref={slide} position={[0, -0.25, 0]}>
+        <mesh position={[0, 0, 0.005]}>
+          <planeGeometry args={[2.2, 1.52]} />
+          <meshStandardMaterial map={card} roughness={0.85} />
+        </mesh>
+      </group>
+      {/* front pocket and open flap */}
+      <mesh position={[0, -0.33, 0.02]} material={paper}>
+        <boxGeometry args={[2.4, 0.84, 0.01]} />
+      </mesh>
+      <mesh position={[0, 0.75, -0.04]} rotation={[-0.5, 0, 0]}>
+        <shapeGeometry args={[new THREE.Shape([new THREE.Vector2(-1.2, 0), new THREE.Vector2(1.2, 0), new THREE.Vector2(0, 0.7)])]} />
+        <meshStandardMaterial color="#e2d6bd" roughness={0.9} side={THREE.DoubleSide} />
+      </mesh>
+      {/* wax seal with the SM mark */}
+      <group position={[0, -0.3, 0.04]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]} material={wax}>
+          <cylinderGeometry args={[0.2, 0.22, 0.05, 32]} />
+        </mesh>
+        <mesh position={[0, 0, 0.027]}>
+          <planeGeometry args={[0.24, 0.28]} />
+          <meshStandardMaterial map={logo} transparent color="#d9a08f" roughness={0.5} />
+        </mesh>
+      </group>
     </group>
   )
 }

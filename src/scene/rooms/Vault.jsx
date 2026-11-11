@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import * as THREE from 'three'
 import { Box, Cyl } from '../primitives.jsx'
 import Interactive from '../Interactive.jsx'
+import { labelTexture } from '../inspect/textures.js'
 
 // ROOM 04, VAULT: x[-4, 4], z[-9, -3]. A steel vault chamber against the north
 // glazing with its round door swung open. Clicking it opens the Vault page.
@@ -87,6 +88,10 @@ export default function Vault({ mats, ctx }) {
       chamber: new THREE.MeshStandardMaterial({ color: '#45484c', metalness: 0.7, roughness: 0.4 }),
       boxes: new THREE.MeshStandardMaterial({ map: depositBoxTexture(), metalness: 0.6, roughness: 0.4 }),
       glow: new THREE.MeshBasicMaterial({ color: '#ffcf8a' }),
+      sign: new THREE.MeshBasicMaterial({
+        map: labelTexture({ key: 'vault-sign', w: 1536, h: 240, bg: '#0d0d0e', lines: [{ text: 'P R O J E C T S', size: 150, font: 'sans', weight: 600, color: '#ffd59a', spacing: 18 }] }),
+        toneMapped: false,
+      }),
       spill: new THREE.MeshBasicMaterial({ color: '#ffb969', transparent: true, opacity: 0.22, depthWrite: false }),
       brass: mats.brass,
     }),
@@ -96,7 +101,7 @@ export default function Vault({ mats, ctx }) {
 
   return (
     <group>
-      <Interactive id="inside" label="Open the vault" sub="The Vault" ring={[0, -5.4, 1.6]} {...hover}>
+      <Interactive id="inside" label="The vault" sub="Unlock" ring={[0, -5.4, 1.6]} {...hover}>
         {/* chamber */}
         <Box p={[0, 0, -7.7]} s={[5.4, 3.3, 2.6]} m={m.chamber} />
         <mesh position={[2.701, 1.65, -7.7]} rotation={[0, Math.PI / 2, 0]} material={m.boxes}>
@@ -114,6 +119,13 @@ export default function Vault({ mats, ctx }) {
         </mesh>
         <Door m={m} />
         <Box p={[0, 3.3, -7.7]} s={[5.6, 0.1, 2.8]} m={mats.steel} />
+        {/* backlit sign on top of the vault */}
+        <Box p={[0, 3.4, -6.7]} s={[3.4, 0.62, 0.12]} m={mats.steel} />
+        <mesh position={[0, 3.71, -6.635]} material={m.sign} userData={{ noGlow: true }}>
+          <planeGeometry args={[3.2, 0.5]} />
+        </mesh>
+        <Box p={[0, 3.39, -6.64]} s={[3.44, 0.03, 0.02]} m={mats.brass} cast={false} />
+        <Box p={[0, 4.0, -6.64]} s={[3.44, 0.03, 0.02]} m={mats.brass} cast={false} />
       </Interactive>
 
       {/* light spilling out across the floor */}

@@ -5,18 +5,13 @@
 
 export const artifacts = [
   // 01 Foyer
-  { id: 'intro', room: 'foyer', object: 'A brass nameplate', where: 'By the entrance', kind: 'intro' },
-  { id: 'resume', room: 'foyer', object: 'A leather folio', where: 'On the console', kind: 'resume' },
+  { id: 'intro', room: 'foyer', object: 'A sealed envelope', where: 'On the console', kind: 'intro' },
   { id: 'active', room: 'foyer', object: 'Running shoes', where: 'By the door', kind: 'interest', ref: 'active' },
 
   // 02 Study
   { id: 'degree', room: 'study', object: 'A framed certificate', where: 'North wall', kind: 'degree' },
-  { id: 'presidential', room: 'study', object: 'A steel-framed letter', where: 'North wall', kind: 'honour', ref: 'presidential' },
-  { id: 'ideal', room: 'study', object: 'A cobalt medal', where: 'Achievement shelf', kind: 'award', ref: 'ideal' },
-  { id: 'robotics-second', room: 'study', object: 'A silver medal and a small robot', where: 'Achievement shelf', kind: 'award', ref: 'robotics-second' },
-  { id: 'robotics-excellence', room: 'study', object: 'A gold trophy', where: 'Achievement shelf', kind: 'award', ref: 'robotics-excellence' },
-  { id: 'physics', room: 'study', object: 'A crystal block', where: 'On the desk', kind: 'award', ref: 'physics' },
-  { id: 'distinction', room: 'study', object: 'A bound book', where: 'On the desk', kind: 'honour', ref: 'distinction' },
+  { id: 'cabinet', room: 'study', object: 'A lit display cabinet', where: 'North wall', kind: 'cabinet' },
+  { id: 'resume', room: 'study', object: 'A leather folio', where: 'On the desk', kind: 'resume' },
   { id: 'coursework', room: 'study', object: 'Five well-used textbooks', where: 'Bookshelf', kind: 'coursework' },
   { id: 'specialization', room: 'study', object: 'A microscope', where: 'Side table, reading corner', kind: 'specialization' },
 
@@ -42,9 +37,19 @@ export const artifactsIn = (room) => artifacts.filter((a) => a.room === room)
 
 // One-line room descriptions for the panel: atmosphere, not answers.
 export const roomIntro = {
-  foyer: 'The way in. A few things left by the door.',
-  study: 'Books, a desk by the windows, and things kept on the walls and shelves.',
+  foyer: 'The way in. Something has been left for you on the console.',
+  study: 'Books, a desk by the windows, and a lit cabinet on the north wall.',
   workshop: 'Five workstations and a tool chest. Each bench has something left on it.',
-  vault: 'A bank vault, door open. Three deposit boxes inside.',
+  vault: 'A bank vault with PROJECTS over the door. It has to be unlocked first.',
   lounge: 'Where the day ends. Look around.',
 }
+
+// Everything kept in the Study's display cabinet, in compartment order.
+export const cabinetItems = [
+  { id: 'ideal', kind: 'award', ref: 'ideal' },
+  { id: 'robotics-excellence', kind: 'award', ref: 'robotics-excellence' },
+  { id: 'physics', kind: 'award', ref: 'physics' },
+  { id: 'robotics-second', kind: 'award', ref: 'robotics-second' },
+  { id: 'presidential', kind: 'honour', ref: 'presidential' },
+  { id: 'distinction', kind: 'honour', ref: 'distinction' },
+]

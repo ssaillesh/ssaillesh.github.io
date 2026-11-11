@@ -8,6 +8,7 @@ import { roomById } from '../data/rooms.js'
 import SceneBoundary from './SceneBoundary.jsx'
 import VaultPage from './VaultPage.jsx'
 import InspectOverlay from './InspectOverlay.jsx'
+import CabinetPage from './CabinetPage.jsx'
 import { INSPECTABLE, inspectLabel } from '../data/inspect.js'
 import { artifactById } from '../data/artifacts.js'
 
@@ -40,7 +41,8 @@ export default function ResidenceView({ route, go, onFail }) {
   }, [ready])
   const panelWidth = usePanelWidth()
 
-  const inspecting = !intro && route.room && route.room !== 'vault' && route.item && INSPECTABLE[route.item] ? route.item : null
+  const inspecting = !intro && route.room && route.room !== 'vault' && route.item && route.item !== 'cabinet' && INSPECTABLE[route.item] ? route.item : null
+  const [cabinetSel, setCabinetSel] = useState(null)
 
   const caption = hover
     ? hover.kind === 'room'
@@ -62,7 +64,7 @@ export default function ResidenceView({ route, go, onFail }) {
               panelWidth={route.room ? panelWidth : 0}
               onHoverInfo={setHover}
               onFail={onFail}
-              paused={!!inspecting}
+              paused={!!inspecting || (route.room === 'vault' && !!route.item) || (route.room === 'study' && route.item === 'cabinet')}
               onCreated={() => setTimeout(() => setReady(true), 300)}
             />
           </Suspense>
@@ -111,9 +113,18 @@ export default function ResidenceView({ route, go, onFail }) {
             <RoomPanel route={route} go={go} width={panelWidth} />
             <VaultPage
               open={route.room === 'vault' && !!route.item}
-              project={route.item === 'inside' ? 'rova' : route.item}
-              onProject={(id) => go('vault', id)}
+              project={route.item === 'inside' ? null : route.item}
+              onProject={(id) => go('vault', id || 'inside')}
               onClose={() => go('vault')}
+            />
+            <CabinetPage
+              open={route.room === 'study' && route.item === 'cabinet'}
+              selected={cabinetSel}
+              onSelect={setCabinetSel}
+              onClose={() => {
+                setCabinetSel(null)
+                go('study')
+              }}
             />
           </Motion.div>
         )}

@@ -7,10 +7,10 @@ Live: https://ssaillesh.github.io/
 
 | Room | Purpose | What's in it |
 | --- | --- | --- |
-| 01 Foyer | Introduction | Brass nameplate, résumé folio, running shoes |
-| 02 Study | Education & awards | Degree and letter on the wall, achievement shelf, crystal and transcript on the desk, textbooks, microscope |
+| 01 Foyer | Introduction | A sealed envelope with a short intro, running shoes |
+| 02 Study | Education & awards | Degree on the wall, a lit display cabinet (opens the Cabinet view of every award), résumé on the desk, textbooks, microscope |
 | 03 Workshop | Experience | Laptop + security key, sample vials, bag of chips, SQL monitor, lidar sensor, tool chest |
-| 04 Vault | Projects | A bank vault; opening it reveals the Vault page (Rova archive, LapZero circuit, a sealed third box) |
+| 04 Vault | Projects | A bank vault signed PROJECTS; unlocking it opens a secure-storage wall of displays, one per GitHub project |
 | 05 Lounge | Personal & contact | Scale car, dumbbells, cast-iron pan, bicycle, photographs, rotary phone |
 
 ## Stack
@@ -25,7 +25,7 @@ src/
     profile.js     name, intro, links, skills
     education.js   degree and honours
     experience.js  workshop stations (from the résumé and previous site)
-    projects.js    projects + vaultBoxes (which projects the Vault shows)
+    projects.js    projects + vaultDisplays (order of the Vault displays)
     awards.js      awards (shown around the Study)
     artifacts.js   every object in the house: what it is, where it is, what it opens
     inspect.js     close-up copy, derived from artifacts.js
@@ -41,7 +41,8 @@ src/
     ResidenceView.jsx  desktop experience (3D + panel + plan mini-map)
     PlanView.jsx       mobile / no-WebGL / "plain view" layout
     RoomContent.jsx    room content, shared by desktop panel and mobile page
-    VaultPage.jsx      the full-screen Vault: Rova archive, LapZero circuit, sealed box
+    VaultPage.jsx      unlock sequence + the wall of project displays and project files
+    CabinetPage.jsx    the Study's award cabinet (3D, scene/cabinet/CabinetScene.jsx)
   legacy/          the previous site, kept intact
 ```
 

@@ -2,11 +2,11 @@ import { motion } from 'framer-motion'
 import { profile, skills } from '../data/profile.js'
 import { education } from '../data/education.js'
 import { experience } from '../data/experience.js'
-import { vaultBoxes } from '../data/projects.js'
+import { vaultDisplays } from '../data/projects.js'
 import { interests, photos } from '../data/lounge.js'
 import { awards } from '../data/awards.js'
 import { rooms, roomById } from '../data/rooms.js'
-import { artifactById, artifactsIn, roomIntro } from '../data/artifacts.js'
+import { artifactById, artifactsIn, cabinetItems, roomIntro } from '../data/artifacts.js'
 import { BackRow, Chips, ContactLinks, ExternalButton, ItemRow, Kicker, Metrics, ResumeButton, SectionLabel } from './bits.jsx'
 
 const Motion = motion
@@ -183,6 +183,22 @@ function ArtifactDetail({ a }) {
           </p>
         </Card>
       )
+    case 'cabinet':
+      return (
+        <Card kicker="The display cabinet" title="Awards & honours">
+          <ul>
+            {cabinetItems.map((c, i) => {
+              const name = c.kind === 'award' ? awards.find((x) => x.id === c.ref)?.name : education.honours.find((x) => x.id === c.ref)?.name
+              return (
+                <li key={c.id} className="flex items-center gap-4 border-b border-line py-3.5">
+                  <span className="font-mono text-[11px] text-brass">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="text-[15px] text-ivory-2">{name}</span>
+                </li>
+              )
+            })}
+          </ul>
+        </Card>
+      )
     case 'coursework':
       return (
         <Card kicker="Technical coursework" title="What the books are about">
@@ -267,25 +283,7 @@ function Vault({ onItem }) {
       </Reveal>
       <Reveal delay={0.1}>
         <SectionLabel>What’s here</SectionLabel>
-        <ul>
-          {vaultBoxes.map((id, i) => {
-            const n = String(i + 1).padStart(2, '0')
-            return (
-              <li key={n}>
-                {id ? (
-                  <ItemRow onClick={() => onItem(id)} eyebrow={`Deposit box ${n}`} title="Locked box" meta="Open →" />
-                ) : (
-                  <div className="flex items-center gap-4 border-b border-line py-4 text-stone">
-                    <span className="min-w-0 flex-1">
-                      <span className="label-mono block text-[10px]">Deposit box {n}</span>
-                      <span className="mt-1 block text-[16px]">Sealed</span>
-                    </span>
-                  </div>
-                )}
-              </li>
-            )
-          })}
-        </ul>
+        <p className="border-y border-line py-4 text-[15px] text-ivory-2">{vaultDisplays.length} project displays behind a locked door. The sign above it says PROJECTS.</p>
       </Reveal>
     </div>
   )

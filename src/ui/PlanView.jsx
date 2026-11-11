@@ -39,7 +39,10 @@ export default function PlanView({ route, go }) {
     <div className="min-h-screen bg-charcoal pb-24">
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-charcoal/90 px-5 py-3 backdrop-blur-md">
         <a href="#/" onClick={(e) => (e.preventDefault(), window.scrollTo({ top: 0, behavior: 'smooth' }))} className="leading-none">
-          <span className="font-serif text-[26px]">{profile.name}.</span>
+          <span className="flex items-center gap-2.5">
+            <img src="/logos/sai-logo.png" alt="SM" className="h-8 w-auto" />
+            <span className="font-serif text-[26px]">{profile.name}.</span>
+          </span>
         </a>
         <div className="flex items-center gap-2">
           <a href="?3d" className="label-mono hidden h-9 items-center px-2 text-[10px] text-stone hover:text-ivory sm:inline-flex">
@@ -97,8 +100,8 @@ export default function PlanView({ route, go }) {
 
       <VaultPage
         open={!!vaultItem}
-        project={vaultItem === 'inside' ? 'rova' : vaultItem}
-        onProject={(id) => setItems((s) => ({ ...s, vault: id }))}
+        project={vaultItem === 'inside' ? null : vaultItem}
+        onProject={(id) => setItems((s) => ({ ...s, vault: id || 'inside' }))}
         onClose={() => setItems((s) => ({ ...s, vault: null }))}
       />
 

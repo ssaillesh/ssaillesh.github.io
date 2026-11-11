@@ -19,6 +19,7 @@ export default function Intro({ show, ready, slow, onEnter, onPlain }) {
           exit={{ opacity: 0, transition: { duration: 1.1, ease: [0.4, 0, 0.2, 1] } }}
           className="grain fixed inset-0 z-50 flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_50%_60%,rgba(13,13,14,.55)_0%,rgba(13,13,14,.92)_70%)] px-6 text-center"
         >
+          <Motion.img {...line(0.05)} src="/logos/sai-logo.png" alt="SM logo" className="mb-8 h-20 w-auto" />
           <Motion.p {...line(0.2)} className="label-mono text-[11px] text-brass">
             {profile.school} · {profile.location}
           </Motion.p>
