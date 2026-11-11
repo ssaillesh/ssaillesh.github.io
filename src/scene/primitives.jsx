@@ -100,3 +100,15 @@ export function Monitor({ p, rot = 0, mats, w = 0.6, h = 0.36, screen = 'screen'
 export function Rug({ p, s, m }) {
   return <Box p={p} s={[s[0], 0.015, s[1]]} m={m} cast={false} />
 }
+
+// Generic snack bag (no branding): a pillowed foil body with crimped seams.
+export function ChipBag({ p, rot = [0, 0, 0], mats, scale = 1 }) {
+  return (
+    <group position={p} rotation={rot} scale={scale}>
+      <mesh geometry={unitSphere} material={mats.chipFoil} position={[0, 0.2, 0]} scale={[0.15, 0.19, 0.055]} castShadow />
+      <mesh geometry={unitSphere} material={mats.chipBand} position={[0, 0.2, 0.004]} scale={[0.152, 0.06, 0.056]} />
+      <Box p={[0, 0.375, 0]} s={[0.27, 0.035, 0.018]} m={mats.chipFoil} />
+      <Box p={[0, 0.005, 0]} s={[0.27, 0.035, 0.018]} m={mats.chipFoil} />
+    </group>
+  )
+}

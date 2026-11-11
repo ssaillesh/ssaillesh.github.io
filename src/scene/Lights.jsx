@@ -8,39 +8,44 @@ const ROOM_LIGHTS = {
   study: [{ p: [-9.9, 1.4, 4.75], i: 4, d: 5 }, { p: [-7.6, 2.8, 4.6], i: 9 }],
   workshop: [{ p: [-10, 2.8, -7.2], i: 9 }, { p: [-7, 2.8, -2.6], i: 9 }],
   gallery: [],
-  lounge: [{ p: [8, 2.8, 6], i: 10 }, { p: [8, 2.8, -5.6], i: 9 }, { p: [4.9, 0.6, 6], i: 3, d: 4, c: '#ff8a3c' }],
+  lounge: [{ p: [8, 2.8, 6], i: 10 }, { p: [8, 2.8, -0.6], i: 9 }, { p: [4.9, 0.6, 6], i: 3, d: 4, c: '#ff8a3c' }],
+  trophy: [{ p: [8, 2.9, -5.2], i: 5 }],
   core: [{ p: [0, 3, 0.5], i: 7 }],
 }
 
-const GALLERY_SPOTS = [-2.65, 0, 2.65]
+// Spotlights for exhibits: [room, x, z] of the thing being lit.
+const SPOTS = [
+  ['gallery', -2.65, -6.6], ['gallery', 0, -6.6], ['gallery', 2.65, -6.6],
+  ['trophy', 5.4, -7.7], ['trophy', 7.0, -7.7], ['trophy', 8.6, -7.7], ['trophy', 10.3, -7.7], ['trophy', 8.0, -5.2],
+]
 
-function RoomLight({ room, cfg, activeRoom }) {
+function RoomLight({ room, cfg, activeRoom, hoveredRoom }) {
   const ref = useRef()
   useFrame((_, dt) => {
     if (!ref.current) return
-    const k = !activeRoom ? 1 : activeRoom === room ? 1.5 : room === 'core' ? 0.6 : 0.35
+    const k = !activeRoom ? (hoveredRoom === room ? 1.7 : hoveredRoom ? 0.8 : 1) : activeRoom === room ? 1.5 : room === 'core' ? 0.6 : 0.35
     ref.current.intensity = THREE.MathUtils.damp(ref.current.intensity, cfg.i * k, 4, dt)
   })
   return <pointLight ref={ref} position={cfg.p} intensity={cfg.i} distance={cfg.d || 9} decay={1.6} color={cfg.c || '#ffc58a'} />
 }
 
-function GallerySpot({ x, activeRoom }) {
+function Spot({ room, x, z, activeRoom, hoveredRoom }) {
   const ref = useRef()
   const target = useMemo(() => new THREE.Object3D(), [])
   useEffect(() => {
-    target.position.set(x, 0.9, -6.6)
+    target.position.set(x, 0.9, z)
     target.updateMatrixWorld()
     if (ref.current) ref.current.target = target
-  }, [target, x])
+  }, [target, x, z])
   useFrame((_, dt) => {
     if (!ref.current) return
-    const k = !activeRoom ? 1 : activeRoom === 'gallery' ? 1.6 : 0.35
-    ref.current.intensity = THREE.MathUtils.damp(ref.current.intensity, 26 * k, 4, dt)
+    const k = !activeRoom ? (hoveredRoom === room ? 1.6 : hoveredRoom ? 0.8 : 1) : activeRoom === room ? 1.6 : 0.35
+    ref.current.intensity = THREE.MathUtils.damp(ref.current.intensity, 22 * k, 4, dt)
   })
-  return <spotLight ref={ref} position={[x, 4.2, -4.6]} angle={0.42} penumbra={0.7} intensity={26} distance={9} decay={1.6} color="#ffe2b8" />
+  return <spotLight ref={ref} position={[x, 4.2, z + 2]} angle={0.4} penumbra={0.7} intensity={22} distance={9} decay={1.6} color="#ffe2b8" />
 }
 
-export default function Lights({ activeRoom }) {
+export default function Lights({ activeRoom, hoveredRoom }) {
   return (
     <>
       <hemisphereLight args={['#5b6372', '#2a2118', 0.55]} />
@@ -62,10 +67,10 @@ export default function Lights({ activeRoom }) {
       />
       <directionalLight position={[20, 14, 22]} intensity={0.35} color="#ffd9a8" />
       {Object.entries(ROOM_LIGHTS).flatMap(([room, list]) =>
-        list.map((cfg, i) => <RoomLight key={`${room}${i}`} room={room} cfg={cfg} activeRoom={activeRoom} />),
+        list.map((cfg, i) => <RoomLight key={`${room}${i}`} room={room} cfg={cfg} activeRoom={activeRoom} hoveredRoom={hoveredRoom} />),
       )}
-      {GALLERY_SPOTS.map((x) => (
-        <GallerySpot key={x} x={x} activeRoom={activeRoom} />
+      {SPOTS.map(([room, x, z]) => (
+        <Spot key={`${room}${x}${z}`} room={room} x={x} z={z} activeRoom={activeRoom} hoveredRoom={hoveredRoom} />
       ))}
     </>
   )

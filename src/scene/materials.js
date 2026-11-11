@@ -70,7 +70,7 @@ export function getMaterials() {
   const std = (o) => new THREE.MeshStandardMaterial(o)
   const concreteMap = canvasTexture(256, concreteDraw('#7f7a73', 0.08), [3, 3])
   const wallMap = canvasTexture(256, concreteDraw('#8a857d', 0.06), [2, 1])
-  const polishedMap = canvasTexture(256, concreteDraw('#5d5954', 0.05), [2, 2])
+  const polishedMap = canvasTexture(256, concreteDraw('#6a645c', 0.05), [2, 2])
   const walnutMap = canvasTexture(128, walnutDraw, [1, 1])
   const oakFloor = canvasTexture(256, plankDraw('#6b4a33'), [3, 3])
   const darkFloor = canvasTexture(256, plankDraw('#3b2a1f'), [3, 3])
@@ -78,7 +78,7 @@ export function getMaterials() {
   cache = {
     slab: std({ color: '#3c3935', roughness: 0.9 }),
     concreteFloor: std({ map: concreteMap, roughness: 0.82 }),
-    polished: std({ map: polishedMap, roughness: 0.32, metalness: 0.08 }),
+    polished: std({ map: polishedMap, roughness: 0.42, metalness: 0.04 }),
     oakFloor: std({ map: oakFloor, roughness: 0.6 }),
     darkFloor: std({ map: darkFloor, roughness: 0.55 }),
     wall: std({ map: wallMap, roughness: 0.88 }),
@@ -99,6 +99,8 @@ export function getMaterials() {
     rugIvory: std({ color: '#cbc2b2', roughness: 1 }),
     whiteLab: std({ color: '#d9d6cf', roughness: 0.5 }),
     rubber: std({ color: '#0c0c0c', roughness: 0.9 }),
+    chipFoil: std({ color: '#d6a634', roughness: 0.32, metalness: 0.45 }),
+    chipBand: std({ color: '#9e2f26', roughness: 0.4, metalness: 0.2 }),
     carRed: std({ color: '#7a1f17', roughness: 0.25, metalness: 0.6 }),
     carGrey: std({ color: '#2c2f33', roughness: 0.3, metalness: 0.7 }),
     glass: new THREE.MeshPhysicalMaterial({ color: '#9fb0bd', roughness: 0.05, metalness: 0, transparent: true, opacity: 0.12, depthWrite: false }),

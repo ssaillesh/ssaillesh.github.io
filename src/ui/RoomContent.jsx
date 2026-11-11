@@ -4,6 +4,7 @@ import { education } from '../data/education.js'
 import { experience } from '../data/experience.js'
 import { projects } from '../data/projects.js'
 import { interests, photos } from '../data/lounge.js'
+import { awards } from '../data/awards.js'
 import { rooms } from '../data/rooms.js'
 import { BackRow, Chips, ContactLinks, ExternalButton, ItemRow, Kicker, Metrics, ResumeButton, SectionLabel } from './bits.jsx'
 
@@ -66,7 +67,8 @@ function Foyer({ onRoom }) {
 }
 
 // ---------------------------------------------------------------- Study
-function Study({ item, onItem }) {
+function Study({ item, onItem, onRoom }) {
+  const degreeOpen = item === 'degree'
   return (
     <div className="flex flex-col gap-8">
       <Reveal>
@@ -76,7 +78,27 @@ function Study({ item, onItem }) {
           {education.specialization} specialization · {education.period}
         </p>
       </Reveal>
-      <Reveal delay={0.08}>
+      <Reveal delay={0.06}>
+        <SectionLabel>On the wall</SectionLabel>
+        <button
+          type="button"
+          onClick={() => onItem(degreeOpen ? null : 'degree')}
+          aria-pressed={degreeOpen}
+          className={`w-full rounded-[3px] border p-5 text-left transition-colors ${degreeOpen ? 'border-brass bg-brass/10' : 'border-line hover:border-brass/60'}`}
+        >
+          <span className="label-mono block text-[10px] text-brass">The degree</span>
+          <span className="mt-3 block font-serif text-[28px] leading-tight text-ivory">{education.degree}</span>
+          <span className="mt-2 block text-[14.5px] text-ivory-2">
+            {education.school} · {education.location}
+          </span>
+          {degreeOpen && (
+            <span className="mt-3 block text-[14px] leading-relaxed text-stone">
+              {education.specialization} specialization, Co-op program, {education.period}.
+            </span>
+          )}
+        </button>
+      </Reveal>
+      <Reveal delay={0.1}>
         <SectionLabel>Honours</SectionLabel>
         <ul>
           {education.honours.map((h) => (
@@ -89,6 +111,41 @@ function Study({ item, onItem }) {
       <Reveal delay={0.14}>
         <SectionLabel>Technical coursework</SectionLabel>
         <Chips items={education.coursework} />
+      </Reveal>
+      {onRoom && (
+        <Reveal delay={0.18}>
+          <ItemRow onClick={() => onRoom('trophy')} eyebrow="Medals & awards" title="Continue to the Trophy Room" meta="05 →" />
+        </Reveal>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- Trophy Room
+function Trophy({ item, onItem }) {
+  const sel = awards.find((a) => a.id === item)
+  return (
+    <div className="flex flex-col gap-8">
+      <Reveal>
+        <h2 className="font-serif text-[44px] leading-[0.95] text-ivory">Recognition along the way</h2>
+        <p className="mt-4 text-[15.5px] leading-relaxed text-stone">Scholarships, medals and awards, from robotics competitions to physics. Each sits on its own plinth.</p>
+      </Reveal>
+      {sel && (
+        <Reveal key={sel.id} className="rounded-[3px] border border-brass bg-brass/10 p-5">
+          <p className="label-mono text-[10px] text-brass">{sel.kind}</p>
+          <p className="mt-3 font-serif text-[30px] leading-tight text-ivory">{sel.name}</p>
+          {sel.detail && <p className="mt-2 text-[14.5px] text-ivory-2">{sel.detail}</p>}
+          <p className="mt-3 font-mono text-[11.5px] text-stone">Displayed as: {sel.display.toLowerCase()}</p>
+        </Reveal>
+      )}
+      <Reveal delay={0.08}>
+        <ul>
+          {awards.map((a) => (
+            <li key={a.id}>
+              <ItemRow selected={item === a.id} onClick={() => onItem(item === a.id ? null : a.id)} eyebrow={`${a.kind} · ${a.display}`} title={a.name} />
+            </li>
+          ))}
+        </ul>
       </Reveal>
     </div>
   )
@@ -286,7 +343,7 @@ function Lounge({ item, onItem }) {
   )
 }
 
-const BY_ROOM = { foyer: Foyer, study: Study, workshop: Workshop, gallery: Gallery, lounge: Lounge }
+const BY_ROOM = { foyer: Foyer, study: Study, workshop: Workshop, gallery: Gallery, trophy: Trophy, lounge: Lounge }
 
 export default function RoomContent({ room, item, onItem, onRoom }) {
   const C = BY_ROOM[room]

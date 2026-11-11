@@ -2,7 +2,6 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Box } from './primitives.jsx'
-import { makeWindowTexture } from './materials.js'
 import { BUILDING } from '../data/rooms.js'
 
 const H = BUILDING.wallHeight
@@ -13,7 +12,8 @@ const T = 0.16
 // default camera (it sits on their east or south edge), so it fades when one is open.
 const interiorWalls = [
   { id: 'w-west-core', axis: 'z', at: -4, from: -9, to: 9, openings: [[-2.4, 0.4], [1.6, 3.6]], fadeFor: ['study', 'workshop'] },
-  { id: 'w-east-core', axis: 'z', at: 4, from: -9, to: 9, openings: [[-2, 3]], fadeFor: ['foyer', 'gallery'] },
+  { id: 'w-east-core', axis: 'z', at: 4, from: -9, to: 9, openings: [[-6.6, -5.4], [-2, 3]], fadeFor: ['foyer', 'gallery'] },
+  { id: 'w-trophy', axis: 'x', at: -3, from: 4, to: 12, openings: [[8.6, 9.4]], fadeFor: ['trophy'] },
   { id: 'w-study-workshop', axis: 'x', at: 1, from: -12, to: -4, openings: [], fadeFor: ['workshop'] },
   { id: 'w-gallery', axis: 'x', at: -3, from: -4, to: 4, openings: [[-2, 2]], fadeFor: ['gallery'] },
   { id: 'w-foyer', axis: 'x', at: 4, from: -4, to: 4, openings: [[-2.4, 2.4]], fadeFor: [] },
@@ -116,20 +116,36 @@ function OpenFacade({ axis, at, from, to, gaps = [], mats }) {
   )
 }
 
-function Tower({ mats }) {
-  const tex = useMemo(() => {
-    const t = makeWindowTexture()
-    t.repeat.set(5, 14)
-    return t
-  }, [])
-  const mat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1a1918', emissive: '#ffffff', emissiveMap: tex, emissiveIntensity: 0.18, roughness: 0.8 }), [tex])
+// The residence stands at ground level on a low concrete plinth, inside a
+// quiet forecourt that falls away into darkness. No backdrop.
+function Ground({ mats }) {
+  const groundMat = useMemo(() => {
+    const m = mats.concreteFloor.clone()
+    m.map = mats.concreteFloor.map.clone()
+    m.map.repeat.set(18, 18)
+    m.map.needsUpdate = true
+    m.color = new THREE.Color('#8a857c')
+    m.roughness = 0.95
+    return m
+  }, [mats])
   return (
     <group>
-      <Box p={[0, -0.55, 0]} s={[24.8, 0.55, 18.8]} m={mats.slab} />
-      <Box p={[0, -0.7, 0]} s={[25.2, 0.15, 19.2]} m={mats.steel} cast={false} />
-      <mesh position={[0, -70.7, 0]} material={mat}>
-        <boxGeometry args={[24, 140, 18]} />
+      <mesh position={[0, -0.3, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow material={groundMat}>
+        <circleGeometry args={[70, 64]} />
       </mesh>
+      {/* plinth the building sits on */}
+      <Box p={[0, -0.3, 0]} s={[25.2, 0.3, 19.2]} m={mats.slab} />
+      {/* forecourt paving and entrance steps */}
+      <Box p={[0, -0.3, 11.2]} s={[6, 0.02, 3.2]} m={mats.stone} cast={false} />
+      <Box p={[0, -0.3, 9.85]} s={[3.6, 0.2, 0.5]} m={mats.stone} />
+      <Box p={[0, -0.3, 9.7]} s={[3.6, 0.3, 0.2]} m={mats.stone} />
+      {/* low planters flanking the entrance */}
+      {[-3.6, 3.6].map((x) => (
+        <group key={x}>
+          <Box p={[x, -0.3, 10.6]} s={[2.2, 0.55, 0.8]} m={mats.wall} />
+          <Box p={[x, 0.25, 10.6]} s={[2.0, 0.25, 0.6]} m={mats.plant} />
+        </group>
+      ))}
     </group>
   )
 }
@@ -140,13 +156,14 @@ const floors = [
   { b: [-12, -4, 1, 9], m: 'darkFloor' },
   { b: [-12, -4, -9, 1], m: 'concreteFloor' },
   { b: [-4, 4, -9, -3], m: 'polished' },
-  { b: [4, 12, -9, 9], m: 'oakFloor' },
+  { b: [4, 12, -3, 9], m: 'oakFloor' },
+  { b: [4, 12, -9, -3], m: 'darkFloor' },
 ]
 
 export default function Architecture({ mats, activeRoom }) {
   return (
     <group>
-      <Tower mats={mats} />
+      <Ground mats={mats} />
       {floors.map(({ b: [x0, x1, z0, z1], m }) => (
         <Box key={`${x0}${z0}`} p={[(x0 + x1) / 2, 0, (z0 + z1) / 2]} s={[x1 - x0, 0.02, z1 - z0]} m={mats[m]} cast={false} />
       ))}
@@ -162,9 +179,7 @@ export default function Architecture({ mats, activeRoom }) {
       <Box p={[1.35, 0, 9]} s={[0.12, 3, 0.3]} m={mats.steel} />
       <Box p={[0, 3, 9]} s={[2.82, 0.14, 0.3]} m={mats.steel} />
       <Box p={[0.55, 0, 8.55]} s={[0.08, 2.95, 1.7]} r={[0, 0.55, 0]} m={mats.walnut} />
-      <Box p={[0, -0.55, 10]} s={[4.4, 0.57, 1.3]} m={mats.stone} />
-      <Box p={[-2.1, 0.02, 10.55]} s={[0.06, 0.95, 0.06]} m={mats.brass} />
-      <Box p={[2.1, 0.02, 10.55]} s={[0.06, 0.95, 0.06]} m={mats.brass} />
+
     </group>
   )
 }

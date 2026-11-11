@@ -4,6 +4,7 @@ import TopNav from './TopNav.jsx'
 import RoomPanel from './RoomPanel.jsx'
 import Intro from './Intro.jsx'
 import FloorPlan from './FloorPlan.jsx'
+import { roomById } from '../data/rooms.js'
 
 const Residence = lazy(() => import('../scene/Residence.jsx'))
 const Motion = motion
@@ -23,13 +24,22 @@ const usePanelWidth = () => {
 export default function ResidenceView({ route, go }) {
   const [intro, setIntro] = useState(() => !route.room)
   const [ready, setReady] = useState(false)
+  const [hover, setHover] = useState(null)
   const panelWidth = usePanelWidth()
+
+  const caption = hover
+    ? hover.kind === 'room'
+      ? { eyebrow: `${roomById[hover.id].number} · ${roomById[hover.id].kicker}`, text: `Enter the ${roomById[hover.id].name}` }
+      : { eyebrow: hover.sub, text: hover.label }
+    : route.room
+      ? { eyebrow: roomById[route.room].name, text: 'Hover an object to light it · click to open' }
+      : { eyebrow: 'Five rooms', text: 'Hover a room to light it · click to enter' }
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-charcoal">
       <div className="absolute inset-0" aria-hidden={intro}>
         <Suspense fallback={null}>
-          <Residence route={route} go={go} intro={intro} panelWidth={route.room ? panelWidth : 0} onCreated={() => setTimeout(() => setReady(true), 600)} />
+          <Residence route={route} go={go} intro={intro} panelWidth={route.room ? panelWidth : 0} onHoverInfo={setHover} onCreated={() => setTimeout(() => setReady(true), 600)} />
         </Suspense>
       </div>
 
@@ -45,19 +55,19 @@ export default function ResidenceView({ route, go }) {
                 <FloorPlan active={route.room} onSelect={(id) => go(id)} showLabels={false} className="w-full" />
                 <p className="label-mono mt-1.5 px-1 text-[9px] text-stone">Plan · select a room</p>
               </div>
-              <p className="label-mono hidden pb-2 text-[10px] text-stone 2xl:block">Drag to look around · Scroll to zoom</p>
             </div>
 
-            {!route.room && (
-              <Motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0, transition: { delay: 1.2, duration: 0.8 } }}
-                className="pointer-events-none fixed bottom-6 right-8 z-20 max-w-[340px] text-right"
-              >
-                <p className="label-mono text-[10px] text-brass">Five rooms · one residence</p>
-                <p className="mt-2 font-serif text-[21px] leading-tight text-ivory-2">Start in the foyer, or walk straight to the work.</p>
-              </Motion.div>
-            )}
+            <div
+              aria-live="polite"
+              className="pointer-events-none fixed bottom-6 z-20 -translate-x-1/2"
+              style={{ left: route.room ? `calc((100% - ${panelWidth + 16}px) / 2)` : '50%' }}
+            >
+              <div className="flex items-center gap-3 rounded-full border border-line bg-charcoal/80 px-4 py-2 backdrop-blur-md">
+                <span className="label-mono text-[10px] text-brass">{caption.eyebrow}</span>
+                <span className="h-3 w-px bg-line" aria-hidden />
+                <span className="text-[13px] text-ivory-2">{caption.text}</span>
+              </div>
+            </div>
 
             <RoomPanel route={route} go={go} width={panelWidth} />
           </Motion.div>

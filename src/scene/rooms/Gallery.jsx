@@ -10,9 +10,9 @@ const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefer
 // ROOM 04, GALLERY: x[-4, 4], z[-9, -3]. Three exhibits, each a plinth with a
 // physical object and a graphic panel carrying the real product screenshot.
 const EXHIBITS = [
-  { id: 'rova', x: -2.65, img: '/residence/rova.jpg', label: 'Rova', sub: '04.A' },
-  { id: 'lapzero', x: 0, img: '/residence/lapzero.jpg', label: 'LapZero', sub: '04.B' },
-  { id: 'codegraphrag', x: 2.65, img: '/residence/codegraphrag.jpg', label: 'CodeGraphRAG', sub: '04.C' },
+  { id: 'rova', x: -2.65, img: '/residence/rova.jpg', label: 'Rova', sub: 'Exhibit 01' },
+  { id: 'lapzero', x: 0, img: '/residence/lapzero.jpg', label: 'LapZero', sub: 'Exhibit 02' },
+  { id: 'codegraphrag', x: 2.65, img: '/residence/codegraphrag.jpg', label: 'CodeGraphRAG', sub: 'Exhibit 03' },
 ]
 
 function Panel({ x, texture, mats }) {
@@ -123,7 +123,7 @@ export default function Gallery({ mats, ctx }) {
           onSelect={ctx.onSelect}
           label={e.label}
           sub={e.sub}
-          labelAt={[e.x, 2.9, -6.6]}
+         
           ring={[e.x, -6.3, 1.0]}
         >
           <Box p={[e.x, 0, -6.3]} s={[1.0, 0.95, 1.0]} m={plinth} />

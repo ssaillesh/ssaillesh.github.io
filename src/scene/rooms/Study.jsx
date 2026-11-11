@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Box, Cyl, Chair, FloorLamp, Rug } from '../primitives.jsx'
+import { Box, Cyl, Chair, FloorLamp, Plant, Rug } from '../primitives.jsx'
 import Interactive from '../Interactive.jsx'
 import { seeded } from '../random.js'
 
@@ -39,24 +39,20 @@ export default function Study({ mats, ctx }) {
         <Box key={i} p={[b.x, b.y, 1.45]} s={[b.w, b.h, 0.24]} m={mats.books[b.m]} cast={false} />
       ))}
 
-      {/* Honours on the wall */}
-      <Interactive {...it('ideal')} label="IDEAL Scholar Award" sub="02.A" labelAt={[-7.2, 2.4, 1.2]} ring={[-7.2, 1.7, 0.6]}>
-        <Box p={[-7.2, 1.1, 1.1]} s={[0.66, 0.86, 0.04]} m={mats.brass} />
-        <Box p={[-7.2, 1.16, 1.125]} s={[0.54, 0.74, 0.01]} m={mats.ivory} cast={false} />
+      {/* The degree, framed as the centrepiece of the wall, with honours beside it */}
+      <Interactive {...it('degree')} label="BSc Honours Physics · University of Waterloo" sub="Degree" ring={[-6.9, 1.8, 0.75]}>
+        <Box p={[-6.9, 1.0, 1.1]} s={[1.25, 1.0, 0.05]} m={mats.walnut} />
+        <Box p={[-6.9, 1.06, 1.13]} s={[1.13, 0.88, 0.01]} m={mats.ivory} cast={false} />
+        <Box p={[-6.9, 1.62, 1.14]} s={[0.56, 0.05, 0.005]} m={mats.blackMatte} cast={false} />
+        <Box p={[-6.9, 1.52, 1.14]} s={[0.8, 0.025, 0.005]} m={mats.stone} cast={false} />
+        <Box p={[-6.9, 1.44, 1.14]} s={[0.66, 0.02, 0.005]} m={mats.stone} cast={false} />
+        <Cyl p={[-6.62, 1.18, 1.14]} radius={0.07} h={0.01} m={mats.brass} r={[Math.PI / 2, 0, 0]} />
       </Interactive>
-      <Interactive {...it('presidential')} label="Presidential Scholarship" sub="02.B" labelAt={[-6.2, 2.4, 1.2]} ring={[-6.2, 1.7, 0.6]}>
-        <Box p={[-6.2, 1.1, 1.1]} s={[0.66, 0.86, 0.04]} m={mats.steel} />
-        <Box p={[-6.2, 1.16, 1.125]} s={[0.54, 0.74, 0.01]} m={mats.ivory} cast={false} />
+      <Interactive {...it('presidential')} label="Presidential Scholarship" sub="Honour" ring={[-5.4, 1.8, 0.55]}>
+        <Box p={[-5.4, 1.2, 1.1]} s={[0.62, 0.76, 0.04]} m={mats.steel} />
+        <Box p={[-5.4, 1.25, 1.125]} s={[0.52, 0.66, 0.01]} m={mats.ivory} cast={false} />
       </Interactive>
-      <Interactive {...it('cobalt')} label="Cobalt Medallion" sub="02.C" labelAt={[-5.0, 2.0, 1.75]} ring={[-5.0, 1.75, 0.6]}>
-        <Box p={[-5.0, 0, 1.75]} s={[0.5, 1.0, 0.5]} m={mats.walnut} />
-        <Box p={[-5.0, 1.0, 1.75]} s={[0.46, 0.46, 0.46]} m={mats.glass} cast={false} />
-        <Cyl p={[-5.0, 1.04, 1.75]} radius={0.05} h={0.12} m={mats.brass} />
-        <mesh position={[-5.0, 1.3, 1.75]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-          <cylinderGeometry args={[0.13, 0.13, 0.025, 32]} />
-          <meshStandardMaterial color="#2c4f8c" metalness={0.8} roughness={0.25} />
-        </mesh>
-      </Interactive>
+      <Plant p={[-4.6, 0, 1.8]} mats={mats} scale={0.9} />
 
       {/* Desk facing the windows */}
       <Box p={[-9.7, 0.72, 5.4]} s={[0.95, 0.05, 2.1]} m={mats.walnut} />
@@ -66,7 +62,7 @@ export default function Study({ mats, ctx }) {
       <Cyl p={[-9.9, 0.77, 4.75]} radius={0.08} h={0.02} m={mats.brass} />
       <Cyl p={[-9.9, 0.77, 4.75]} radius={0.012} h={0.42} m={mats.brass} />
       <Cyl p={[-9.9, 1.15, 4.75]} radius={0.11} h={0.12} m={mats.lampGlow} cast={false} />
-      <Interactive {...it('distinction')} label="Term Distinction" sub="02.D" labelAt={[-9.7, 1.5, 5.9]} ring={[-9.7, 5.9, 0.5]}>
+      <Interactive {...it('distinction')} label="Term Distinction" sub="Honour" ring={[-9.7, 5.9, 0.5]}>
         <Box p={[-9.7, 0.77, 5.9]} s={[0.3, 0.06, 0.4]} m={mats.books[1]} />
         <Box p={[-9.7, 0.83, 5.9]} s={[0.28, 0.04, 0.38]} m={mats.books[4]} />
       </Interactive>

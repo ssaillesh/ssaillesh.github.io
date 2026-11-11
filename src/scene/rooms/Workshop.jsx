@@ -1,4 +1,4 @@
-import { Box, Cyl, Chair, Monitor, Stool } from '../primitives.jsx'
+import { Box, Cyl, Chair, ChipBag, Monitor, Stool } from '../primitives.jsx'
 import Interactive from '../Interactive.jsx'
 
 // ROOM 03, WORKSHOP: x[-12, -4], z[-9, 1]. One workstation per role.
@@ -7,7 +7,7 @@ export default function Workshop({ mats, ctx }) {
   return (
     <group>
       {/* Symcor: platform console + runner rack */}
-      <Interactive {...it('symcor')} label="Symcor · DevOps Engineer" sub="03.A" labelAt={[-10.1, 2.3, -7.8]} ring={[-10.3, -7.4, 1.7]}>
+      <Interactive {...it('symcor')} label="Symcor · DevOps Engineer" sub="Select" ring={[-10.3, -7.4, 1.7]}>
         <Box p={[-10.1, 0.72, -7.9]} s={[2.6, 0.05, 0.8]} m={mats.walnut} />
         <Box p={[-11.35, 0, -7.9]} s={[0.05, 0.72, 0.76]} m={mats.steel} />
         <Box p={[-8.85, 0, -7.9]} s={[0.05, 0.72, 0.76]} m={mats.steel} />
@@ -22,7 +22,7 @@ export default function Workshop({ mats, ctx }) {
       </Interactive>
 
       {/* OmniaBio: QC lab bench */}
-      <Interactive {...it('omniabio')} label="OmniaBio · Quality Automation" sub="03.B" labelAt={[-6.3, 2.3, -7.9]} ring={[-6.3, -7.6, 1.6]}>
+      <Interactive {...it('omniabio')} label="OmniaBio · Quality Automation" sub="Select" ring={[-6.3, -7.6, 1.6]}>
         <Box p={[-6.3, 0, -7.9]} s={[2.6, 0.88, 0.8]} m={mats.whiteLab} />
         <Box p={[-6.3, 0.88, -7.9]} s={[2.65, 0.04, 0.84]} m={mats.stone} />
         {[-7.2, -7.0, -6.8, -6.6].map((x) =>
@@ -34,7 +34,7 @@ export default function Workshop({ mats, ctx }) {
       </Interactive>
 
       {/* PepsiCo Lethbridge: computer-vision rig over a conveyor */}
-      <Interactive {...it('pepsico-ops')} label="PepsiCo · Software & Operations" sub="03.C" labelAt={[-10.6, 2.4, -3.6]} ring={[-10.5, -3.6, 1.7]}>
+      <Interactive {...it('pepsico-ops')} label="PepsiCo · Software & Operations" sub="Select" ring={[-10.5, -3.6, 1.7]}>
         <Box p={[-11.1, 0, -3.6]} s={[0.8, 0.7, 2.8]} m={mats.steel} />
         {[-4.8, -4.4, -4.0, -3.6, -3.2, -2.8, -2.4].map((z) => (
           <mesh key={z} position={[-11.1, 0.72, z]} rotation={[0, 0, Math.PI / 2]} castShadow>
@@ -42,8 +42,11 @@ export default function Workshop({ mats, ctx }) {
             <primitive object={mats.brass} attach="material" />
           </mesh>
         ))}
-        <Box p={[-11.1, 0.76, -4.2]} s={[0.5, 0.36, 0.5]} m={mats.terracotta} />
-        <Box p={[-11.1, 0.76, -3.1]} s={[0.46, 0.3, 0.42]} m={mats.terracotta} />
+        {[-4.5, -3.9, -3.3, -2.7].map((z, i) => (
+          <ChipBag key={z} p={[-11.1, 0.76, z]} rot={[0, Math.PI / 2 + (i % 2 ? 0.2 : -0.15), 0]} mats={mats} />
+        ))}
+        <Box p={[-11.1, 0.7, -1.9]} s={[0.7, 0.5, 0.5]} m={mats.terracotta} />
+        <ChipBag p={[-11.1, 1.2, -1.9]} rot={[-Math.PI / 2, 0, 0.3]} mats={mats} scale={0.9} />
         {[[-0.2, -0.2], [0.2, -0.2], [0, 0.22]].map(([dx, dz]) => (
           <Box key={`${dx}${dz}`} p={[-9.9 + dx, 0, -3.6 + dz]} s={[0.03, 1.5, 0.03]} m={mats.steel} r={[dz * 0.4, 0, dx * -0.4]} />
         ))}
@@ -56,17 +59,18 @@ export default function Workshop({ mats, ctx }) {
       </Interactive>
 
       {/* PepsiCo Mississauga: analyst desk */}
-      <Interactive {...it('pepsico-data')} label="PepsiCo · Data Analyst" sub="03.D" labelAt={[-11.0, 2.2, -0.4]} ring={[-10.7, -0.4, 1.4]}>
+      <Interactive {...it('pepsico-data')} label="PepsiCo · Data Analyst" sub="Select" ring={[-10.7, -0.4, 1.4]}>
         <Box p={[-11.2, 0.72, -0.4]} s={[0.8, 0.05, 2.0]} m={mats.walnut} />
         <Box p={[-11.2, 0, -1.35]} s={[0.76, 0.72, 0.05]} m={mats.steel} />
         <Box p={[-11.2, 0, 0.55]} s={[0.76, 0.72, 0.05]} m={mats.steel} />
         <Monitor p={[-11.4, 0.77, -0.8]} rot={Math.PI / 2} mats={mats} />
         <Monitor p={[-11.4, 0.77, 0.0]} rot={Math.PI / 2} mats={mats} screen="screenCool" />
         <Chair p={[-10.45, 0, -0.4]} rot={-Math.PI / 2} mats={mats} />
+        <ChipBag p={[-11.0, 0.77, 0.38]} rot={[-1.35, 0, 0.5]} mats={mats} scale={0.85} />
       </Interactive>
 
       {/* UWAFT: autonomous vehicle on stands */}
-      <Interactive {...it('uwaft')} label="UWAFT · Software Engineer" sub="03.E" labelAt={[-6.6, 2.2, -3.4]} ring={[-6.6, -3.4, 1.9]}>
+      <Interactive {...it('uwaft')} label="UWAFT · Software Engineer" sub="Select" ring={[-6.6, -3.4, 1.9]}>
         {[[-0.4, -0.8], [0.4, -0.8], [-0.4, 0.8], [0.4, 0.8]].map(([dx, dz]) => (
           <Box key={`${dx}${dz}`} p={[-6.6 + dx, 0, -3.4 + dz]} s={[0.12, 0.36, 0.12]} m={mats.steel} />
         ))}

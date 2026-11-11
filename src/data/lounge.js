@@ -5,7 +5,7 @@ export const interests = [
   { id: 'cars', name: 'Cars & automotive design', object: 'Scale model and print', note: 'Automotive design, supercars and ambitious long-term goals.' },
   { id: 'gym', name: 'The gym', object: 'Dumbbell rack', note: 'Training, consistently.' },
   { id: 'cooking', name: 'Cooking', object: 'Kitchen island', note: 'Cooking at home.' },
-  { id: 'biking', name: 'Biking', object: 'Bike on the wall', note: 'Getting out on the bike.' },
+  { id: 'biking', name: 'Biking', object: 'Bike by the window', note: 'Getting out on the bike.' },
   { id: 'active', name: 'Walking & staying active', object: 'The long windows', note: 'Walking and staying active.' },
   { id: 'exploring', name: 'Exploring new things', object: 'Photographs', note: 'New places, new tools, new problems.' },
 ]

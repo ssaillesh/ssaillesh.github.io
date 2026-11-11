@@ -38,12 +38,20 @@ export const rooms = [
     bounds: { minX: -4, maxX: 4, minZ: -9, maxZ: -3 },
   },
   {
-    id: 'lounge',
+    id: 'trophy',
     number: '05',
+    name: 'Trophy Room',
+    kicker: 'Awards',
+    purpose: 'Recognition along the way',
+    bounds: { minX: 4, maxX: 12, minZ: -9, maxZ: -3 },
+  },
+  {
+    id: 'lounge',
+    number: '06',
     name: 'Lounge',
     kicker: 'Personal & contact',
     purpose: 'The person behind it',
-    bounds: { minX: 4, maxX: 12, minZ: -9, maxZ: 9 },
+    bounds: { minX: 4, maxX: 12, minZ: -3, maxZ: 9 },
   },
 ]
 
