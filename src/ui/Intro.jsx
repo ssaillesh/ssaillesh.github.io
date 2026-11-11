@@ -9,7 +9,7 @@ const line = (delay) => ({
 })
 
 // Cinematic title card shown over the 3D scene while it loads.
-export default function Intro({ show, ready, onEnter }) {
+export default function Intro({ show, ready, slow, onEnter, onPlain }) {
   return (
     <AnimatePresence>
       {show && (
@@ -48,6 +48,20 @@ export default function Intro({ show, ready, onEnter }) {
                 )}
               </span>
             </button>
+            {slow && (
+              <div role="status" className="flex flex-col items-center gap-3">
+                <p className="max-w-[26rem] text-[14px] leading-relaxed text-ivory-2">
+                  The 3D residence is taking longer than usual on this device. Everything is also available in the plain version.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => onPlain?.('slow')}
+                  className="inline-flex h-11 items-center rounded-full bg-brass px-5 text-[14px] font-medium text-charcoal transition-colors hover:bg-brass-2"
+                >
+                  Continue in plain view
+                </button>
+              </div>
+            )}
             <p className="text-[13px] text-stone">
               In a hurry?{' '}
               <a href={profile.links.resume} className="text-ivory-2 underline decoration-brass/60 underline-offset-4 hover:text-ivory">

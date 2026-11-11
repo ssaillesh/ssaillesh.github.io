@@ -1,6 +1,7 @@
 import { Suspense, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { PerformanceMonitor } from '@react-three/drei'
 import { getMaterials } from './materials.js'
 import Architecture from './Architecture.jsx'
 import Lights from './Lights.jsx'
@@ -50,6 +51,18 @@ function RoomHitArea({ room, hovered, active, onHover, onGo }) {
   )
 }
 
+// Signals "ready" only once a frame has actually been drawn, so the intro never
+// offers to enter a scene the GPU has not managed to render yet.
+function FirstFrame({ onFirstFrame }) {
+  const done = useRef(false)
+  useFrame(() => {
+    if (done.current) return
+    done.current = true
+    onFirstFrame?.()
+  })
+  return null
+}
+
 function Scene({ route, go, intro, panelWidth, onHoverInfo }) {
   const mats = useMemo(() => getMaterials(), [])
   const [hoveredRoom, setHoveredRoomState] = useState(null)
@@ -96,20 +109,35 @@ function Scene({ route, go, intro, panelWidth, onHoverInfo }) {
   )
 }
 
-export default function Residence({ route, go, intro, panelWidth, onCreated, onHoverInfo }) {
+export default function Residence({ route, go, intro, panelWidth, onCreated, onFail, onHoverInfo }) {
+  const [dpr, setDpr] = useState(1.5)
   return (
     <Canvas
       shadows
-      dpr={[1, 1.75]}
+      dpr={dpr}
       camera={{ position: [90, 110, 90], fov: FOV, near: 2, far: 900 }}
-      gl={{ antialias: true, powerPreference: 'high-performance' }}
+      gl={(defaults) => {
+        // Create the renderer ourselves so a failure is caught here: three.js
+        // throws asynchronously, outside React's error boundary.
+        try {
+          return new THREE.WebGLRenderer({ ...defaults, antialias: true, powerPreference: 'high-performance' })
+        } catch (err) {
+          onFail?.('webgl')
+          throw err
+        }
+      }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping
         gl.toneMappingExposure = 1.05
-        onCreated?.()
+        gl.domElement.addEventListener('webglcontextlost', (e) => {
+          e.preventDefault()
+          onFail?.('context-lost')
+        })
       }}
       onPointerMissed={() => route.item && go(route.room)}
     >
+      <PerformanceMonitor onDecline={() => setDpr(1)} flipflops={2} onFallback={() => setDpr(1)} />
+      <FirstFrame onFirstFrame={onCreated} />
       <Scene route={route} go={go} intro={intro} panelWidth={panelWidth} onHoverInfo={onHoverInfo} />
     </Canvas>
   )

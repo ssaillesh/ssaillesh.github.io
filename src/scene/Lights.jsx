@@ -2,21 +2,22 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-// Warm architectural lighting per room. The open room brightens, the others dim.
+// Warm architectural lighting: one light per room, two wide spots for the
+// exhibit rooms. Kept deliberately few — every extra light makes every
+// material more expensive to compile and to draw on modest GPUs.
 const ROOM_LIGHTS = {
   foyer: [{ p: [0, 2.8, 6.5], i: 9 }],
-  study: [{ p: [-9.9, 1.4, 4.75], i: 4, d: 5 }, { p: [-7.6, 2.8, 4.6], i: 9 }],
-  workshop: [{ p: [-10, 2.8, -7.2], i: 9 }, { p: [-7, 2.8, -2.6], i: 9 }],
-  gallery: [],
-  lounge: [{ p: [8, 2.8, 6], i: 10 }, { p: [8, 2.8, -0.6], i: 9 }, { p: [4.9, 0.6, 6], i: 3, d: 4, c: '#ff8a3c' }],
+  study: [{ p: [-8.6, 2.6, 4.6], i: 11 }],
+  workshop: [{ p: [-8.4, 2.9, -4.6], i: 14, d: 11 }],
+  lounge: [{ p: [8, 2.9, 3.2], i: 15, d: 12 }],
   trophy: [{ p: [8, 2.9, -5.2], i: 5 }],
   core: [{ p: [0, 3, 0.5], i: 7 }],
 }
 
-// Spotlights for exhibits: [room, x, z] of the thing being lit.
+// Wide spotlights: [room, x, z] of the area being lit.
 const SPOTS = [
-  ['gallery', -2.65, -6.6], ['gallery', 0, -6.6], ['gallery', 2.65, -6.6],
-  ['trophy', 5.4, -7.7], ['trophy', 7.0, -7.7], ['trophy', 8.6, -7.7], ['trophy', 10.3, -7.7], ['trophy', 8.0, -5.2],
+  ['gallery', 0, -6.6],
+  ['trophy', 7.9, -7.0],
 ]
 
 function RoomLight({ room, cfg, activeRoom, hoveredRoom }) {
@@ -40,9 +41,9 @@ function Spot({ room, x, z, activeRoom, hoveredRoom }) {
   useFrame((_, dt) => {
     if (!ref.current) return
     const k = !activeRoom ? (hoveredRoom === room ? 1.6 : hoveredRoom ? 0.8 : 1) : activeRoom === room ? 1.6 : 0.35
-    ref.current.intensity = THREE.MathUtils.damp(ref.current.intensity, 22 * k, 4, dt)
+    ref.current.intensity = THREE.MathUtils.damp(ref.current.intensity, 34 * k, 4, dt)
   })
-  return <spotLight ref={ref} position={[x, 4.2, z + 2]} angle={0.4} penumbra={0.7} intensity={22} distance={9} decay={1.6} color="#ffe2b8" />
+  return <spotLight ref={ref} position={[x, 5.2, z + 2.6]} angle={0.85} penumbra={0.6} intensity={34} distance={12} decay={1.5} color="#ffe2b8" />
 }
 
 export default function Lights({ activeRoom, hoveredRoom }) {
@@ -55,7 +56,7 @@ export default function Lights({ activeRoom, hoveredRoom }) {
         intensity={0.9}
         color="#c9d4e4"
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-camera-left={-17}
         shadow-camera-right={17}
         shadow-camera-top={17}

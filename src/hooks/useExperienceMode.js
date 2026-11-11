@@ -17,7 +17,10 @@ export function useExperienceMode() {
     if (q.has('plan')) return 'plan'
     if (q.has('3d')) return 'residence'
     const small = window.matchMedia('(max-width: 860px)').matches
-    return small || !hasWebGL() ? 'plan' : 'residence'
+    // tablets and other touch-only devices get the plan layout: the 3D scene
+    // is built for a mouse and is the heaviest thing on the page
+    const touchOnly = window.matchMedia('(pointer: coarse)').matches && !window.matchMedia('(any-pointer: fine)').matches
+    return small || touchOnly || !hasWebGL() ? 'plan' : 'residence'
   }
   const [mode, setMode] = useState(decide)
 

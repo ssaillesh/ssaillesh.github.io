@@ -5,6 +5,7 @@ import RoomPanel from './RoomPanel.jsx'
 import Intro from './Intro.jsx'
 import FloorPlan from './FloorPlan.jsx'
 import { roomById } from '../data/rooms.js'
+import SceneBoundary from './SceneBoundary.jsx'
 
 const Residence = lazy(() => import('../scene/Residence.jsx'))
 const Motion = motion
@@ -21,10 +22,18 @@ const usePanelWidth = () => {
 }
 
 // Desktop experience: full-screen 3D residence with a minimal interface over it.
-export default function ResidenceView({ route, go }) {
+export default function ResidenceView({ route, go, onFail }) {
   const [intro, setIntro] = useState(() => !route.room)
   const [ready, setReady] = useState(false)
+  const [slow, setSlow] = useState(false)
   const [hover, setHover] = useState(null)
+
+  // Watchdog: if no frame has been drawn after 12 s, offer the plain version.
+  useEffect(() => {
+    if (ready) return
+    const t = setTimeout(() => setSlow(true), 12000)
+    return () => clearTimeout(t)
+  }, [ready])
   const panelWidth = usePanelWidth()
 
   const caption = hover
@@ -38,9 +47,19 @@ export default function ResidenceView({ route, go }) {
   return (
     <div className="fixed inset-0 overflow-hidden bg-charcoal">
       <div className="absolute inset-0" aria-hidden={intro}>
-        <Suspense fallback={null}>
-          <Residence route={route} go={go} intro={intro} panelWidth={route.room ? panelWidth : 0} onHoverInfo={setHover} onCreated={() => setTimeout(() => setReady(true), 600)} />
-        </Suspense>
+        <SceneBoundary onFail={onFail}>
+          <Suspense fallback={null}>
+            <Residence
+              route={route}
+              go={go}
+              intro={intro}
+              panelWidth={route.room ? panelWidth : 0}
+              onHoverInfo={setHover}
+              onFail={onFail}
+              onCreated={() => setTimeout(() => setReady(true), 300)}
+            />
+          </Suspense>
+        </SceneBoundary>
       </div>
 
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,transparent_55%,rgba(8,8,9,.65)_100%)]" />
@@ -74,7 +93,7 @@ export default function ResidenceView({ route, go }) {
         )}
       </AnimatePresence>
 
-      <Intro show={intro} ready={ready} onEnter={() => setIntro(false)} />
+      <Intro show={intro} ready={ready} slow={slow && !ready} onEnter={() => setIntro(false)} onPlain={onFail} />
     </div>
   )
 }

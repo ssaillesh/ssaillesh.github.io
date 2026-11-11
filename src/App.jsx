@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { useRoute } from './hooks/useRoute.js'
 import { useExperienceMode } from './hooks/useExperienceMode.js'
 import { roomById } from './data/rooms.js'
@@ -10,6 +10,7 @@ const LegacyRoot = lazy(() => import('./legacy/LegacyRoot.jsx'))
 export default function App() {
   const [route, go] = useRoute()
   const mode = useExperienceMode()
+  const [fallback, setFallback] = useState(false)
 
   useEffect(() => {
     const room = route.room ? roomById[route.room] : null
@@ -24,5 +25,9 @@ export default function App() {
     )
   }
 
-  return mode === 'residence' ? <ResidenceView route={route} go={go} /> : <PlanView route={route} go={go} />
+  return mode === 'residence' && !fallback ? (
+    <ResidenceView route={route} go={go} onFail={() => setFallback(true)} />
+  ) : (
+    <PlanView route={route} go={go} />
+  )
 }
