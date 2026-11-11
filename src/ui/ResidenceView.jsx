@@ -7,6 +7,8 @@ import FloorPlan from './FloorPlan.jsx'
 import { roomById } from '../data/rooms.js'
 import SceneBoundary from './SceneBoundary.jsx'
 import VaultPage from './VaultPage.jsx'
+import InspectOverlay from './InspectOverlay.jsx'
+import { INSPECTABLE, inspectLabel } from '../data/inspect.js'
 
 const Residence = lazy(() => import('../scene/Residence.jsx'))
 const Motion = motion
@@ -37,6 +39,8 @@ export default function ResidenceView({ route, go, onFail }) {
   }, [ready])
   const panelWidth = usePanelWidth()
 
+  const inspecting = !intro && route.room && route.room !== 'vault' && route.item && INSPECTABLE[route.item] ? route.item : null
+
   const caption = hover
     ? hover.kind === 'room'
       ? { eyebrow: `${roomById[hover.id].number} · ${roomById[hover.id].kicker}`, text: `Enter the ${roomById[hover.id].name}` }
@@ -57,6 +61,7 @@ export default function ResidenceView({ route, go, onFail }) {
               panelWidth={route.room ? panelWidth : 0}
               onHoverInfo={setHover}
               onFail={onFail}
+              paused={!!inspecting}
               onCreated={() => setTimeout(() => setReady(true), 300)}
             />
           </Suspense>
@@ -79,6 +84,7 @@ export default function ResidenceView({ route, go, onFail }) {
 
             <div
               aria-live="polite"
+              hidden={!!inspecting}
               className="pointer-events-none fixed bottom-6 z-20 -translate-x-1/2"
               style={{ left: route.room ? `calc((100% - ${panelWidth + 16}px) / 2)` : '50%' }}
             >
@@ -89,6 +95,18 @@ export default function ResidenceView({ route, go, onFail }) {
               </div>
             </div>
 
+            <AnimatePresence>
+              {inspecting && (
+                <InspectOverlay
+                  key={inspecting}
+                  item={inspecting}
+                  label={inspectLabel(inspecting)}
+                  from={INSPECTABLE[inspecting]}
+                  right={panelWidth + 24}
+                  onClose={() => go(route.room)}
+                />
+              )}
+            </AnimatePresence>
             <RoomPanel route={route} go={go} width={panelWidth} />
             <VaultPage
               open={route.room === 'vault' && !!route.item}

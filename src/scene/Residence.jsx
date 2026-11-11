@@ -108,10 +108,11 @@ function Scene({ route, go, intro, panelWidth, onHoverInfo }) {
   )
 }
 
-export default function Residence({ route, go, intro, panelWidth, onCreated, onFail, onHoverInfo }) {
+export default function Residence({ route, go, intro, panelWidth, onCreated, onFail, onHoverInfo, paused }) {
   const [dpr, setDpr] = useState(1.5)
   return (
     <Canvas
+      frameloop={paused ? 'demand' : 'always'}
       shadows
       dpr={dpr}
       camera={{ position: [90, 110, 90], fov: FOV, near: 2, far: 900 }}
