@@ -12,10 +12,9 @@ const T = 0.16
 // default camera (it sits on their east or south edge), so it fades when one is open.
 const interiorWalls = [
   { id: 'w-west-core', axis: 'z', at: -4, from: -9, to: 9, openings: [[-2.4, 0.4], [1.6, 3.6]], fadeFor: ['study', 'workshop'] },
-  { id: 'w-east-core', axis: 'z', at: 4, from: -9, to: 9, openings: [[-6.6, -5.4], [-2, 3]], fadeFor: ['foyer', 'gallery'] },
-  { id: 'w-trophy', axis: 'x', at: -3, from: 4, to: 12, openings: [[8.6, 9.4]], fadeFor: ['trophy'] },
+  { id: 'w-east-core', axis: 'z', at: 4, from: -9, to: 9, openings: [[-2, 3]], fadeFor: ['foyer', 'vault'] },
   { id: 'w-study-workshop', axis: 'x', at: 1, from: -12, to: -4, openings: [], fadeFor: ['workshop'] },
-  { id: 'w-gallery', axis: 'x', at: -3, from: -4, to: 4, openings: [[-2, 2]], fadeFor: ['gallery'] },
+  { id: 'w-gallery', axis: 'x', at: -3, from: -4, to: 4, openings: [[-2, 2]], fadeFor: ['vault'] },
   { id: 'w-foyer', axis: 'x', at: 4, from: -4, to: 4, openings: [[-2.4, 2.4]], fadeFor: [] },
 ]
 
@@ -156,8 +155,7 @@ const floors = [
   { b: [-12, -4, 1, 9], m: 'darkFloor' },
   { b: [-12, -4, -9, 1], m: 'concreteFloor' },
   { b: [-4, 4, -9, -3], m: 'polished' },
-  { b: [4, 12, -3, 9], m: 'oakFloor' },
-  { b: [4, 12, -9, -3], m: 'darkFloor' },
+  { b: [4, 12, -9, 9], m: 'oakFloor' },
 ]
 
 export default function Architecture({ mats, activeRoom }) {

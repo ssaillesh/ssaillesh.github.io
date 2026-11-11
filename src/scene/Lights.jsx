@@ -9,16 +9,12 @@ const ROOM_LIGHTS = {
   foyer: [{ p: [0, 2.8, 6.5], i: 9 }],
   study: [{ p: [-8.6, 2.6, 4.6], i: 11 }],
   workshop: [{ p: [-8.4, 2.9, -4.6], i: 14, d: 11 }],
-  lounge: [{ p: [8, 2.9, 3.2], i: 15, d: 12 }],
-  trophy: [{ p: [8, 2.9, -5.2], i: 5 }],
+  lounge: [{ p: [8, 2.9, 4.2], i: 13, d: 10 }, { p: [8, 2.9, -5.2], i: 10, d: 9 }],
   core: [{ p: [0, 3, 0.5], i: 7 }],
 }
 
 // Wide spotlights: [room, x, z] of the area being lit.
-const SPOTS = [
-  ['gallery', 0, -6.6],
-  ['trophy', 7.9, -7.0],
-]
+const SPOTS = [['vault', 0, -6.2]]
 
 function RoomLight({ room, cfg, activeRoom, hoveredRoom }) {
   const ref = useRef()

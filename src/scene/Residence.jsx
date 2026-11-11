@@ -10,12 +10,11 @@ import Core from './rooms/Core.jsx'
 import Foyer from './rooms/Foyer.jsx'
 import Study from './rooms/Study.jsx'
 import Workshop from './rooms/Workshop.jsx'
-import Gallery from './rooms/Gallery.jsx'
+import Vault from './rooms/Vault.jsx'
 import Lounge from './rooms/Lounge.jsx'
-import Trophy from './rooms/Trophy.jsx'
 import { rooms, roomCenter, roomSize } from '../data/rooms.js'
 
-const ROOM_COMPONENTS = { foyer: Foyer, study: Study, workshop: Workshop, gallery: Gallery, trophy: Trophy, lounge: Lounge }
+const ROOM_COMPONENTS = { foyer: Foyer, study: Study, workshop: Workshop, vault: Vault, lounge: Lounge }
 
 // Invisible floor that makes a whole room clickable, with a faint brass wash on hover.
 function RoomHitArea({ room, hovered, active, onHover, onGo }) {

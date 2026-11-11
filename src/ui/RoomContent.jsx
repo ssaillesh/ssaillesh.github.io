@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { profile, skills } from '../data/profile.js'
 import { education } from '../data/education.js'
 import { experience } from '../data/experience.js'
-import { projects } from '../data/projects.js'
+import { projects, vaultBoxes } from '../data/projects.js'
 import { interests, photos } from '../data/lounge.js'
 import { awards } from '../data/awards.js'
 import { rooms } from '../data/rooms.js'
@@ -67,8 +67,9 @@ function Foyer({ onRoom }) {
 }
 
 // ---------------------------------------------------------------- Study
-function Study({ item, onItem, onRoom }) {
+function Study({ item, onItem }) {
   const degreeOpen = item === 'degree'
+  const selAward = awards.find((a) => a.id === item)
   return (
     <div className="flex flex-col gap-8">
       <Reveal>
@@ -112,33 +113,15 @@ function Study({ item, onItem, onRoom }) {
         <SectionLabel>Technical coursework</SectionLabel>
         <Chips items={education.coursework} />
       </Reveal>
-      {onRoom && (
-        <Reveal delay={0.18}>
-          <ItemRow onClick={() => onRoom('trophy')} eyebrow="Medals & awards" title="Continue to the Trophy Room" meta="05 →" />
-        </Reveal>
-      )}
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------- Trophy Room
-function Trophy({ item, onItem }) {
-  const sel = awards.find((a) => a.id === item)
-  return (
-    <div className="flex flex-col gap-8">
-      <Reveal>
-        <h2 className="font-serif text-[44px] leading-[0.95] text-ivory">Recognition along the way</h2>
-        <p className="mt-4 text-[15.5px] leading-relaxed text-stone">Scholarships, medals and awards, from robotics competitions to physics. Each sits on its own plinth.</p>
-      </Reveal>
-      {sel && (
-        <Reveal key={sel.id} className="rounded-[3px] border border-brass bg-brass/10 p-5">
-          <p className="label-mono text-[10px] text-brass">{sel.kind}</p>
-          <p className="mt-3 font-serif text-[30px] leading-tight text-ivory">{sel.name}</p>
-          {sel.detail && <p className="mt-2 text-[14.5px] text-ivory-2">{sel.detail}</p>}
-          <p className="mt-3 font-mono text-[11.5px] text-stone">Displayed as: {sel.display.toLowerCase()}</p>
-        </Reveal>
-      )}
-      <Reveal delay={0.08}>
+      <Reveal delay={0.18}>
+        <SectionLabel>Awards · in the display table</SectionLabel>
+        {selAward && (
+          <div className="mb-3 rounded-[3px] border border-brass bg-brass/10 p-4">
+            <p className="label-mono text-[10px] text-brass">{selAward.kind}</p>
+            <p className="mt-2 font-serif text-[26px] leading-tight text-ivory">{selAward.name}</p>
+            {selAward.detail && <p className="mt-1.5 text-[14px] text-ivory-2">{selAward.detail}</p>}
+          </div>
+        )}
         <ul>
           {awards.map((a) => (
             <li key={a.id}>
@@ -226,78 +209,41 @@ function Workshop({ item, onItem }) {
 }
 
 // ---------------------------------------------------------------- Gallery
-function ProjectDetail({ p, onBack }) {
-  return (
-    <div className="flex flex-col gap-7">
-      {onBack && <BackRow onClick={onBack}>All exhibits</BackRow>}
-      <Reveal>
-        <div className="overflow-hidden rounded-[3px] border border-line">
-          <img src={p.image} alt={`${p.name} screenshot`} className="aspect-[16/9] w-full object-cover" />
-        </div>
-      </Reveal>
-      <Reveal delay={0.06}>
-        <div className="flex items-center gap-3">
-          <Kicker>{p.kind}</Kicker>
-          <span className="rounded-full border border-brass/40 px-2 py-0.5 font-mono text-[10.5px] text-brass-2">{p.status}</span>
-        </div>
-        <h2 className="mt-3 font-serif text-[48px] leading-[0.95] text-ivory">{p.name}</h2>
-        <p className="mt-3 font-serif text-[21px] italic leading-snug text-ivory-2">{p.oneLiner}</p>
-      </Reveal>
-      <Reveal delay={0.1}>
-        <SectionLabel>The problem</SectionLabel>
-        <p className="text-[15px] leading-relaxed text-ivory-2">{p.problem}</p>
-        <p className="mt-3 text-[14.5px] leading-relaxed text-stone">{p.description}</p>
-      </Reveal>
-      {p.results && (
-        <Reveal delay={0.14}>
-          <SectionLabel>Results</SectionLabel>
-          <Metrics items={p.results} />
-        </Reveal>
-      )}
-      <Reveal delay={0.18}>
-        <SectionLabel>Architecture</SectionLabel>
-        <ol className="flex flex-col">
-          {p.architecture.map((a, i) => (
-            <li key={a} className="grid grid-cols-[32px_1fr] gap-2 border-t border-line py-3 text-[14.5px] leading-relaxed text-ivory-2">
-              <span className="font-mono text-[11px] text-brass">{String(i + 1).padStart(2, '0')}</span>
-              {a}
-            </li>
-          ))}
-        </ol>
-      </Reveal>
-      <Reveal delay={0.22}>
-        <SectionLabel>Built with</SectionLabel>
-        <Chips items={p.stack} />
-      </Reveal>
-      {p.contribution && (
-        <Reveal delay={0.24}>
-          <SectionLabel>My contribution</SectionLabel>
-          <p className="text-[15px] leading-relaxed text-ivory-2">{p.contribution}</p>
-        </Reveal>
-      )}
-      <Reveal delay={0.26} className="flex flex-wrap gap-3">
-        {p.links.live && <ExternalButton href={p.links.live}>Live demo</ExternalButton>}
-        {p.links.github && <ExternalButton href={p.links.github}>Source on GitHub</ExternalButton>}
-        {!p.links.live && !p.links.github && <p className="font-mono text-[12px] text-stone">Private repository · not yet deployed</p>}
-      </Reveal>
-    </div>
-  )
-}
-
-function Gallery({ item, onItem }) {
-  const sel = projects.find((p) => p.id === item)
-  if (sel) return <ProjectDetail p={sel} onBack={() => onItem(null)} />
+function Vault({ onItem }) {
+  const boxes = vaultBoxes.map((id, i) => ({ n: String(i + 1).padStart(2, '0'), p: id ? projects.find((x) => x.id === id) : null }))
   return (
     <div className="flex flex-col gap-8">
       <Reveal>
-        <h2 className="font-serif text-[44px] leading-[0.95] text-ivory">Things I’ve built</h2>
-        <p className="mt-4 text-[15.5px] leading-relaxed text-stone">A private exhibition of independent work. Select an exhibit for the problem, the architecture and the evidence.</p>
+        <h2 className="font-serif text-[44px] leading-[0.95] text-ivory">The Vault</h2>
+        <p className="mt-4 text-[15.5px] leading-relaxed text-stone">Where the work is kept. Three deposit boxes, one project each: the problem, the architecture and the evidence.</p>
       </Reveal>
-      <Reveal delay={0.08}>
+      <Reveal delay={0.06}>
+        <button
+          type="button"
+          onClick={() => onItem('inside')}
+          className="group flex w-full items-center justify-between gap-4 rounded-full bg-brass py-2 pl-6 pr-2 text-left text-charcoal transition-colors hover:bg-brass-2"
+        >
+          <span className="text-[15.5px] font-medium">Open the vault</span>
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-charcoal text-brass transition-transform group-hover:rotate-90" aria-hidden>
+            ✳
+          </span>
+        </button>
+      </Reveal>
+      <Reveal delay={0.1}>
         <ul>
-          {projects.map((p, i) => (
-            <li key={p.id}>
-              <ItemRow onClick={() => onItem(p.id)} thumb={p.image} eyebrow={`Exhibit 0${i + 1} · ${p.kind}`} title={p.name} meta={p.status} />
+          {boxes.map(({ n, p }) => (
+            <li key={n}>
+              {p ? (
+                <ItemRow onClick={() => onItem(p.id)} thumb={p.image} eyebrow={`Box ${n} · ${p.kind}`} title={p.name} meta={p.status} />
+              ) : (
+                <div className="flex items-center gap-4 border-b border-line py-4 text-stone">
+                  <span className="flex h-12 w-[72px] items-center justify-center rounded-[2px] border border-dashed border-line font-mono text-[11px]">SEALED</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="label-mono block text-[10px]">Box {n}</span>
+                    <span className="mt-1 block text-[16px]">Reserved for what’s next</span>
+                  </span>
+                </div>
+              )}
             </li>
           ))}
         </ul>
@@ -343,7 +289,7 @@ function Lounge({ item, onItem }) {
   )
 }
 
-const BY_ROOM = { foyer: Foyer, study: Study, workshop: Workshop, gallery: Gallery, trophy: Trophy, lounge: Lounge }
+const BY_ROOM = { foyer: Foyer, study: Study, workshop: Workshop, vault: Vault, lounge: Lounge }
 
 export default function RoomContent({ room, item, onItem, onRoom }) {
   const C = BY_ROOM[room]

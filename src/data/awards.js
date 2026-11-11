@@ -1,18 +1,18 @@
-// Trophy Room. Awards as given by the owner. `display` is how each one is
-// shown in the 3D room; `kind` drives the panel's grouping.
+// Awards, shown in the Study's glass display table. As given by the owner.
+// `display` is how each one is shown in the 3D room.
 
 export const awards = [
   {
     id: 'ideal',
     name: 'IDEAL Scholarship',
     kind: 'Scholarship',
-    display: 'Medal in a glass case',
+    display: 'Gold medal',
   },
   {
     id: 'cobalt',
     name: 'Cobalt Medallion',
     kind: 'Medallion',
-    display: 'Medallion in a glass case',
+    display: 'Cobalt medallion',
   },
   {
     id: 'robotics-excellence',

@@ -5,8 +5,8 @@ import { Box, Cyl, Chair, FloorLamp, Plant, Rug, Stool } from '../primitives.jsx
 import { makeCarPrintTexture } from '../materials.js'
 import Interactive from '../Interactive.jsx'
 
-// ROOM 06, LOUNGE: x[4, 12], z[-3, 9]. Living area to the south, kitchen and
-// dining against the Trophy Room wall, the east side glazed.
+// ROOM 05, LOUNGE: x[4, 12], z[-9, 9]. Living area to the south, kitchen and
+// dining to the north, the east side glazed.
 export default function Lounge({ mats, ctx }) {
   const it = (id) => ({ id, enabled: ctx.active, hovered: ctx.hovered, selected: ctx.selected, onHover: ctx.onHover, onSelect: ctx.onSelect })
   const carPrint = useMemo(() => makeCarPrintTexture(), [])
@@ -100,27 +100,29 @@ export default function Lounge({ mats, ctx }) {
         </group>
       </Interactive>
 
-      {/* Kitchen run against the Trophy Room wall, island and dining */}
-      <Box p={[6.35, 0, -2.6]} s={[4.1, 0.9, 0.62]} m={mats.walnut} />
-      <Box p={[6.35, 0.9, -2.6]} s={[4.14, 0.04, 0.66]} m={mats.steel} />
-      <Box p={[4.55, 0.94, -2.75]} s={[0.5, 1.6, 0.36]} m={mats.walnut} />
-      <Interactive {...it('cooking')} label="Cooking" sub="Interest" ring={[6.5, -0.9, 1.6]}>
-        <Box p={[6.5, 0, -0.9]} s={[2.6, 0.9, 1.0]} m={mats.walnut} />
-        <Box p={[6.5, 0.9, -0.9]} s={[2.7, 0.05, 1.1]} m={mats.marble} />
-        <Cyl p={[5.8, 0.95, -0.9]} radius={0.16} h={0.14} m={mats.steel} />
-        <Box p={[7.1, 0.95, -0.9]} s={[0.4, 0.03, 0.28]} m={mats.walnut} />
-        {[5.7, 6.5, 7.3].map((x) => (
-          <Stool key={x} p={[x, 0, -0.05]} mats={mats} />
+      {/* Kitchen run along the north-west wall, island and dining by the windows */}
+      <Box p={[4.45, 0, -6.6]} s={[0.7, 0.9, 4.0]} m={mats.walnut} />
+      <Box p={[4.45, 0.9, -6.6]} s={[0.74, 0.04, 4.04]} m={mats.steel} />
+      <Box p={[4.4, 0, -8.4]} s={[0.6, 2.4, 0.4]} m={mats.walnut} />
+      <Interactive {...it('cooking')} label="Cooking" sub="Interest" ring={[7.0, -6.4, 1.6]}>
+        <Box p={[7.0, 0, -6.4]} s={[1.0, 0.9, 2.6]} m={mats.walnut} />
+        <Box p={[7.0, 0.9, -6.4]} s={[1.1, 0.05, 2.7]} m={mats.marble} />
+        <Cyl p={[7.0, 0.95, -7.1]} radius={0.16} h={0.14} m={mats.steel} />
+        <Box p={[7.0, 0.95, -5.8]} s={[0.4, 0.03, 0.28]} m={mats.walnut} />
+        {[-7.2, -6.4, -5.6].map((z) => (
+          <Stool key={z} p={[7.85, 0, z]} mats={mats} />
         ))}
       </Interactive>
-      <Box p={[10.4, 0.72, -1.7]} s={[1.1, 0.05, 1.6]} m={mats.walnut} />
-      <Box p={[10.4, 0, -1.7]} s={[0.5, 0.72, 1.0]} m={mats.steel} />
-      {[-2.1, -1.3].map((z) => (
+      <Box p={[10.2, 0.72, -5.8]} s={[1.1, 0.05, 2.2]} m={mats.walnut} />
+      <Box p={[10.2, 0, -5.8]} s={[0.5, 0.72, 1.4]} m={mats.steel} />
+      {[-6.4, -5.2].map((z) => (
         <group key={z}>
-          <Chair p={[9.65, 0, z]} rot={Math.PI / 2} mats={mats} seat="linen" />
-          <Chair p={[11.15, 0, z]} rot={-Math.PI / 2} mats={mats} seat="linen" />
+          <Chair p={[9.4, 0, z]} rot={Math.PI / 2} mats={mats} seat="linen" />
+          <Chair p={[11.0, 0, z]} rot={-Math.PI / 2} mats={mats} seat="linen" />
         </group>
       ))}
+      <Plant p={[11.4, 0, -8.4]} mats={mats} scale={1.1} />
+      <Plant p={[4.6, 0, -3.2]} mats={mats} scale={1.2} />
     </group>
   )
 }

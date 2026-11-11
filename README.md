@@ -1,18 +1,17 @@
 # ssaillesh.github.io — The Private Residence
 
 Personal portfolio of Saillesh Somasundaram, built as an interactive architectural model:
-a converted-warehouse residence at ground level with six rooms around a central core, each one part of the story.
+a converted-warehouse residence at ground level with five rooms around a central core, each one part of the story.
 
 Live: https://ssaillesh.github.io/
 
 | Room | Purpose | What's in it |
 | --- | --- | --- |
 | 01 Foyer | Introduction | Name monolith, résumé folio, links |
-| 02 Study | Education | The degree framed on the wall, bookshelves, desk by the windows |
+| 02 Study | Education & awards | The degree framed on the wall, awards in a glass display table |
 | 03 Workshop | Experience | One workstation per role (Symcor, OmniaBio, PepsiCo ×2 with chip bags, UWAFT) |
-| 04 Gallery | Projects | Exhibits for Rova, LapZero, CodeGraphRAG |
-| 05 Trophy Room | Awards | Medals and awards on spot-lit plinths |
-| 06 Lounge | Personal & contact | Interests as objects, photographs, contact |
+| 04 Vault | Projects | A bank vault; opening it reveals the Vault page (Rova archive, LapZero circuit, a sealed third box) |
+| 05 Lounge | Personal & contact | Interests as objects, photographs, contact |
 
 ## Stack
 
@@ -26,8 +25,8 @@ src/
     profile.js     name, intro, links, skills
     education.js   degree and honours
     experience.js  workshop stations (from the résumé and previous site)
-    projects.js    gallery exhibits
-    awards.js      trophy room
+    projects.js    projects + vaultBoxes (which projects the Vault shows)
+    awards.js      awards in the Study display table
     lounge.js      interests and photos
     rooms.js       floor plan: room ids and bounds in metres
   scene/           the 3D residence (lazy-loaded chunk)
@@ -40,6 +39,7 @@ src/
     ResidenceView.jsx  desktop experience (3D + panel + plan mini-map)
     PlanView.jsx       mobile / no-WebGL / "plain view" layout
     RoomContent.jsx    room content, shared by desktop panel and mobile page
+    VaultPage.jsx      the full-screen Vault: Rova archive, LapZero circuit, sealed box
   legacy/          the previous site, kept intact
 ```
 

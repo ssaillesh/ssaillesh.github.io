@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import * as THREE from 'three'
 import { Box, Cyl, Chair, FloorLamp, Plant, Rug } from '../primitives.jsx'
 import Interactive from '../Interactive.jsx'
 import { seeded } from '../random.js'
@@ -23,6 +24,18 @@ export default function Study({ mats, ctx }) {
     }
     return out
   }, [])
+
+  const awardMats = useMemo(
+    () => ({
+      gold: new THREE.MeshStandardMaterial({ color: '#d4af5f', metalness: 1, roughness: 0.22 }),
+      silver: new THREE.MeshStandardMaterial({ color: '#c9ccd1', metalness: 1, roughness: 0.25 }),
+      cobalt: new THREE.MeshStandardMaterial({ color: '#2c4f8c', metalness: 0.8, roughness: 0.25 }),
+      ribbonRed: new THREE.MeshStandardMaterial({ color: '#7a2420', roughness: 0.8 }),
+      ribbonBlue: new THREE.MeshStandardMaterial({ color: '#263d63', roughness: 0.8 }),
+      crystal: new THREE.MeshPhysicalMaterial({ color: '#dfe8ee', roughness: 0.05, transparent: true, opacity: 0.5, emissive: '#c9dbe6', emissiveIntensity: 0.15 }),
+    }),
+    [],
+  )
 
   return (
     <group>
@@ -65,6 +78,41 @@ export default function Study({ mats, ctx }) {
       <Interactive {...it('distinction')} label="Term Distinction" sub="Honour" ring={[-9.7, 5.9, 0.5]}>
         <Box p={[-9.7, 0.77, 5.9]} s={[0.3, 0.06, 0.4]} m={mats.books[1]} />
         <Box p={[-9.7, 0.83, 5.9]} s={[0.28, 0.04, 0.38]} m={mats.books[4]} />
+      </Interactive>
+
+      {/* Awards: a glass-topped walnut display table */}
+      <Box p={[-5.4, 0, 5.3]} s={[0.72, 0.82, 2.7]} m={mats.walnut} />
+      <Box p={[-5.4, 0.82, 5.3]} s={[0.76, 0.03, 2.74]} m={mats.brass} />
+      <Box p={[-5.4, 0.85, 5.3]} s={[0.7, 0.36, 2.66]} m={mats.glass} cast={false} />
+      <Interactive {...it('ideal')} label="IDEAL Scholarship" sub="Award" ring={[-5.4, 4.25, 0.34]}>
+        <mesh position={[-5.4, 0.87, 4.25]} material={awardMats.gold} castShadow>
+          <cylinderGeometry args={[0.1, 0.1, 0.02, 32]} />
+        </mesh>
+        <Box p={[-5.4, 0.86, 4.08]} s={[0.07, 0.01, 0.22]} m={awardMats.ribbonRed} cast={false} />
+      </Interactive>
+      <Interactive {...it('cobalt')} label="Cobalt Medallion" sub="Award" ring={[-5.4, 4.8, 0.34]}>
+        <mesh position={[-5.4, 0.87, 4.8]} material={awardMats.cobalt} castShadow>
+          <cylinderGeometry args={[0.11, 0.11, 0.025, 32]} />
+        </mesh>
+        <Box p={[-5.4, 0.86, 4.62]} s={[0.07, 0.01, 0.22]} m={awardMats.ribbonBlue} cast={false} />
+      </Interactive>
+      <Interactive {...it('physics')} label="Excellence Award, 100% in Physics" sub="Award" ring={[-5.4, 5.35, 0.34]}>
+        <Box p={[-5.4, 0.85, 5.35]} s={[0.2, 0.04, 0.14]} m={mats.blackMatte} />
+        <Box p={[-5.4, 0.89, 5.35]} s={[0.15, 0.26, 0.07]} m={awardMats.crystal} cast={false} />
+      </Interactive>
+      <Interactive {...it('robotics-excellence')} label="Excellence Award in Robotics" sub="Award" ring={[-5.4, 5.9, 0.34]}>
+        <Box p={[-5.4, 0.85, 5.9]} s={[0.16, 0.06, 0.16]} m={mats.blackMatte} />
+        <Cyl p={[-5.4, 0.91, 5.9]} radius={0.018} h={0.1} m={awardMats.gold} />
+        <mesh position={[-5.4, 1.06, 5.9]} material={awardMats.gold} castShadow>
+          <cylinderGeometry args={[0.08, 0.04, 0.12, 24]} />
+        </mesh>
+      </Interactive>
+      <Interactive {...it('robotics-second')} label="Second Place, Autonomous Robotics" sub="Award" ring={[-5.4, 6.4, 0.34]}>
+        <Box p={[-5.4, 0.85, 6.3]} s={[0.18, 0.06, 0.12]} m={mats.carGrey} />
+        <Cyl p={[-5.36, 0.91, 6.3]} radius={0.02} h={0.03} m={mats.led} />
+        <mesh position={[-5.4, 0.87, 6.5]} material={awardMats.silver} castShadow>
+          <cylinderGeometry args={[0.08, 0.08, 0.018, 28]} />
+        </mesh>
       </Interactive>
 
       {/* Reading corner */}

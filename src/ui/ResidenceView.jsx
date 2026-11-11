@@ -6,6 +6,7 @@ import Intro from './Intro.jsx'
 import FloorPlan from './FloorPlan.jsx'
 import { roomById } from '../data/rooms.js'
 import SceneBoundary from './SceneBoundary.jsx'
+import VaultPage from './VaultPage.jsx'
 
 const Residence = lazy(() => import('../scene/Residence.jsx'))
 const Motion = motion
@@ -42,7 +43,7 @@ export default function ResidenceView({ route, go, onFail }) {
       : { eyebrow: hover.sub, text: hover.label }
     : route.room
       ? { eyebrow: roomById[route.room].name, text: 'Hover an object to light it · click to open' }
-      : { eyebrow: 'Six rooms', text: 'Hover a room to light it · click to enter' }
+      : { eyebrow: 'Five rooms', text: 'Hover a room to light it · click to enter' }
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-charcoal">
@@ -89,6 +90,12 @@ export default function ResidenceView({ route, go, onFail }) {
             </div>
 
             <RoomPanel route={route} go={go} width={panelWidth} />
+            <VaultPage
+              open={route.room === 'vault' && !!route.item}
+              project={route.item === 'inside' ? 'rova' : route.item}
+              onProject={(id) => go('vault', id)}
+              onClose={() => go('vault')}
+            />
           </Motion.div>
         )}
       </AnimatePresence>

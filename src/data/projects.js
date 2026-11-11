@@ -1,5 +1,6 @@
-// Gallery exhibits. Descriptions come from the previous site's project data.
+// Projects. Descriptions come from the previous site's project data.
 // `contribution` stays null until confirmed by the owner, and the UI hides it when null.
+// The Vault shows the projects listed in `vaultBoxes`, in order; a null slot is sealed.
 
 export const projects = [
   {
@@ -22,6 +23,14 @@ export const projects = [
     stack: ['Python', 'FastAPI', 'PostgreSQL', 'PostGIS', 'Redis'],
     contribution: null,
     links: {},
+    // The Vault shows Rova as an archive feed; each post is one real feature.
+    archive: [
+      { id: 'plan', kind: 'image', title: 'Your night, planned', body: 'Describe the mood, or set where, budget, radius and who. Rova builds a real, timed plan from live venues nearby.' },
+      { id: 'whatson', kind: 'text', title: 'What’s on', body: 'Live events from Ticketmaster and the City of Toronto festivals feed, in one view.' },
+      { id: 'route', kind: 'route', title: 'Every stop, mapped', body: 'Each plan comes with a route map of its stops.' },
+      { id: 'taste', kind: 'text', title: 'A taste survey', body: 'Optional questions that turn your answers into planner defaults.' },
+      { id: 'stack', kind: 'stack', title: 'Under the hood', body: 'FastAPI, PostgreSQL + PostGIS and Redis behind a static web front end.' },
+    ],
   },
   {
     id: 'lapzero',
@@ -70,3 +79,5 @@ export const projects = [
     links: { github: 'https://github.com/ssaillesh/CodeGraphRAG' },
   },
 ]
+
+export const vaultBoxes = ['rova', 'lapzero', null]

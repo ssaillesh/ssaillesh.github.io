@@ -5,14 +5,17 @@ import { rooms } from '../data/rooms.js'
 import FloorPlan from './FloorPlan.jsx'
 import RoomContent from './RoomContent.jsx'
 import { ResumeButton } from './bits.jsx'
+import VaultPage from './VaultPage.jsx'
 
 const Motion = motion
 
-// Mobile / no-WebGL / "plain view" layout: the same six rooms read as one
+// Mobile / no-WebGL / "plain view" layout: the same five rooms read as one
 // editorial page, with the floor plan as the map and a sticky room bar.
 export default function PlanView({ route, go }) {
   const [items, setItems] = useState({})
   const [current, setCurrent] = useState(route.room || 'foyer')
+
+  const vaultItem = 'vault' in items ? items.vault : route.room === 'vault' ? route.item : null
 
   const scrollTo = (id) => document.getElementById(`room-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
@@ -62,7 +65,7 @@ export default function PlanView({ route, go }) {
           {profile.motto}
         </Motion.p>
         <p className="mt-5 max-w-[34rem] text-[15.5px] leading-relaxed text-stone">
-          A private residence of six rooms, one for each part of the story. Tap a room on the plan, or scroll through them in order.
+          A private residence of five rooms, one for each part of the story. Tap a room on the plan, or scroll through them in order.
         </p>
         <div className="mt-8 rounded-[4px] border border-line bg-char-2 p-3">
           <FloorPlan active={current} onSelect={scrollTo} className="w-full" />
@@ -91,6 +94,13 @@ export default function PlanView({ route, go }) {
           </div>
         </section>
       ))}
+
+      <VaultPage
+        open={!!vaultItem}
+        project={vaultItem === 'inside' ? 'rova' : vaultItem}
+        onProject={(id) => setItems((s) => ({ ...s, vault: id }))}
+        onClose={() => setItems((s) => ({ ...s, vault: null }))}
+      />
 
       <nav aria-label="Rooms" className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-charcoal/92 backdrop-blur-md">
         <ul className="hide-scrollbar flex gap-1 overflow-x-auto px-3 py-2.5">
