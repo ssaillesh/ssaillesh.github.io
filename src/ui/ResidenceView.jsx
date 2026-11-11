@@ -33,7 +33,7 @@ export default function ResidenceView({ route, go }) {
       : { eyebrow: hover.sub, text: hover.label }
     : route.room
       ? { eyebrow: roomById[route.room].name, text: 'Hover an object to light it · click to open' }
-      : { eyebrow: 'Five rooms', text: 'Hover a room to light it · click to enter' }
+      : { eyebrow: 'Six rooms', text: 'Hover a room to light it · click to enter' }
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-charcoal">
