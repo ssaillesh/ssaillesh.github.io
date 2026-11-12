@@ -29,7 +29,6 @@ import {
 } from 'lucide-react'
 
 const Motion = motion
-const navPills = ['About Me', 'Projects']
 
 const experienceEntries = [
   {
@@ -1389,7 +1388,6 @@ function BrandMark() {
 }
 
 function AppLayout() {
-  const [activePill, setActivePill] = useState('About Me')
   const [activePage, setActivePage] = useState('about')
   const [pageDirection, setPageDirection] = useState(1)
   const scrollTop = useMotionValue(0)
@@ -1407,14 +1405,12 @@ function AppLayout() {
     setPageDirection(nextPage === 'projects' ? 1 : -1)
 
     if (pill === 'About Me') {
-      setActivePill('About Me')
       setActivePage('about')
       scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'auto' })
       return
     }
 
     if (pill === 'Projects') {
-      setActivePill('Projects')
       setActivePage('projects')
       scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'auto' })
       return
@@ -1425,7 +1421,6 @@ function AppLayout() {
     if (activePage === 'projects') return
 
     setPageDirection(1)
-    setActivePill('Projects')
     setActivePage('projects')
     scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'auto' })
   }
