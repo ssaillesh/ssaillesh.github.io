@@ -8,11 +8,6 @@ import {
   SecondPlace,
   ChipsOps,
   ResumeFolio,
-  Dumbbell,
-  CastIronPan,
-  Bicycle,
-  Photograph,
-  RunningShoes,
   Textbooks,
   Microscope,
   ToolChest,
@@ -22,7 +17,6 @@ import {
   TubeRack,
   Clipboard,
   AutonomousCar,
-  SimRig,
 } from './models.jsx'
 
 // Registry: route item id -> close-up model (see src/data/inspect.js for copy).
@@ -41,12 +35,6 @@ export const INSPECT = {
   uwaft: { Model: AutonomousCar },
   intro: { Model: Envelope },
   resume: { Model: ResumeFolio },
-  cars: { Model: SimRig },
-  gym: { Model: Dumbbell },
-  cooking: { Model: CastIronPan },
-  biking: { Model: Bicycle },
-  exploring: { Model: Photograph },
-  active: { Model: RunningShoes },
   coursework: { Model: Textbooks },
   specialization: { Model: Microscope },
   toolkit: { Model: ToolChest },

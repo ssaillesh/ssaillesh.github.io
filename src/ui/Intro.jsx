@@ -34,25 +34,34 @@ export default function Intro({ show, ready, slow, onEnter, onPlain }) {
           </Motion.p>
 
           <Motion.div {...line(1.5)} className="mt-14 flex flex-col items-center gap-5">
-            <button
-              type="button"
-              onClick={onEnter}
-              disabled={!ready}
-              className="group inline-flex h-14 items-center gap-4 rounded-full border border-brass/60 pl-7 pr-2 text-[15px] text-ivory transition-colors enabled:hover:border-brass enabled:hover:bg-brass/10 disabled:cursor-wait"
-            >
-              {ready ? 'Enter the residence' : 'Preparing the residence'}
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brass text-charcoal">
-                {ready ? (
-                  <span aria-hidden>→</span>
-                ) : (
-                  <span aria-hidden className="h-4 w-4 animate-spin rounded-full border-2 border-charcoal/30 border-t-charcoal" />
-                )}
-              </span>
-            </button>
+            <div className="flex flex-col items-center gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={onEnter}
+                disabled={!ready}
+                className="group inline-flex h-14 items-center gap-4 rounded-full border border-brass/60 pl-7 pr-2 text-[15px] text-ivory transition-colors enabled:hover:border-brass enabled:hover:bg-brass/10 disabled:cursor-wait"
+              >
+                {ready ? 'Enter the residence' : 'Preparing the residence'}
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brass text-charcoal">
+                  {ready ? (
+                    <span aria-hidden>→</span>
+                  ) : (
+                    <span aria-hidden className="h-4 w-4 animate-spin rounded-full border-2 border-charcoal/30 border-t-charcoal" />
+                  )}
+                </span>
+              </button>
+              <a
+                href="?plan"
+                className="inline-flex h-14 flex-col items-start justify-center rounded-full border border-ivory/20 px-7 text-left transition-colors hover:border-ivory/50 hover:bg-ivory/5"
+              >
+                <span className="text-[15px] text-ivory">Plain view</span>
+                <span className="text-[11.5px] text-stone">Work, projects &amp; contact on one page</span>
+              </a>
+            </div>
             {slow && (
               <div role="status" className="flex flex-col items-center gap-3">
                 <p className="max-w-[26rem] text-[14px] leading-relaxed text-ivory-2">
-                  The 3D residence is taking longer than usual on this device. Everything is also available in the plain version.
+                  The 3D residence is taking longer than usual on this device. Everything is also in the plain view.
                 </p>
                 <button
                   type="button"
@@ -67,10 +76,6 @@ export default function Intro({ show, ready, slow, onEnter, onPlain }) {
               In a hurry?{' '}
               <a href={profile.links.resume} className="text-ivory-2 underline decoration-brass/60 underline-offset-4 hover:text-ivory">
                 Open the résumé
-              </a>{' '}
-              or{' '}
-              <a href="?plan" className="text-ivory-2 underline decoration-brass/60 underline-offset-4 hover:text-ivory">
-                read the plain version
               </a>
               .
             </p>

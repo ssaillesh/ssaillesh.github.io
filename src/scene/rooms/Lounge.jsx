@@ -103,7 +103,7 @@ export default function Lounge({ mats, ctx }) {
       </Interactive>
 
       {/* credenza with photographs, between theater and games */}
-      <Interactive {...it('exploring')} label="Two photographs" sub="Pick up" ring={[8.2, 1.4, 1.3]}>
+      <group>
         <Box p={[8.2, 0, 1.4]} s={[2.4, 0.7, 0.45]} m={mats.walnut} />
         {[[-0.55, 0], [0.5, 1]].map(([dx, i]) => (
           <group key={i} position={[8.2 + dx, 0.7, 1.42]} rotation={[-0.12, 0, 0]}>
@@ -114,7 +114,7 @@ export default function Lounge({ mats, ctx }) {
             </mesh>
           </group>
         ))}
-      </Interactive>
+      </group>
       <Plant p={[11.4, 0, 2.2]} mats={mats} scale={1.1} />
       <Plant p={[4.7, 0, 3.5]} mats={mats} scale={0.9} />
 
@@ -137,7 +137,7 @@ export default function Lounge({ mats, ctx }) {
       <Box p={[11.24, 0.3, -6.9]} s={[0.02, 1.6, 0.02]} m={mats.brass} cast={false} />
 
       {/* the island: marble waterfall, the pan on the hob, stools facing the theater */}
-      <Interactive {...it('cooking')} label="A cast-iron pan" sub="Pick up" ring={[8.0, -4.8, 1.9]}>
+      <group>
         <Box p={[8.0, 0, -4.8]} s={[3.0, 0.9, 1.1]} m={mats.walnut} />
         <Box p={[8.0, 0.9, -4.8]} s={[3.1, 0.06, 1.2]} m={mats.marble} />
         {[-1, 1].map((s) => (
@@ -148,7 +148,7 @@ export default function Lounge({ mats, ctx }) {
         <Box p={[7.65, 0.99, -4.85]} s={[0.4, 0.03, 0.05]} m={mats.walnut} />
         <Box p={[8.6, 0.96, -4.7]} s={[0.5, 0.03, 0.32]} m={mats.walnut} />
         <Cyl p={[9.1, 0.96, -4.9]} radius={0.14} h={0.1} m={mats.stone} />
-      </Interactive>
+      </group>
       {[6.9, 7.65, 8.4, 9.15].map((x) => (
         <Stool key={x} p={[x, 0, -3.95]} mats={mats} />
       ))}
@@ -176,6 +176,24 @@ export default function Lounge({ mats, ctx }) {
       </mesh>
       <Plant p={[4.7, 0, -8.3]} mats={mats} />
       <FloorLamp p={[11.3, 0, -1.6]} mats={mats} />
+
+      {/* ---- scenery (not pick-ups) ---- */}
+      {/* a record console on the garage wall: turntable, two speakers, a crate of vinyl */}
+      <Box p={[11.55, 0, -4.4]} s={[0.5, 0.7, 1.5]} m={mats.walnut} />
+      <Box p={[11.55, 0.7, -4.55]} s={[0.4, 0.06, 0.42]} m={mats.blackMatte} />
+      <Cyl p={[11.55, 0.76, -4.55]} radius={0.15} h={0.01} m={mats.blackMatte} />
+      <Cyl p={[11.55, 0.77, -4.55]} radius={0.04} h={0.005} m={m.popcorn} />
+      <Box p={[11.45, 0.77, -4.38]} s={[0.02, 0.02, 0.18]} m={mats.steel} r={[0, 0.4, 0]} />
+      {[-5.35, -3.45].map((z) => (
+        <group key={z}>
+          <Box p={[11.55, 0, z]} s={[0.36, 1.05, 0.36]} m={mats.blackMatte} />
+          <Cyl p={[11.36, 0.72, z]} radius={0.11} h={0.01} m={mats.steel} r={[0, 0, Math.PI / 2]} />
+          <Cyl p={[11.36, 0.32, z]} radius={0.07} h={0.01} m={mats.steel} r={[0, 0, Math.PI / 2]} />
+        </group>
+      ))}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <Box key={i} p={[11.55, 0.08, -4.9 + i * 0.07]} s={[0.32, 0.32, 0.012]} m={m.bottle[i]} cast={false} />
+      ))}
     </group>
   )
 }

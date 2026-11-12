@@ -1,3 +1,4 @@
+import { LayoutGrid } from 'lucide-react'
 import { rooms } from '../data/rooms.js'
 import { profile } from '../data/profile.js'
 import { ResumeButton } from './bits.jsx'
@@ -40,7 +41,12 @@ export default function TopNav({ route, go }) {
       </nav>
 
       <div className="pointer-events-auto flex items-center gap-2">
-        <a href="?plan" className="label-mono hidden h-9 items-center rounded-full px-3 text-[10px] text-stone transition-colors hover:text-ivory lg:inline-flex">
+        <a
+          href="?plan"
+          title="Experience, projects and contact on one fast page"
+          className="inline-flex h-9 items-center gap-2 rounded-full border border-ivory/25 bg-charcoal/70 px-4 text-[13px] text-ivory backdrop-blur-md transition-colors hover:border-brass hover:text-brass-2"
+        >
+          <LayoutGrid size={14} strokeWidth={1.8} aria-hidden />
           Plain view
         </a>
         <ResumeButton size="sm" label="Résumé" />

@@ -167,7 +167,7 @@ export default function Garage({ mats, ctx }) {
 
       {/* Training corner: rubber mat, bike on the wall, dumbbells, a bench */}
       <Box p={[13.45, 0.026, -3.0]} s={[2.3, 0.01, 3.2]} m={m.mat} cast={false} />
-      <Interactive {...it('biking')} label="A bicycle" sub="Pick up" ring={[12.8, -3.3, 0.9]}>
+      <group>
         <group position={[12.25, 1.35, -3.3]} rotation={[0, Math.PI / 2, 0]}>
           {[-0.55, 0.55].map((x) => (
             <mesh key={x} position={[x, 0, 0]}>
@@ -187,8 +187,8 @@ export default function Garage({ mats, ctx }) {
           <Box p={[0.3, 0.56, 0]} s={[0.2, 0.04, 0.1]} m={mats.leather} />
         </group>
         <Box p={[12.12, 1.0, -3.3]} s={[0.06, 0.06, 1.4]} m={mats.steel} />
-      </Interactive>
-      <Interactive {...it('gym')} label="A dumbbell rack" sub="Pick up" ring={[14.1, -1.9, 0.9]}>
+      </group>
+      <group>
         <Box p={[14.1, 0, -1.9]} s={[1.4, 0.06, 0.5]} m={mats.steel} />
         {[-0.68, 0.68].map((dx) => (
           <Box key={dx} p={[14.1 + dx, 0, -1.9]} s={[0.05, 0.8, 0.5]} m={mats.steel} />
@@ -204,7 +204,7 @@ export default function Garage({ mats, ctx }) {
             </mesh>
           )),
         )}
-      </Interactive>
+      </group>
       <Box p={[13.6, 0, -3.6]} s={[0.4, 0.42, 1.3]} m={mats.blackMatte} />
       <Box p={[13.6, 0.42, -3.6]} s={[0.42, 0.08, 1.32]} m={mats.leather} />
 
@@ -220,8 +220,8 @@ export default function Garage({ mats, ctx }) {
       <Cyl p={[17.9, 0.3, -1.3]} radius={0.46} h={0.02} m={mats.glass} cast={false} />
       <Box p={[19.45, 0, 1.0]} s={[0.6, 0.85, 0.6]} m={m.fridge} />
       <Box p={[19.13, 0.45, 1.15]} s={[0.02, 0.3, 0.04]} m={mats.steel} />
-      {/* racing sim rig by the couch: the cars artifact */}
-      <Interactive {...it('cars')} label="A racing sim rig" sub="Pick up" ring={[13.75, 2.4, 1.2]}>
+      {/* racing sim rig by the couch (scenery) */}
+      <group>
         <group position={[13.9, 0, 2.4]} rotation={[0, Math.PI / 2, 0]}>
           <Box p={[0, 0, 0]} s={[0.7, 0.08, 1.7]} m={mats.steel} />
           <Box p={[0, 0.08, 0.35]} s={[0.55, 0.32, 0.6]} m={mats.blackMatte} />
@@ -236,7 +236,7 @@ export default function Garage({ mats, ctx }) {
           <Box p={[0, 0.58, -1.225]} s={[1.24, 0.69, 0.004]} m={m.simScreen} cast={false} />
           <Box p={[0, 0, -1.25]} s={[0.1, 0.55, 0.1]} m={mats.steel} />
         </group>
-      </Interactive>
+      </group>
       {/* neon SM sign on the garage side of the Lounge wall */}
       <mesh position={[12.13, 2.0, 4.6]} rotation={[0, Math.PI / 2, 0]}>
         <planeGeometry args={[1.05, 1.25]} />

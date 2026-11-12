@@ -6,7 +6,6 @@
 export const artifacts = [
   // 01 Foyer
   { id: 'intro', room: 'foyer', object: 'A sealed envelope', where: 'On the console', kind: 'intro' },
-  { id: 'active', room: 'foyer', object: 'Running shoes', where: 'By the door', kind: 'interest', ref: 'active' },
 
   // 02 Study
   { id: 'degree', room: 'study', object: 'A framed certificate', where: 'North wall', kind: 'degree' },
@@ -23,12 +22,7 @@ export const artifacts = [
   { id: 'uwaft', room: 'garage', object: 'An autonomous car with a lidar mount', where: 'Up on the lift', kind: 'experience', ref: 'uwaft' },
   { id: 'toolkit', room: 'garage', object: 'A tool chest', where: 'West wall, by the pegboard', kind: 'toolkit' },
 
-  // 05 Den
-  { id: 'gym', room: 'garage', object: 'A dumbbell rack', where: 'Training corner', kind: 'interest', ref: 'gym' },
-  { id: 'cooking', room: 'lounge', object: 'A cast-iron pan', where: 'Kitchen island', kind: 'interest', ref: 'cooking' },
-  { id: 'cars', room: 'garage', object: 'A racing sim rig', where: 'Hangout corner', kind: 'interest', ref: 'cars' },
-  { id: 'biking', room: 'garage', object: 'A bicycle', where: 'On the wall, training corner', kind: 'interest', ref: 'biking' },
-  { id: 'exploring', room: 'lounge', object: 'Two photographs', where: 'Credenza, between the theater and the kitchen', kind: 'interest', ref: 'exploring' },
+  // 05 Den (the gym, bike, sim rig, pan, photographs and running shoes are scenery, not pick-ups)
   { id: 'contact', room: 'lounge', object: 'A rotary phone', where: 'Side table by the sofa', kind: 'contact' },
 
   // 06 Lab

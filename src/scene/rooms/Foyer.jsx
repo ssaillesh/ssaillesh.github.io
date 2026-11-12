@@ -32,8 +32,8 @@ export default function Foyer({ mats, ctx }) {
       <Plant p={[3.4, 0, 8.4]} mats={mats} scale={1.1} />
       <Plant p={[-3.35, 0, 8.4]} mats={mats} scale={0.9} />
 
-      {/* Running shoes left by the door */}
-      <Interactive {...it('active')} label="Running shoes" sub="Pick up" ring={[-2.0, 8.3, 0.55]}>
+      {/* Running shoes left by the door (scenery) */}
+      <group>
         {[[-2.12, 0.15], [-1.86, -0.1]].map(([x, r]) => (
           <group key={x} position={[x, 0.02, 8.3]} rotation={[0, r, 0]}>
             <Box p={[0, 0, 0]} s={[0.12, 0.035, 0.3]} m={mats.ivory} />
@@ -41,7 +41,30 @@ export default function Foyer({ mats, ctx }) {
             <Box p={[0, 0.035, 0.11]} s={[0.1, 0.05, 0.07]} m={mats.leather} />
           </group>
         ))}
-      </Interactive>
+      </group>
+
+      {/* ---- scenery (not pick-ups) ---- */}
+      {/* coat stand in the corner by the east wall, a jacket on one hook */}
+      <group position={[3.45, 0, 4.75]}>
+        <Cyl p={[0, 0, 0]} radius={0.2} h={0.03} m={mats.blackMatte} />
+        <Cyl p={[0, 0, 0]} radius={0.025} h={1.85} m={mats.blackMatte} />
+        {[0, 1.57, 3.14, 4.71].map((a) => (
+          <Box key={a} p={[Math.cos(a) * 0.1, 1.66, Math.sin(a) * 0.1]} s={[0.16, 0.02, 0.02]} m={mats.brass} r={[0, -a, 0.5]} />
+        ))}
+        <Box p={[-0.14, 0.95, 0]} s={[0.1, 0.72, 0.44]} m={mats.leather} r={[0, 0, 0.06]} />
+      </group>
+      {/* umbrella stand by the door */}
+      <Cyl p={[2.35, 0, 8.55]} radius={0.13} h={0.5} m={mats.steel} />
+      <Cyl p={[2.31, 0.15, 8.55]} radius={0.018} h={0.78} m={mats.blackMatte} r={[0, 0, 0.12]} />
+      <Cyl p={[2.4, 0.15, 8.5]} radius={0.018} h={0.72} m={mats.walnut} r={[0.1, 0, -0.1]} />
+      {/* an abstract print over the bench */}
+      <Box p={[3.89, 1.05, 7.4]} s={[0.04, 0.9, 1.3]} m={mats.walnut} />
+      <Box p={[3.865, 1.11, 7.4]} s={[0.01, 0.78, 1.18]} m={mats.ivory} cast={false} />
+      <Box p={[3.858, 1.3, 7.15]} s={[0.005, 0.36, 0.52]} m={mats.terracotta} cast={false} />
+      <Box p={[3.858, 1.22, 7.68]} s={[0.005, 0.24, 0.34]} m={mats.blackMatte} cast={false} />
+      <Box p={[3.858, 1.62, 7.6]} s={[0.005, 0.03, 0.62]} m={mats.brass} cast={false} />
+      {/* a key bowl on the console */}
+      <Cyl p={[-3.6, 0.8, 5.75]} radius={0.12} h={0.04} m={mats.stone} />
     </group>
   )
 }

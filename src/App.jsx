@@ -12,10 +12,12 @@ export default function App() {
   const mode = useExperienceMode()
   const [fallback, setFallback] = useState(false)
 
+  // The quick view sets its own titles.
   useEffect(() => {
+    if (mode !== 'residence' || fallback) return
     const room = route.room ? roomById[route.room] : null
     document.title = room ? `${room.name} · Saillesh — The Private Residence` : 'Saillesh — The Private Residence'
-  }, [route.room])
+  }, [route.room, mode, fallback])
 
   if (new URLSearchParams(window.location.search).has('classic')) {
     return (

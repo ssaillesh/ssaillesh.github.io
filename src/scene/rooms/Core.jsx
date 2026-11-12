@@ -38,6 +38,17 @@ export default function Core({ mats }) {
       {[[-3.3, -2.3], [3.3, -2.3], [-3.3, 3.3], [3.3, 3.3]].map(([x, z]) => (
         <Box key={`${x}${z}`} p={[x, 0, z]} s={[0.26, 3.4, 0.26]} m={mats.steel} />
       ))}
+
+      {/* ---- scenery: two tall floor vases flanking the way to the vault ---- */}
+      {[-2.7, 2.7].map((x) => (
+        <group key={x} position={[x, 0, -2.35]}>
+          <Cyl p={[0, 0, 0]} radius={0.22} h={0.9} m={mats.terracotta} />
+          <Cyl p={[0, 0.9, 0]} radius={0.12} h={0.18} m={mats.terracotta} />
+          {[-0.08, 0.03, 0.1].map((dx, i) => (
+            <Cyl key={dx} p={[dx, 1.05, i * 0.04 - 0.04]} radius={0.008} h={0.7 + i * 0.12} m={mats.walnut} r={[0, 0, dx * 1.6]} />
+          ))}
+        </group>
+      ))}
     </group>
   )
 }

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
-import { Box, Cyl, Chair, FloorLamp, Plant, Rug } from '../primitives.jsx'
+import { Ball, Box, Cyl, Chair, FloorLamp, Plant, Rug } from '../primitives.jsx'
 import Interactive from '../Interactive.jsx'
 import { seeded } from '../random.js'
 
@@ -124,6 +124,31 @@ export default function Study({ mats, ctx }) {
         <Box p={[-4.97, 0.66, 8.2]} s={[0.12, 0.015, 0.12]} m={mats.steel} />
       </Interactive>
       <FloorLamp p={[-7.2, 0, 8.4]} mats={mats} />
+
+      {/* ---- scenery (not pick-ups) ---- */}
+      {/* a globe on a stand in the window corner */}
+      <group position={[-11.2, 0, 7.9]}>
+        <Cyl p={[0, 0, 0]} radius={0.2} h={0.03} m={mats.walnut} />
+        <Cyl p={[0, 0, 0]} radius={0.025} h={0.78} m={mats.brass} />
+        <Ball p={[0, 1.0, 0]} radius={0.22} m={mats.rugWarm} />
+        <mesh position={[0, 1.0, 0]} rotation={[0, 0, 0.4]}>
+          <torusGeometry args={[0.25, 0.008, 8, 48]} />
+          <primitive object={mats.brass} attach="material" />
+        </mesh>
+      </group>
+      {/* a low sideboard on the east wall with books, a vase and a print above */}
+      <Box p={[-4.33, 0, 4.5]} s={[0.45, 0.75, 1.6]} m={mats.walnut} />
+      {[0, 1, 2, 3].map((i) => (
+        <Box key={i} p={[-4.33, 0.75 + i * 0.05, 4.05]} s={[0.3 - i * 0.02, 0.05, 0.38 - i * 0.03]} m={mats.books[(i * 3) % mats.books.length]} r={[0, i * 0.12, 0]} />
+      ))}
+      <Cyl p={[-4.33, 0.75, 4.95]} radius={0.09} h={0.34} m={mats.terracotta} />
+      <Cyl p={[-4.33, 1.09, 4.95]} radius={0.01} h={0.3} m={mats.plantDark} />
+      <Box p={[-4.12, 1.15, 4.5]} s={[0.04, 0.8, 1.1]} m={mats.blackMatte} />
+      <Box p={[-4.145, 1.21, 4.5]} s={[0.01, 0.68, 0.98]} m={mats.linen} cast={false} />
+      <mesh position={[-4.152, 1.55, 4.5]} rotation={[0, -Math.PI / 2, 0]}>
+        <circleGeometry args={[0.2, 40]} />
+        <primitive object={mats.brass} attach="material" />
+      </mesh>
     </group>
   )
 }

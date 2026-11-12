@@ -11,6 +11,8 @@ export const profile = {
     'I am a multidisciplinary engineer with an academic foundation in physics and experience across software engineering, DevOps, automation, data, and intelligent systems.',
   focus:
     'Platform engineering, CI/CD reliability, infrastructure and secrets automation, data pipelines, and machine learning systems.',
+  // Short forms of `focus`, cycled under the name in the quick view's hero.
+  focusAreas: ['platform engineering', 'CI/CD reliability', 'infrastructure automation', 'data pipelines', 'machine learning systems'],
   location: 'Toronto, ON',
   availability: 'Open to new grad roles',
   school: 'University of Waterloo',
