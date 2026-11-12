@@ -16,12 +16,12 @@ export const artifacts = [
   { id: 'specialization', room: 'study', object: 'A microscope', where: 'Side table, reading corner', kind: 'specialization' },
 
   // 03 Workshop
-  { id: 'symcor', room: 'workshop', object: 'A laptop and a security key', where: 'Platform console', kind: 'experience', ref: 'symcor' },
-  { id: 'omniabio', room: 'workshop', object: 'A rack of sample vials', where: 'Lab bench', kind: 'experience', ref: 'omniabio' },
-  { id: 'pepsico-ops', room: 'workshop', object: 'A bag of chips', where: 'On the conveyor', kind: 'experience', ref: 'pepsico-ops' },
-  { id: 'pepsico-data', room: 'workshop', object: 'A monitor full of SQL', where: 'Analyst desk', kind: 'experience', ref: 'pepsico-data' },
-  { id: 'uwaft', room: 'workshop', object: 'A lidar sensor', where: 'Simulation bay', kind: 'experience', ref: 'uwaft' },
-  { id: 'toolkit', room: 'workshop', object: 'A tool chest', where: 'Under the north window', kind: 'toolkit' },
+  { id: 'symcor', room: 'workshop', object: 'A server rack and a security key', where: 'Against the north glass', kind: 'experience', ref: 'symcor' },
+  { id: 'omniabio', room: 'workshop', object: 'A test-tube rack', where: 'On the lab cart', kind: 'experience', ref: 'omniabio' },
+  { id: 'pepsico-ops', room: 'workshop', object: 'A bag of chips', where: 'On the pallet', kind: 'experience', ref: 'pepsico-ops' },
+  { id: 'pepsico-data', room: 'workshop', object: 'A clipboard of SQL and charts', where: 'Standing desk', kind: 'experience', ref: 'pepsico-data' },
+  { id: 'uwaft', room: 'workshop', object: 'An autonomous car with a lidar mount', where: 'Garage bay', kind: 'experience', ref: 'uwaft' },
+  { id: 'toolkit', room: 'workshop', object: 'A tool chest', where: 'By the north glass', kind: 'toolkit' },
 
   // 05 Lounge
   { id: 'cars', room: 'lounge', object: 'A scale model car', where: 'Coffee table', kind: 'interest', ref: 'cars' },
@@ -39,7 +39,7 @@ export const artifactsIn = (room) => artifacts.filter((a) => a.room === room)
 export const roomIntro = {
   foyer: 'The way in. Something has been left for you on the console.',
   study: 'Books, a desk by the windows, and a lit cabinet on the north wall.',
-  workshop: 'Five workstations and a tool chest. Each bench has something left on it.',
+  workshop: 'A working garage: a car in the bay, a roll-up door onto the driveway, and benches along the glass.',
   vault: 'A bank vault with PROJECTS over the door. It has to be unlocked first.',
   lounge: 'Where the day ends. Look around.',
 }

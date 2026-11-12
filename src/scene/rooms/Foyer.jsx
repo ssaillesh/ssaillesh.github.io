@@ -8,11 +8,6 @@ export default function Foyer({ mats, ctx }) {
     <group>
       <Rug p={[0, 0.02, 6.6]} s={[3.4, 2.6]} m={mats.rugIvory} />
 
-      {/* Name monolith: blackened steel with a brass inlay */}
-      <Box p={[1.9, 0, 6.2]} s={[1.5, 0.08, 0.5]} m={mats.stone} />
-      <Box p={[1.9, 0.08, 6.2]} s={[1.4, 2.0, 0.2]} m={mats.steel} />
-      <Box p={[1.9, 1.2, 6.31]} s={[1.0, 0.05, 0.01]} m={mats.brass} cast={false} />
-      <Box p={[1.9, 1.32, 6.31]} s={[0.6, 0.02, 0.01]} m={mats.brass} cast={false} />
 
       {/* Console with a leather résumé folio */}
       <Box p={[-3.6, 0, 6.6]} s={[0.5, 0.8, 2.2]} m={mats.walnut} />

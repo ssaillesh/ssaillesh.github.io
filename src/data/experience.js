@@ -4,7 +4,7 @@
 export const experience = [
   {
     id: 'symcor',
-    station: 'Platform console',
+    station: 'Server rack',
     company: 'Symcor',
     companyAbout: 'Secure technology and operations for major Canadian financial institutions.',
     url: 'https://www.symcor.ca/',
@@ -30,7 +30,7 @@ export const experience = [
   },
   {
     id: 'omniabio',
-    station: 'Lab bench',
+    station: 'Lab cart',
     company: 'OmniaBio',
     companyAbout: 'Cell and gene therapy CDMO focused on AI-enabled development and GMP manufacturing.',
     url: 'https://omniabio.com/',
@@ -55,7 +55,7 @@ export const experience = [
   },
   {
     id: 'pepsico-ops',
-    station: 'Vision rig',
+    station: 'The pallet',
     company: 'PepsiCo',
     companyAbout: 'Global food and beverage company with large-scale manufacturing.',
     url: 'https://www.pepsico.com/',
@@ -79,7 +79,7 @@ export const experience = [
   },
   {
     id: 'pepsico-data',
-    station: 'Analyst desk',
+    station: 'Standing desk',
     company: 'PepsiCo',
     companyAbout: 'Global food and beverage company with large-scale analytics operations.',
     url: 'https://www.pepsico.com/',
@@ -103,7 +103,7 @@ export const experience = [
   },
   {
     id: 'uwaft',
-    station: 'Simulation bay',
+    station: 'Garage bay',
     company: 'UWAFT',
     companyAbout: 'University of Waterloo Alternative Fuels Team: autonomous and low-emission vehicle technology.',
     url: 'https://uwaft.ca/',

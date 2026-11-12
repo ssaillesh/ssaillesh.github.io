@@ -9,7 +9,7 @@ Live: https://ssaillesh.github.io/
 | --- | --- | --- |
 | 01 Foyer | Introduction | A sealed envelope with a short intro, running shoes |
 | 02 Study | Education & awards | Degree on the wall, a lit display cabinet (opens the Cabinet view of every award), résumé on the desk, textbooks, microscope |
-| 03 Workshop | Experience | Laptop + security key, sample vials, bag of chips, SQL monitor, lidar sensor, tool chest |
+| 03 Workshop | Experience | A working garage with a roll-up door and driveway: UWAFT autonomous car + lidar bench, Symcor server rack, OmniaBio test-tube cart, PepsiCo clipboard and chip pallet, tool chest |
 | 04 Vault | Projects | A bank vault signed PROJECTS; unlocking it opens a secure-storage wall of displays, one per GitHub project |
 | 05 Lounge | Personal & contact | Scale car, dumbbells, cast-iron pan, bicycle, photographs, rotary phone |
 
@@ -50,6 +50,12 @@ Routing is hash-based (`#/workshop/symcor`), so deep links work on GitHub Pages.
 
 URL flags: `?plan` forces the mobile/plain layout, `?3d` forces the 3D residence,
 `?classic` shows the previous site.
+
+## Images for the Vault
+
+Every project display has an image slot. Put a screenshot in `public/residence/` and set
+`image: '/residence/<file>.jpg'` on the project in `src/data/projects.js`; until then a placeholder frame
+is shown.
 
 ## Develop
 

@@ -60,7 +60,7 @@ function WallRun({ wall, mats, activeRoom }) {
 }
 
 // Floor-to-ceiling glazing between structural piers (north and west, behind the rooms).
-function GlazedFacade({ axis, at, from, to, piers, mats }) {
+function GlazedFacade({ axis, at, from, to, piers, mats, doors = [] }) {
   const bays = []
   for (let i = 0; i < piers.length - 1; i++) bays.push([piers[i], piers[i + 1]])
   const place = (u, y, w, h, d) => (axis === 'x' ? { p: [u, y, at], s: [w, h, d] } : { p: [at, y, u], s: [d, h, w] })
@@ -78,6 +78,22 @@ function GlazedFacade({ axis, at, from, to, piers, mats }) {
         const head = place(mid, H - 0.18, w, 0.18, 0.3)
         const mull = place(mid, 0.12, 0.06, H - 0.3, 0.08)
         const rail = place(mid, 2.35, w, 0.05, 0.08)
+        if (doors.some(([da, db]) => da === a && db === b)) {
+          // a roll-up garage door, raised two-thirds of the way
+          const open = 2.1
+          const slats = Array.from({ length: 6 }, (_, i) => i)
+          return (
+            <group key={`bay-${a}`}>
+              <Box {...head} m={mats.steel} />
+              <Box {...place(mid, H - 0.5, w + 0.2, 0.36, 0.5)} m={mats.blackMatte} />
+              {slats.map((i) => (
+                <Box key={i} {...place(mid, open + i * 0.2, w - 0.04, 0.19, 0.05)} m={i % 2 ? mats.steel : mats.stone} />
+              ))}
+              <Box {...place(a + 0.3, 0, 0.08, H - 0.2, 0.12)} m={mats.steel} />
+              <Box {...place(b - 0.3, 0, 0.08, H - 0.2, 0.12)} m={mats.steel} />
+            </group>
+          )
+        }
         return (
           <group key={`bay-${a}`}>
             <Box {...glass} m={mats.glass} cast={false} receive={false} />
@@ -138,6 +154,14 @@ function Ground({ mats }) {
       <Box p={[0, -0.3, 11.2]} s={[6, 0.02, 3.2]} m={mats.stone} cast={false} />
       <Box p={[0, -0.3, 9.85]} s={[3.6, 0.2, 0.5]} m={mats.stone} />
       <Box p={[0, -0.3, 9.7]} s={[3.6, 0.3, 0.2]} m={mats.stone} />
+      {/* driveway out of the garage door on the west side */}
+      <Box p={[-15.6, -0.3, -2.25]} s={[6.8, 0.3, 4.2]} m={mats.stone} />
+      {[-3.9, -0.6].map((z) => (
+        <Box key={z} p={[-15.6, 0.0, z]} s={[6.8, 0.012, 0.08]} m={mats.wallCap} cast={false} />
+      ))}
+      <mesh position={[-20.2, -0.15, -2.25]} rotation={[0, 0, -0.12]} receiveShadow material={mats.stone}>
+        <boxGeometry args={[2.6, 0.04, 4.2]} />
+      </mesh>
       {/* low planters flanking the entrance */}
       {[-3.6, 3.6].map((x) => (
         <group key={x}>
@@ -169,7 +193,7 @@ export default function Architecture({ mats, activeRoom }) {
         <WallRun key={w.id} wall={w} mats={mats} activeRoom={activeRoom} />
       ))}
       <GlazedFacade axis="x" at={-9} from={-12} to={12} piers={[-12, -8, -4, 0, 4, 8, 12]} mats={mats} />
-      <GlazedFacade axis="z" at={-12} from={-9} to={9} piers={[-9, -4.5, 0, 4.5, 9]} mats={mats} />
+      <GlazedFacade axis="z" at={-12} from={-9} to={9} piers={[-9, -4.5, 0, 4.5, 9]} mats={mats} doors={[[-4.5, 0]]} />
       <OpenFacade axis="x" at={9} from={-12} to={12} gaps={[[-1.3, 1.3]]} mats={mats} />
       <OpenFacade axis="z" at={12} from={-9} to={9} mats={mats} />
       {/* Entrance: steel portal and a walnut pivot door left ajar */}

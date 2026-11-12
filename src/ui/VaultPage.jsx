@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, ArrowUpRight, Github, X } from 'lucide-react'
-import { githubPreview, projects, vaultDisplays } from '../data/projects.js'
+import { ArrowLeft, ArrowUpRight, Github, Image as ImageIcon, X } from 'lucide-react'
+import { projects, vaultDisplays } from '../data/projects.js'
 import { Chips, Kicker, Metrics, SectionLabel } from './bits.jsx'
 
 const Motion = motion
+const UnlockScene = lazy(() => import('../scene/vault/UnlockScene.jsx'))
 const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const displays = vaultDisplays.map((id, i) => ({ n: String(i + 1).padStart(2, '0'), p: projects.find((x) => x.id === id) })).filter((d) => d.p)
 let unlockedThisVisit = false
@@ -13,7 +14,7 @@ let unlockedThisVisit = false
 const BOLTS = Array.from({ length: 16 }, (_, i) => (i / 16) * 360)
 const COMBINATION = [-137, 212, -48]
 
-function UnlockSequence({ onDone }) {
+function UnlockSequence2D({ onDone }) {
   const [step, setStep] = useState(0) // 0 idle, 1-3 tumblers, 4 bolts, 5 granted, 6 door
   useEffect(() => {
     const times = [350, 1150, 1950, 2550, 3050, 3600, 4500]
@@ -112,17 +113,56 @@ function UnlockSequence({ onDone }) {
   )
 }
 
+// 3D version: the door is a real model; the status text sits over it.
+function UnlockSequence3D({ onDone }) {
+  const [step, setStep] = useState(0)
+  const granted = step >= 5
+  const label = granted ? 'ACCESS GRANTED' : step >= 4 ? 'RETRACTING BOLTS…' : step >= 1 ? `TUMBLER ${step} OF 3 · ACCEPTED` : 'AUTHENTICATING…'
+  return (
+    <div className="relative h-full min-h-screen">
+      <div className="absolute inset-0">
+        <Suspense fallback={null}>
+          <UnlockScene onStep={setStep} onDone={onDone} />
+        </Suspense>
+      </div>
+      <div className="pointer-events-none absolute inset-x-0 top-8 text-center">
+        <p className="label-mono text-[11px] text-brass">Vault 04 · Projects · Restricted</p>
+      </div>
+      <div className="absolute inset-x-0 bottom-10 flex flex-col items-center gap-4">
+        <div className="flex gap-6">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="flex flex-col items-center gap-2">
+              <span className={`h-3 w-3 rounded-full transition-colors duration-300 ${step >= n ? 'bg-[#7fcf98] shadow-[0_0_12px_#7fcf98]' : 'bg-[#3a3c3f]'}`} />
+              <span className="label-mono text-[9.5px] text-stone">Tumbler {n}</span>
+            </div>
+          ))}
+        </div>
+        <p role="status" className={`font-mono text-[15px] tracking-[0.3em] ${granted ? 'text-[#7fcf98]' : 'text-ivory-2'}`}>
+          {label}
+        </p>
+        <button type="button" onClick={onDone} className="label-mono text-[10px] text-stone underline-offset-4 hover:text-ivory hover:underline">
+          Skip
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ============================================================ shared pieces
+// Every project has an image slot. Set `image` in src/data/projects.js to fill it;
+// until then a placeholder frame holds the space.
 function ScreenImage({ p, className = '' }) {
-  const src = p.image || githubPreview(p.links.github)
   const [failed, setFailed] = useState(false)
-  if (!src || failed)
+  if (!p.image || failed)
     return (
-      <div className={`flex items-center justify-center bg-[repeating-linear-gradient(135deg,#15171a_0_14px,#1b1e22_14px_28px)] ${className}`}>
-        <span className="font-serif text-[46px] text-[#3a3f45]">{p.name.split(' ').map((w) => w[0]).join('').slice(0, 2)}</span>
+      <div className={`flex flex-col items-center justify-center gap-3 bg-[#121417] ${className}`}>
+        <div aria-hidden className="absolute inset-3 rounded-[2px] border border-dashed border-[#3a3f45]" />
+        <ImageIcon size={26} strokeWidth={1.4} className="text-[#4d5560]" aria-hidden />
+        <span className="font-serif text-[30px] leading-none text-[#4d5560]">{p.name}</span>
+        <span className="label-mono text-[9.5px] text-[#4d5560]">Image coming soon</span>
       </div>
     )
-  return <img src={src} alt={`${p.name} preview`} onError={() => setFailed(true)} className={`object-cover ${className}`} />
+  return <img src={p.image} alt={`${p.name} screenshot`} onError={() => setFailed(true)} className={`object-cover ${className}`} />
 }
 
 function LinkButton({ href, children }) {
@@ -489,7 +529,7 @@ function Inside({ project, onProject, onClose, closeRef }) {
 }
 
 // project: null shows the wall of displays, an id opens that file.
-export default function VaultPage({ open, project, onProject, onClose }) {
+export default function VaultPage({ open, project, onProject, onClose, threeD = false }) {
   const closeRef = useRef()
   const [unlocked, setUnlocked] = useState(() => unlockedThisVisit || reduceMotion)
 
@@ -525,7 +565,7 @@ export default function VaultPage({ open, project, onProject, onClose }) {
           <AnimatePresence mode="wait">
             {!unlocked ? (
               <Motion.div key="lock" className="min-h-full" exit={{ opacity: 0, transition: { duration: 0.3 } }}>
-                <UnlockSequence onDone={finishUnlock} />
+                {threeD ? <UnlockSequence3D onDone={finishUnlock} /> : <UnlockSequence2D onDone={finishUnlock} />}
               </Motion.div>
             ) : (
               <Motion.div

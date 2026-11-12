@@ -2,11 +2,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, X } from 'lucide-react'
 import { roomById, rooms } from '../data/rooms.js'
 import RoomContent from './RoomContent.jsx'
+import { artifactById } from '../data/artifacts.js'
 
 const Motion = motion
 
 export default function RoomPanel({ route, go, width }) {
-  const room = route.room ? roomById[route.room] : null
+  // The panel only opens once an object has been picked up; choosing a room
+  // just frames it and lights up what can be picked up.
+  const picked = route.item && artifactById[route.item] && artifactById[route.item].room === route.room
+  const room = route.room && picked ? roomById[route.room] : null
   const idx = room ? rooms.indexOf(room) : -1
   const prev = idx > 0 ? rooms[idx - 1] : null
   const next = idx >= 0 && idx < rooms.length - 1 ? rooms[idx + 1] : null
@@ -32,8 +36,8 @@ export default function RoomPanel({ route, go, width }) {
             </div>
             <button
               type="button"
-              onClick={() => go(null)}
-              aria-label="Back to the aerial view"
+              onClick={() => go(room.id)}
+              aria-label="Put it back"
               className="ml-auto flex h-10 w-10 items-center justify-center rounded-full text-stone transition-colors hover:bg-char-3 hover:text-ivory"
             >
               <X size={18} strokeWidth={1.6} />

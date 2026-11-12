@@ -49,7 +49,7 @@ export default function ResidenceView({ route, go, onFail }) {
       ? { eyebrow: `${roomById[hover.id].number} · ${roomById[hover.id].kicker}`, text: `Enter the ${roomById[hover.id].name}` }
       : { eyebrow: artifactById[hover.id]?.where || hover.sub, text: artifactById[hover.id]?.object || hover.label }
     : route.room
-      ? { eyebrow: roomById[route.room].name, text: 'Hover an object to light it · click to pick it up' }
+      ? { eyebrow: roomById[route.room].name, text: 'Glowing objects can be picked up · click one' }
       : { eyebrow: 'Five rooms', text: 'Hover a room to light it · click to enter' }
 
   return (
@@ -61,7 +61,7 @@ export default function ResidenceView({ route, go, onFail }) {
               route={route}
               go={go}
               intro={intro}
-              panelWidth={route.room ? panelWidth : 0}
+              panelWidth={0}
               onHoverInfo={setHover}
               onFail={onFail}
               paused={!!inspecting || (route.room === 'vault' && !!route.item) || (route.room === 'study' && route.item === 'cabinet')}
@@ -89,7 +89,7 @@ export default function ResidenceView({ route, go, onFail }) {
               aria-live="polite"
               hidden={!!inspecting}
               className="pointer-events-none fixed bottom-6 z-20 -translate-x-1/2"
-              style={{ left: route.room ? `calc((100% - ${panelWidth + 16}px) / 2)` : '50%' }}
+              style={{ left: '50%' }}
             >
               <div className="flex items-center gap-3 rounded-full border border-line bg-charcoal/80 px-4 py-2 backdrop-blur-md">
                 <span className="label-mono text-[10px] text-brass">{caption.eyebrow}</span>
@@ -98,6 +98,15 @@ export default function ResidenceView({ route, go, onFail }) {
               </div>
             </div>
 
+            {route.room && !route.item && (
+              <button
+                type="button"
+                onClick={() => go(null)}
+                className="fixed bottom-6 left-[236px] z-20 inline-flex h-10 items-center gap-2 rounded-full border border-line bg-charcoal/80 px-4 text-[13px] text-ivory-2 backdrop-blur-md transition-colors hover:border-ivory/40 hover:text-ivory lg:left-[244px]"
+              >
+                ← Overview
+              </button>
+            )}
             <AnimatePresence>
               {inspecting && (
                 <InspectOverlay
@@ -112,6 +121,7 @@ export default function ResidenceView({ route, go, onFail }) {
             </AnimatePresence>
             <RoomPanel route={route} go={go} width={panelWidth} />
             <VaultPage
+              threeD
               open={route.room === 'vault' && !!route.item}
               project={route.item === 'inside' ? null : route.item}
               onProject={(id) => go('vault', id || 'inside')}

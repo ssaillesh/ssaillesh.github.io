@@ -37,13 +37,16 @@ export default function Interactive({ id, label, sub, enabled, hovered, selected
 
   const lit = enabled && (hovered === id || selected === id)
 
-  useFrame((_, dt) => {
-    const target = !enabled ? 0 : hovered === id ? 1 : selected === id ? 0.6 : 0
+  useFrame((state, dt) => {
+    // In an open room every pickable object breathes with a soft glow so it
+    // reads as interactive; hover brings it to full strength.
+    const breathe = 0.2 + 0.12 * Math.sin(state.clock.elapsedTime * 2.4 + id.length)
+    const target = !enabled ? 0 : hovered === id ? 1 : selected === id ? 0.7 : breathe
     const g = THREE.MathUtils.damp(glow.current, target, 9, dt)
     if (g < 0.001 && glow.current < 0.001) return
     glow.current = g < 0.001 ? 0 : g
     applyGlow(group.current?.userData.glow || [], g)
-    if (ringMat.current) ringMat.current.opacity = g * 0.9
+    if (ringMat.current) ringMat.current.opacity = Math.min(0.9, g * 1.1)
   })
 
   const handlers = enabled

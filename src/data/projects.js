@@ -81,8 +81,8 @@ export const projects = [
 ]
 
 // The rest of the GitHub work, shown as displays inside the Vault. Details come
-// from the résumé and the previous site. `image: null` uses the repository's
-// GitHub preview image when there is a repo, otherwise a placeholder.
+// from the résumé and the previous site. `image: null` shows a placeholder
+// frame; put a screenshot in public/residence/ and set its path to fill it.
 projects.push(
   {
     id: 'heston',
@@ -183,9 +183,4 @@ projects.push(
 // Order of the displays inside the Vault.
 export const vaultDisplays = ['rova', 'lapzero', 'codegraphrag', 'heston', 'ict', 'news', 'automl', 'asl', 'padlock', 'invasion']
 
-// GitHub's own social preview image for a repository, used when there is no screenshot.
-export const githubPreview = (url) => {
-  const m = url && url.match(/github\.com\/([^/]+)\/([^/.]+)/)
-  return m ? `https://opengraph.githubassets.com/1/${m[1]}/${m[2]}` : null
-}
 

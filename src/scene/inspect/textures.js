@@ -360,3 +360,43 @@ export const introCardTexture = ({ name, motto, descriptor, lines }) =>
     lines.forEach((l, i) => g.fillText(l, w / 2, 420 + i * 48))
     centered(g, '— welcome in', h - 90, `italic 400 36px ${SERIF}`, '#7a5a22')
   })
+
+// A printed analysis report: the SQL query and the results chart, on paper.
+export const reportPageTexture = () =>
+  make('report-page', 850, 1100, (g, w, h) => {
+    paperGrain(g, w, h, '#f6f2ea')
+    g.textAlign = 'left'
+    g.textBaseline = 'middle'
+    g.font = `600 22px ${SANS}`
+    g.fillStyle = '#7a5a22'
+    g.fillText('TRUCKLOAD PLANNING · WEEKLY', 70, 80)
+    g.fillStyle = '#1b1a17'
+    g.fillRect(70, 104, w - 140, 2)
+    const code = [
+      'SELECT lane_id,',
+      '       SUM(cases)     AS cases,',
+      '       AVG(fill_rate) AS avg_fill',
+      'FROM ops.shipments s',
+      'JOIN ops.lanes l ON l.id = s.lane_id',
+      'WHERE ship_date >= DATEADD(week, -12, GETDATE())',
+      'GROUP BY lane_id',
+      'ORDER BY avg_fill DESC;',
+    ]
+    g.font = `400 22px ${MONO}`
+    code.forEach((l, i) => {
+      g.fillStyle = /^(SELECT|FROM|JOIN|WHERE|GROUP|ORDER)/.test(l.trim()) ? '#7a5a22' : '#2a2620'
+      g.fillText(l, 70, 160 + i * 36)
+    })
+    g.font = `600 20px ${SANS}`
+    g.fillStyle = '#7a5a22'
+    g.fillText('AVG FILL BY LANE', 70, 500)
+    const bars = [0.92, 0.86, 0.81, 0.77, 0.7, 0.66, 0.6, 0.52]
+    bars.forEach((v, i) => {
+      g.fillStyle = i === 0 ? '#c6a96c' : '#4d5a66'
+      g.fillRect(70 + i * 88, 860 - v * 320, 60, v * 320)
+    })
+    g.fillStyle = '#1b1a17'
+    g.fillRect(70, 862, w - 140, 2)
+    g.fillStyle = 'rgba(27,26,23,.18)'
+    for (let i = 0; i < 4; i++) g.fillRect(70, 920 + i * 30, (w - 140) * (0.5 + (i % 3) * 0.2), 10)
+  })

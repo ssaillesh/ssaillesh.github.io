@@ -2,7 +2,8 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
-import { introCardTexture, bookCoverTexture, certificateTexture, drawerLabelTexture, foilBagTexture, labelTexture, ledStripTexture, medalFaceTexture, phoneCardTexture, pipelineScreenTexture, resumePageTexture, spineTexture, sqlScreenTexture } from './textures.js'
+import { carBodyGeometry, wheelPositions } from '../carGeometry.js'
+import { reportPageTexture, introCardTexture, bookCoverTexture, certificateTexture, drawerLabelTexture, foilBagTexture, labelTexture, ledStripTexture, medalFaceTexture, phoneCardTexture, pipelineScreenTexture, resumePageTexture, spineTexture, sqlScreenTexture } from './textures.js'
 
 // Close-up models for the inspection view. Each is authored to fit roughly a
 // 2.4-unit box centred on the origin, facing +z (towards the viewer).
@@ -920,6 +921,164 @@ export function Envelope() {
           <meshStandardMaterial map={logo} transparent color="#d9a08f" roughness={0.5} />
         </mesh>
       </group>
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------- garage round
+// Symcor: a rack-mount server blade with a hardware security key beside it
+export function RackAndKey() {
+  const m = useMats()
+  return (
+    <group>
+      <group position={[0, 0.15, 0]}>
+        <ServerBlade />
+      </group>
+      <group position={[0.9, -0.55, 0.75]} rotation={[0.3, -0.6, 0]}>
+        <mesh material={m.black} castShadow>
+          <boxGeometry args={[0.26, 0.06, 0.6]} />
+        </mesh>
+        <mesh position={[0, 0.032, 0.08]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.08, 24]} />
+          <meshStandardMaterial color="#c6a96c" metalness={1} roughness={0.25} />
+        </mesh>
+        <mesh position={[0, 0, -0.36]} material={m.silver}>
+          <boxGeometry args={[0.16, 0.035, 0.16]} />
+        </mesh>
+      </group>
+    </group>
+  )
+}
+
+// OmniaBio: a two-tier test-tube rack, tubes standing in a neat row
+export function TubeRack() {
+  const m = useMats()
+  const liquids = ['#7fb7c9', '#c9a24a', '#9fc4a0', '#d97757', '#7fb7c9', '#c9a24a']
+  const card = labelTexture({ key: 'omniabio-card2', w: 1024, h: 300, bg: '#f3efe6', align: 'left', lines: [
+    { text: 'OMNIABIO · QC', size: 70, font: 'sans', weight: 600, color: '#1b1a17', spacing: 6, gap: 90 },
+    { text: 'batch check · control chart', size: 46, font: 'mono', color: '#5c574d' },
+  ] })
+  const white = useMemo(() => new THREE.MeshStandardMaterial({ color: '#e9e6df', roughness: 0.4 }), [])
+  return (
+    <group rotation={[0.3, -0.45, 0]} position={[0, -0.55, 0]}>
+      <mesh position={[0, 0.04, 0]} material={white} castShadow>
+        <boxGeometry args={[2.3, 0.08, 0.7]} />
+      </mesh>
+      {[0.55, 1.0].map((y) => (
+        <mesh key={y} position={[0, y, 0]} material={white}>
+          <boxGeometry args={[2.3, 0.05, 0.6]} />
+        </mesh>
+      ))}
+      {[-1.12, 1.12].map((x) => (
+        <mesh key={x} position={[x, 0.55, 0]} material={white}>
+          <boxGeometry args={[0.06, 1.0, 0.6]} />
+        </mesh>
+      ))}
+      {liquids.map((c, i) => {
+        const x = -0.9 + i * 0.36
+        const lift = i === 3 ? 0.35 : 0
+        return (
+          <group key={i} position={[x, 0.1 + lift, 0]}>
+            <mesh position={[0, 0.55, 0]} material={m.glass}>
+              <cylinderGeometry args={[0.1, 0.1, 1.1, 28]} />
+            </mesh>
+            <mesh position={[0, 0.04, 0]} material={m.glass}>
+              <sphereGeometry args={[0.1, 20, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2]} />
+            </mesh>
+            <mesh position={[0, 0.32, 0]}>
+              <cylinderGeometry args={[0.085, 0.085, 0.55, 28]} />
+              <meshStandardMaterial color={c} roughness={0.2} transparent opacity={0.85} />
+            </mesh>
+            <mesh position={[0, 1.13, 0]}>
+              <cylinderGeometry args={[0.11, 0.11, 0.08, 28]} />
+              <meshStandardMaterial color={i % 2 ? '#c6a96c' : '#1b1a17'} roughness={0.5} />
+            </mesh>
+          </group>
+        )
+      })}
+      <mesh position={[0, 0.25, 0.36]} rotation={[-0.1, 0, 0]}>
+        <planeGeometry args={[1.5, 0.44]} />
+        <meshStandardMaterial map={card} roughness={0.9} />
+      </mesh>
+    </group>
+  )
+}
+
+// PepsiCo, Data Analyst: a clipboard holding the printed query and chart
+export function Clipboard() {
+  const m = useMats()
+  const page = reportPageTexture()
+  return (
+    <group rotation={[-0.2, -0.3, 0.04]}>
+      <mesh material={m.walnut} castShadow>
+        <boxGeometry args={[1.7, 2.3, 0.05]} />
+      </mesh>
+      <mesh position={[0, -0.08, 0.03]}>
+        <planeGeometry args={[1.5, 1.94]} />
+        <meshStandardMaterial map={page} roughness={0.9} />
+      </mesh>
+      <mesh position={[0, 1.05, 0.06]} material={m.silver}>
+        <boxGeometry args={[0.8, 0.16, 0.08]} />
+      </mesh>
+      <mesh position={[0, 1.1, 0.1]} rotation={[Math.PI / 2, 0, 0]} material={m.silver}>
+        <cylinderGeometry args={[0.04, 0.04, 0.6, 16]} />
+      </mesh>
+      <mesh position={[0.95, -0.5, 0.15]} rotation={[0, 0, 0.6]}>
+        <cylinderGeometry args={[0.03, 0.03, 1.2, 12]} />
+        <meshStandardMaterial color="#1b1a17" roughness={0.4} />
+      </mesh>
+    </group>
+  )
+}
+
+// UWAFT: the autonomous car with its roof lidar mount
+const SMALL_CAR = { length: 2.6, width: 1.18, height: 0.86 }
+
+export function AutonomousCar() {
+  const m = useMats()
+  const C = SMALL_CAR
+  const body = useMemo(() => carBodyGeometry(SMALL_CAR), [])
+  const paint = useMemo(() => new THREE.MeshPhysicalMaterial({ color: '#e4e1da', metalness: 0.35, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.06 }), [])
+  const led = useMemo(() => new THREE.MeshStandardMaterial({ color: '#111', emissive: '#e8a35a', emissiveIntensity: 2.5 }), [])
+  return (
+    <group position={[0, -0.55, 0]} rotation={[0.12, -0.6, 0]}>
+      <mesh geometry={body} material={paint} castShadow />
+      <mesh position={[0.1, 0.62, 0]} rotation={[0, 0, -0.06]}>
+        <boxGeometry args={[1.0, 0.15, 1.0]} />
+        <meshPhysicalMaterial color="#0d1115" roughness={0.05} metalness={0.2} clearcoat={1} />
+      </mesh>
+      {wheelPositions(C).map(([x, z]) => (
+        <group key={`${x}${z}`} position={[x, 0.2, z]}>
+          <mesh rotation={[Math.PI / 2, 0, 0]} material={m.rubber}>
+            <cylinderGeometry args={[0.25, 0.25, 0.18, 32]} />
+          </mesh>
+          <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, z > 0 ? 0.092 : -0.092]} material={m.gold}>
+            <cylinderGeometry args={[0.15, 0.15, 0.01, 24]} />
+          </mesh>
+        </group>
+      ))}
+      {/* the lidar mount */}
+      {[-0.34, 0.34].map((z) => (
+        <mesh key={z} position={[0.1, 0.72, z]} material={m.steel}>
+          <boxGeometry args={[0.72, 0.04, 0.05]} />
+        </mesh>
+      ))}
+      <mesh position={[0.1, 0.76, 0]} material={m.steel}>
+        <boxGeometry args={[0.36, 0.03, 0.36]} />
+      </mesh>
+      <Spin speed={2}>
+        <group position={[0.1, 0, 0]}>
+          <mesh position={[0, 0.86, 0]} material={m.black}>
+            <cylinderGeometry args={[0.12, 0.12, 0.16, 28]} />
+          </mesh>
+          <mesh position={[0.121, 0.86, 0]} material={led}>
+            <boxGeometry args={[0.01, 0.06, 0.05]} />
+          </mesh>
+        </group>
+      </Spin>
+      <mesh position={[-1.32, 0.22, 0]} material={m.black}>
+        <boxGeometry args={[0.04, 0.06, 0.2]} />
+      </mesh>
     </group>
   )
 }
