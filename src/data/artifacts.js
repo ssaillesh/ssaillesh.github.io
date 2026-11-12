@@ -16,12 +16,12 @@ export const artifacts = [
   { id: 'specialization', room: 'study', object: 'A microscope', where: 'Side table, reading corner', kind: 'specialization' },
 
   // 03 Garage
-  { id: 'symcor', room: 'garage', object: 'A server rack and a security key', where: 'Bench row, north glass', kind: 'experience', ref: 'symcor' },
-  { id: 'omniabio', room: 'garage', object: 'A test-tube rack', where: 'Lab cart, north glass', kind: 'experience', ref: 'omniabio' },
-  { id: 'pepsico-ops', room: 'garage', object: 'A bag of chips', where: 'On the pallet', kind: 'experience', ref: 'pepsico-ops' },
-  { id: 'pepsico-data', room: 'garage', object: 'A clipboard of SQL and charts', where: 'Standing desk', kind: 'experience', ref: 'pepsico-data' },
+  { id: 'symcor', room: 'garage', object: 'A server rack and a security key', where: 'North-west station', kind: 'experience', ref: 'symcor' },
+  { id: 'omniabio', room: 'garage', object: 'A test-tube rack', where: 'North station, on the lab cart', kind: 'experience', ref: 'omniabio' },
+  { id: 'pepsico-ops', room: 'garage', object: 'A bag of chips', where: 'North-east station, on the pallet', kind: 'experience', ref: 'pepsico-ops' },
+  { id: 'pepsico-data', room: 'garage', object: 'A clipboard of SQL and charts', where: 'Centre station, standing desk', kind: 'experience', ref: 'pepsico-data' },
   { id: 'uwaft', room: 'garage', object: 'An autonomous car with a lidar mount', where: 'Up on the lift', kind: 'experience', ref: 'uwaft' },
-  { id: 'toolkit', room: 'garage', object: 'A tool chest', where: 'By the north glass', kind: 'toolkit' },
+  { id: 'toolkit', room: 'garage', object: 'A tool chest', where: 'West wall, by the pegboard', kind: 'toolkit' },
 
   // 05 Den
   { id: 'cars', room: 'lounge', object: 'A racing sim rig', where: 'Games corner', kind: 'interest', ref: 'cars' },

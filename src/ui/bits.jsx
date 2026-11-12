@@ -28,10 +28,10 @@ export function Metrics({ items }) {
   return (
     <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line">
       {items.map((m) => (
-        <div key={m.label} className="bg-char-2 p-4">
+        <div key={m.label} className="bg-char-2 p-5">
           <dt className="sr-only">{m.label}</dt>
-          <dd className="font-serif text-[30px] leading-none text-ivory">{m.value}</dd>
-          <dd className="mt-2 text-[12.5px] leading-snug text-stone">{m.label}</dd>
+          <dd className="font-serif text-[38px] leading-none text-brass-2">{m.value}</dd>
+          <dd className="mt-2.5 text-[13px] leading-snug text-ivory-2">{m.label}</dd>
         </div>
       ))}
     </dl>

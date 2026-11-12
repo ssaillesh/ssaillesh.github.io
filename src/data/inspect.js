@@ -21,7 +21,7 @@ export function inspectLabel(id) {
     case 'degree':
       return education.degree
     case 'specialization':
-      return `${education.specialization} specialization`
+      return education.focusArea
     case 'coursework':
       return 'Technical coursework'
     case 'toolkit':

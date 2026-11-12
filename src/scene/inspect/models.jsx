@@ -77,7 +77,7 @@ export function Degree() {
       { text: 'Saillesh Somasundaram', size: 104, gap: 140 },
       { text: 'has been admitted to the degree of', size: 40, italic: true, color: '#5a4a35', gap: 100 },
       { text: 'Bachelor of Science', size: 84, gap: 90 },
-      { text: 'HONOURS PHYSICS · CO-OP', size: 30, font: 'sans', color: '#7a5a22', spacing: 8, gap: 60 },
+      { text: 'HONOURS BIOLOGICAL AND MEDICAL PHYSICS · CO-OP', size: 26, font: 'sans', color: '#7a5a22', spacing: 5, gap: 60 },
     ],
   })
   return <FramedCertificate texture={tex} />

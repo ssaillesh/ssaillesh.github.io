@@ -6,10 +6,10 @@ import Interactive from '../Interactive.jsx'
 import CrossoverCar from '../CrossoverCar.jsx'
 
 // ROOM 03, GARAGE: x[12, 20], z[-9, 9], the east wing. A roll-up door on the
-// south side opens onto the driveway. The UWAFT autonomous car is up on a
-// two-post lift with the lidar bench beside it; the bench row along the north
-// glass holds Symcor's rack, OmniaBio's test tubes, PepsiCo's clipboard and the
-// tool chest; PepsiCo's chips sit on a pallet. A training corner (bike on the
+// south side opens onto the driveway. Each role has its own station, newest
+// first from the north: Symcor's server rack (north-west), OmniaBio's lab cart
+// (north-centre), PepsiCo operations' pallet (north-east), PepsiCo data's
+// standing desk (centre), and the UWAFT car up on the lift (south). A training corner (bike on the
 // wall, dumbbells) and a hangout corner (couch, tyre table, fridge, neon SM).
 
 export default function Garage({ mats, ctx }) {
@@ -46,6 +46,21 @@ export default function Garage({ mats, ctx }) {
         <Box key={`${x}${z}`} p={[x, 0.027, z]} s={[w, 0.004, d]} m={m.lines} cast={false} />
       ))}
 
+      {/* each role's station is marked out on the floor */}
+      {[
+        [12.25, 14.1, -9.0, -6.7],
+        [15.0, 17.0, -8.9, -6.55],
+        [18.05, 19.95, -9.0, -6.55],
+        [15.1, 17.1, -5.4, -3.15],
+      ].map(([x0, x1, z0, z1]) => (
+        <group key={`${x0}${z0}`}>
+          <Box p={[(x0 + x1) / 2, 0.027, z0 + 0.03]} s={[x1 - x0, 0.004, 0.05]} m={m.lines} cast={false} />
+          <Box p={[(x0 + x1) / 2, 0.027, z1 - 0.03]} s={[x1 - x0, 0.004, 0.05]} m={m.lines} cast={false} />
+          <Box p={[x0 + 0.03, 0.027, (z0 + z1) / 2]} s={[0.05, 0.004, z1 - z0]} m={m.lines} cast={false} />
+          <Box p={[x1 - 0.03, 0.027, (z0 + z1) / 2]} s={[0.05, 0.004, z1 - z0]} m={m.lines} cast={false} />
+        </group>
+      ))}
+
       {/* UWAFT: the autonomous car up on a two-post lift, lidar bench beside it */}
       <Interactive {...it('uwaft')} label="An autonomous car with a lidar mount" sub="Pick up" ring={[16, 5.0, 2.4]}>
         {[14.55, 17.45].map((x) => (
@@ -68,7 +83,7 @@ export default function Garage({ mats, ctx }) {
         <Box p={[19.35, 0.96, 5.8]} s={[0.24, 0.16, 0.3]} m={mats.carRed} />
       </Interactive>
 
-      {/* Symcor: a server rack at the west end of the bench row */}
+      {/* Symcor: a server rack in the north-west corner */}
       <Interactive {...it('symcor')} label="A server rack and a security key" sub="Pick up" ring={[12.9, -8.1, 0.9]}>
         <Box p={[12.9, 0, -8.35]} s={[0.75, 2.1, 0.9]} m={mats.blackMatte} />
         {[0.25, 0.55, 0.85, 1.15, 1.45, 1.75].map((y, i) => (
@@ -80,64 +95,74 @@ export default function Garage({ mats, ctx }) {
         <Box p={[13.08, 2.1, -8.2]} s={[0.06, 0.02, 0.14]} m={mats.brass} />
       </Interactive>
 
-      {/* OmniaBio: a steel lab cart with a test-tube rack */}
-      <Interactive {...it('omniabio')} label="A test-tube rack" sub="Pick up" ring={[14.55, -8.1, 0.8]}>
-        {[0.15, 0.85].map((y) => (
-          <Box key={y} p={[14.55, y, -8.3]} s={[1.1, 0.04, 0.6]} m={mats.steel} />
-        ))}
-        {[[-0.52, -0.27], [0.52, -0.27], [-0.52, 0.27], [0.52, 0.27]].map(([dx, dz]) => (
-          <Box key={`${dx}${dz}`} p={[14.55 + dx, 0, -8.3 + dz]} s={[0.04, 0.89, 0.04]} m={mats.steel} />
-        ))}
-        <Box p={[14.55, 0.89, -8.3]} s={[0.8, 0.03, 0.22]} m={mats.whiteLab} />
-        <Box p={[14.55, 1.08, -8.3]} s={[0.8, 0.02, 0.22]} m={mats.whiteLab} />
-        {[14.25, 14.85].map((x) => (
-          <Box key={x} p={[x, 0.89, -8.3]} s={[0.02, 0.2, 0.2]} m={mats.whiteLab} />
-        ))}
-        {m.liquids.map((liq, i) => {
-          const x = 14.25 + i * 0.12
-          return (
-            <group key={i}>
-              <Cyl p={[x, 0.92, -8.3]} radius={0.028} h={0.3} m={mats.glass} cast={false} />
-              <Cyl p={[x, 0.92, -8.3]} radius={0.022} h={0.15} m={liq} cast={false} />
-            </group>
-          )
-        })}
-      </Interactive>
+      {/* OmniaBio: a lab station of its own, north-centre */}
+      <group position={[1.45, 0, 0.4]}>
+        <Interactive {...it('omniabio')} label="A test-tube rack" sub="Pick up" ring={[14.55, -8.1, 0.9]}>
+          {[0.15, 0.85].map((y) => (
+            <Box key={y} p={[14.55, y, -8.3]} s={[1.1, 0.04, 0.6]} m={mats.steel} />
+          ))}
+          {[[-0.52, -0.27], [0.52, -0.27], [-0.52, 0.27], [0.52, 0.27]].map(([dx, dz]) => (
+            <Box key={`${dx}${dz}`} p={[14.55 + dx, 0, -8.3 + dz]} s={[0.04, 0.89, 0.04]} m={mats.steel} />
+          ))}
+          <Box p={[14.55, 0.89, -8.3]} s={[0.8, 0.03, 0.22]} m={mats.whiteLab} />
+          <Box p={[14.55, 1.08, -8.3]} s={[0.8, 0.02, 0.22]} m={mats.whiteLab} />
+          {[14.25, 14.85].map((x) => (
+            <Box key={x} p={[x, 0.89, -8.3]} s={[0.02, 0.2, 0.2]} m={mats.whiteLab} />
+          ))}
+          {m.liquids.map((liq, i) => {
+            const x = 14.25 + i * 0.12
+            return (
+              <group key={i}>
+                <Cyl p={[x, 0.92, -8.3]} radius={0.028} h={0.3} m={mats.glass} cast={false} />
+                <Cyl p={[x, 0.92, -8.3]} radius={0.022} h={0.15} m={liq} cast={false} />
+              </group>
+            )
+          })}
+        </Interactive>
+      </group>
 
-      {/* PepsiCo, Data Analyst: a standing desk with a clipboard */}
-      <Interactive {...it('pepsico-data')} label="A clipboard of SQL and charts" sub="Pick up" ring={[16.25, -8.0, 0.8]}>
-        <Box p={[16.25, 0, -8.3]} s={[0.08, 1.05, 0.08]} m={mats.steel} />
-        <Box p={[16.25, 0, -8.3]} s={[0.6, 0.03, 0.5]} m={mats.steel} />
-        <Box p={[16.25, 1.05, -8.25]} s={[1.0, 0.04, 0.6]} m={mats.walnut} r={[0.25, 0, 0]} />
-        <Box p={[16.2, 1.11, -8.2]} s={[0.3, 0.012, 0.4]} m={mats.blackMatte} r={[0.25, 0, 0]} />
-        <Box p={[16.2, 1.12, -8.19]} s={[0.27, 0.004, 0.36]} m={m.paper} r={[0.25, 0, 0]} cast={false} />
-        <Box p={[16.6, 1.11, -8.2]} s={[0.22, 0.01, 0.3]} m={m.paper} r={[0.25, 0.3, 0]} cast={false} />
-      </Interactive>
+      {/* PepsiCo, Data Analyst: a standing desk in the middle of the garage */}
+      <group position={[-0.15, 0, 3.7]}>
+        <Interactive {...it('pepsico-data')} label="A clipboard of SQL and charts" sub="Pick up" ring={[16.25, -7.9, 0.9]}>
+          <Box p={[16.25, 0, -8.3]} s={[0.08, 1.05, 0.08]} m={mats.steel} />
+          <Box p={[16.25, 0, -8.3]} s={[0.6, 0.03, 0.5]} m={mats.steel} />
+          <Box p={[16.25, 1.05, -8.25]} s={[1.0, 0.04, 0.6]} m={mats.walnut} r={[0.25, 0, 0]} />
+          <Box p={[16.2, 1.11, -8.2]} s={[0.3, 0.012, 0.4]} m={mats.blackMatte} r={[0.25, 0, 0]} />
+          <Box p={[16.2, 1.12, -8.19]} s={[0.27, 0.004, 0.36]} m={m.paper} r={[0.25, 0, 0]} cast={false} />
+          <Box p={[16.6, 1.11, -8.2]} s={[0.22, 0.01, 0.3]} m={m.paper} r={[0.25, 0.3, 0]} cast={false} />
+        </Interactive>
+      </group>
 
-      {/* Tool chest: the toolkit */}
-      <Interactive {...it('toolkit')} label="A tool chest" sub="Pick up" ring={[18.4, -8.1, 0.9]}>
-        <Box p={[18.4, 0, -8.35]} s={[1.3, 1.25, 0.6]} m={mats.carRed} />
-        {[0.2, 0.42, 0.64, 0.86, 1.08].map((y) => (
-          <Box key={y} p={[18.4, y, -8.04]} s={[1.18, 0.015, 0.01]} m={mats.steel} cast={false} />
-        ))}
-        <Box p={[18.4, 1.25, -8.35]} s={[1.34, 0.04, 0.64]} m={mats.blackMatte} />
-      </Interactive>
+      {/* Tool chest: the toolkit, on the west wall by the pegboard */}
+      <group position={[12.55, 0, -5.55]} rotation={[0, Math.PI / 2, 0]}>
+        <group position={[-18.4, 0, 8.35]}>
+        <Interactive {...it('toolkit')} label="A tool chest" sub="Pick up" ring={[18.4, -7.9, 0.9]}>
+          <Box p={[18.4, 0, -8.35]} s={[1.3, 1.25, 0.6]} m={mats.carRed} />
+          {[0.2, 0.42, 0.64, 0.86, 1.08].map((y) => (
+            <Box key={y} p={[18.4, y, -8.04]} s={[1.18, 0.015, 0.01]} m={mats.steel} cast={false} />
+          ))}
+          <Box p={[18.4, 1.25, -8.35]} s={[1.34, 0.04, 0.64]} m={mats.blackMatte} />
+        </Interactive>
+        </group>
+      </group>
 
-      {/* PepsiCo, Software & Operations: a pallet of cases, chip bags on top */}
-      <Interactive {...it('pepsico-ops')} label="A bag of chips" sub="Pick up" ring={[19.0, -5.4, 1.0]}>
-        <Box p={[19.0, 0, -5.4]} s={[1.0, 0.04, 1.2]} m={m.pallet} />
-        {[-0.35, 0, 0.35].map((dx) => (
-          <Box key={dx} p={[19.0 + dx, 0.04, -5.4]} s={[0.12, 0.08, 1.2]} m={m.pallet} />
-        ))}
-        <Box p={[19.0, 0.12, -5.4]} s={[1.0, 0.04, 1.2]} m={m.pallet} />
-        <Box p={[19.2, 0.16, -5.65]} s={[0.5, 0.45, 0.55]} m={m.carton} />
-        <Box p={[19.2, 0.16, -5.1]} s={[0.5, 0.45, 0.5]} m={m.carton} />
-        <Box p={[18.7, 0.16, -5.4]} s={[0.45, 0.4, 0.9]} m={m.carton} />
-        <Box p={[19.2, 0.61, -5.6]} s={[0.45, 0.4, 0.5]} m={m.carton} />
-        <ChipBag p={[18.75, 0.56, -5.3]} rot={[-0.3, -1.2, 0.1]} mats={mats} />
-        <ChipBag p={[19.2, 0.61, -5.1]} rot={[0, -1.8, 0]} mats={mats} scale={0.9} />
-        <ChipBag p={[19.2, 1.01, -5.6]} rot={[-1.2, 0, 0.6]} mats={mats} scale={0.85} />
-      </Interactive>
+      {/* PepsiCo, Software & Operations: the pallet in the north-east corner */}
+      <group position={[0, 0, -2.4]}>
+        <Interactive {...it('pepsico-ops')} label="A bag of chips" sub="Pick up" ring={[19.0, -5.4, 1.0]}>
+          <Box p={[19.0, 0, -5.4]} s={[1.0, 0.04, 1.2]} m={m.pallet} />
+          {[-0.35, 0, 0.35].map((dx) => (
+            <Box key={dx} p={[19.0 + dx, 0.04, -5.4]} s={[0.12, 0.08, 1.2]} m={m.pallet} />
+          ))}
+          <Box p={[19.0, 0.12, -5.4]} s={[1.0, 0.04, 1.2]} m={m.pallet} />
+          <Box p={[19.2, 0.16, -5.65]} s={[0.5, 0.45, 0.55]} m={m.carton} />
+          <Box p={[19.2, 0.16, -5.1]} s={[0.5, 0.45, 0.5]} m={m.carton} />
+          <Box p={[18.7, 0.16, -5.4]} s={[0.45, 0.4, 0.9]} m={m.carton} />
+          <Box p={[19.2, 0.61, -5.6]} s={[0.45, 0.4, 0.5]} m={m.carton} />
+          <ChipBag p={[18.75, 0.56, -5.3]} rot={[-0.3, -1.2, 0.1]} mats={mats} />
+          <ChipBag p={[19.2, 0.61, -5.1]} rot={[0, -1.8, 0]} mats={mats} scale={0.9} />
+          <ChipBag p={[19.2, 1.01, -5.6]} rot={[-1.2, 0, 0.6]} mats={mats} scale={0.85} />
+        </Interactive>
+      </group>
 
       {/* Training corner: rubber mat, bike on the wall, dumbbells, a bench */}
       <Box p={[13.45, 0.026, -3.0]} s={[2.3, 0.01, 3.2]} m={m.mat} cast={false} />

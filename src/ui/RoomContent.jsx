@@ -76,28 +76,26 @@ function ExperienceDetail({ x }) {
     <div className="flex flex-col gap-7">
       <Reveal>
         <Kicker>
-          {x.station} · {x.type}
+          {x.type} · {x.period}
         </Kicker>
         <h2 className="mt-3 font-serif text-[46px] leading-[0.95] text-ivory">{x.company}</h2>
         <p className="mt-2 text-[17px] text-ivory-2">{x.title}</p>
-        <p className="mt-1 font-mono text-[12px] text-stone">
-          {x.period} · {x.location}
-        </p>
-        <p className="mt-4 text-[15px] leading-relaxed text-stone">{x.summary}</p>
+        <p className="mt-1 font-mono text-[12px] text-stone">{x.location}</p>
       </Reveal>
-      <Reveal delay={0.08}>
-        <SectionLabel>Results</SectionLabel>
+      {/* results first: the numbers lead */}
+      <Reveal delay={0.06}>
         <Metrics items={x.results} />
       </Reveal>
-      <Reveal delay={0.14}>
-        <SectionLabel>Responsibilities</SectionLabel>
+      <Reveal delay={0.12}>
+        <SectionLabel>What I did</SectionLabel>
+        <p className="mb-4 text-[15.5px] leading-relaxed text-ivory-2">{x.summary}</p>
         <Bullets items={x.responsibilities} />
       </Reveal>
-      <Reveal delay={0.2}>
+      <Reveal delay={0.18}>
         <SectionLabel>Technologies</SectionLabel>
         <Chips items={x.stack} />
       </Reveal>
-      <Reveal delay={0.24} className="flex flex-wrap items-center gap-3 border-t border-line pt-5">
+      <Reveal delay={0.22} className="flex flex-wrap items-center gap-3 border-t border-line pt-5">
         <p className="min-w-0 flex-1 text-[13px] leading-relaxed text-stone">{x.companyAbout}</p>
         <ExternalButton href={x.url}>{new URL(x.url).hostname.replace('www.', '')}</ExternalButton>
       </Reveal>
@@ -171,15 +169,15 @@ function ArtifactDetail({ a }) {
             {education.school} · {education.location}
           </p>
           <p className="text-[15px] leading-relaxed text-stone">
-            {education.specialization} specialization · {education.period}
+            Co-op program · {education.period}
           </p>
         </Card>
       )
     case 'specialization':
       return (
-        <Card kicker="Specialization" title={education.specialization}>
+        <Card kicker="The degree, up close" title={education.focusArea}>
           <p className="text-[15px] leading-relaxed text-ivory-2">
-            The specialization within {education.degree} at the {education.school}.
+            {education.degree} at the {education.school}: physics applied to biology and medicine.
           </p>
         </Card>
       )
