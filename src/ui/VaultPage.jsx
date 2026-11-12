@@ -6,6 +6,7 @@ import { Chips, Kicker, Metrics, SectionLabel } from './bits.jsx'
 
 const Motion = motion
 const UnlockScene = lazy(() => import('../scene/vault/UnlockScene.jsx'))
+const VaultRoomScene = lazy(() => import('../scene/vault/VaultRoomScene.jsx'))
 const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const displays = vaultDisplays.map((id, i) => ({ n: String(i + 1).padStart(2, '0'), p: projects.find((x) => x.id === id) })).filter((d) => d.p)
 let unlockedThisVisit = false
@@ -529,16 +530,110 @@ function Inside({ project, onProject, onClose, closeRef }) {
 }
 
 // project: null shows the wall of displays, an id opens that file.
+// ============================================================ the 3D walk-in vault
+function Vault3D({ project, onProject, onClose, closeRef }) {
+  const [hovered, setHovered] = useState(null)
+  const [fileOpen, setFileOpen] = useState(false)
+  const sel = displays.find((d) => d.p.id === project)
+  const hov = displays.find((d) => d.p.id === hovered)
+
+  if (fileOpen && sel)
+    return <Inside project={project} onProject={(id) => (id ? onProject(id) : setFileOpen(false))} onClose={onClose} closeRef={closeRef} />
+
+  return (
+    <div className="flex h-screen flex-col bg-[#0b0c0d]">
+      <SecureHeader onClose={onClose} closeRef={closeRef} current={null} onBack={() => onProject(null)} />
+      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+        <div className="relative min-h-[420px] flex-1">
+          <Suspense fallback={null}>
+            <VaultRoomScene projects={projects} hovered={hovered} selected={project} onHover={setHovered} onSelect={(id) => onProject(id)} />
+          </Suspense>
+          <p className="label-mono pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-line bg-charcoal/80 px-4 py-2 text-[10px] text-stone backdrop-blur-md">
+            {sel ? 'Esc or click the floor to step back' : hov ? `${hov.p.name} · ${hov.p.kind}` : `${displays.length} projects on display · click one to walk up to it`}
+          </p>
+        </div>
+
+        <aside className="panel-scroll w-full shrink-0 overflow-y-auto border-t border-line bg-[#111214]/95 p-6 lg:w-[400px] lg:border-l lg:border-t-0">
+          <AnimatePresence mode="wait">
+            {sel ? (
+              <Motion.div key={sel.p.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="flex flex-col gap-5">
+                <button type="button" onClick={() => onProject(null)} className="label-mono self-start text-[10px] text-stone hover:text-ivory">
+                  ← The whole vault
+                </button>
+                <div className="flex items-center gap-3">
+                  <Kicker>
+                    Exhibit {sel.n} · {sel.p.kind}
+                  </Kicker>
+                </div>
+                <h2 className="font-serif text-[44px] leading-[0.95] text-ivory">{sel.p.name}</h2>
+                <span className="self-start rounded-full border border-brass/40 px-2.5 py-0.5 font-mono text-[10.5px] text-brass-2">
+                  {sel.p.status} · {sel.p.year}
+                </span>
+                <div className="relative aspect-[16/10] overflow-hidden rounded-[4px] border border-line bg-black">
+                  <ScreenImage p={sel.p} className="absolute inset-0 h-full w-full" />
+                </div>
+                <p className="font-serif text-[21px] italic leading-snug text-ivory-2">{sel.p.oneLiner}</p>
+                <Chips items={sel.p.stack} />
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFileOpen(true)}
+                    className="inline-flex h-11 items-center gap-2 rounded-full bg-brass px-5 text-[14px] font-medium text-charcoal transition-colors hover:bg-brass-2"
+                  >
+                    Open full file →
+                  </button>
+                  {sel.p.links.live && <LinkButton href={sel.p.links.live}>Live demo</LinkButton>}
+                  {sel.p.links.github && <LinkButton href={sel.p.links.github}>GitHub</LinkButton>}
+                </div>
+              </Motion.div>
+            ) : (
+              <Motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <p className="label-mono text-[10px] text-brass">Access granted · {displays.length} exhibits</p>
+                <h2 className="mt-2 font-serif text-[34px] leading-none text-ivory">Everything I’ve built</h2>
+                <ul className="mt-5">
+                  {displays.map((d) => (
+                    <li key={d.p.id}>
+                      <button
+                        type="button"
+                        onClick={() => onProject(d.p.id)}
+                        onMouseEnter={() => setHovered(d.p.id)}
+                        onMouseLeave={() => setHovered(null)}
+                        className="flex w-full items-center gap-4 border-b border-line py-3 text-left text-ivory transition-colors hover:text-brass-2"
+                      >
+                        <span className="font-mono text-[11px] text-brass">{d.n}</span>
+                        <span className="flex-1">
+                          <span className="block text-[15px]">{d.p.name}</span>
+                          <span className="block font-mono text-[10.5px] text-stone">{d.p.kind}</span>
+                        </span>
+                        <span className="font-mono text-[10.5px] text-stone">View →</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </Motion.div>
+            )}
+          </AnimatePresence>
+        </aside>
+      </div>
+    </div>
+  )
+}
+
 export default function VaultPage({ open, project, onProject, onClose, threeD = false }) {
   const closeRef = useRef()
   const [unlocked, setUnlocked] = useState(() => unlockedThisVisit || reduceMotion)
 
   useEffect(() => {
     if (!open) return
-    const onKey = (e) => e.key === 'Escape' && onClose()
+    // Esc steps back out of a selected exhibit first, then leaves the vault
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return
+      if (project) onProject(null)
+      else onClose()
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, onClose])
+  }, [open, onClose, project, onProject])
 
   useEffect(() => {
     if (open && unlocked) closeRef.current?.focus({ preventScroll: true })
@@ -574,7 +669,11 @@ export default function VaultPage({ open, project, onProject, onClose, threeD = 
                 initial={{ clipPath: 'circle(0% at 50% 50%)' }}
                 animate={{ clipPath: 'circle(150% at 50% 50%)', transition: { duration: reduceMotion ? 0 : 1.0, ease: [0.65, 0, 0.35, 1] } }}
               >
-                <Inside project={project} onProject={onProject} onClose={onClose} closeRef={closeRef} />
+                {threeD ? (
+                  <Vault3D project={project} onProject={onProject} onClose={onClose} closeRef={closeRef} />
+                ) : (
+                  <Inside project={project} onProject={onProject} onClose={onClose} closeRef={closeRef} />
+                )}
               </Motion.div>
             )}
           </AnimatePresence>
