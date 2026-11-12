@@ -9,9 +9,9 @@ Live: https://ssaillesh.github.io/
 | --- | --- | --- |
 | 01 Foyer | Introduction | A sealed envelope with a short intro, running shoes |
 | 02 Study | Education & awards | Degree on the wall, a lit display cabinet (opens the Cabinet view of every award), résumé on the desk, textbooks, microscope |
-| 03 Garage | Experience | East wing with a south roll-up door and driveway: UWAFT autonomous car on a two-post lift + lidar bench, Symcor server rack, OmniaBio test tubes, PepsiCo clipboard and chip pallet, tool chest, training corner (bike, dumbbells), hangout corner (couch, fridge, neon SM) |
+| 03 Garage | Experience | East wing with a south roll-up door and driveway: UWAFT autonomous crossover (detailed, src/scene/CrossoverCar.jsx) on a two-post lift + lidar bench, Symcor server rack, OmniaBio test tubes, PepsiCo clipboard and chip pallet, tool chest, training corner (bike, dumbbells), hangout corner (couch, fridge, neon SM) |
 | 04 Vault | Projects | A bank vault signed PROJECTS; a 3D unlock opens a secure wall of displays, one per GitHub project |
-| 05 Lounge | Personal & contact | Fire, sofa and scale car, photographs, rotary phone, drinks cabinet |
+| 05 Den | Theater, games & contact | Theater: big screen over the fireplace, sofa, riser recliners, popcorn cart. Games: PC battlestation, racing sim rig (cars), arcade cabinet (Invasion), drinks cabinet + armchairs. Photographs, rotary phone |
 | 06 Dining | Kitchen & dining | Kitchen run, marble island with the cast-iron pan, dining table for six |
 
 ## Stack

@@ -40,8 +40,8 @@ export const rooms = [
   {
     id: 'lounge',
     number: '05',
-    name: 'Lounge',
-    kicker: 'Personal & contact',
+    name: 'Den',
+    kicker: 'Theater, games & contact',
     purpose: 'The person behind it',
     bounds: { minX: 4, maxX: 12, minZ: -9, maxZ: 9 },
   },

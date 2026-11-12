@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { profile, skills } from '../data/profile.js'
 import { education } from '../data/education.js'
 import { experience } from '../data/experience.js'
-import { vaultDisplays } from '../data/projects.js'
+import { projects, vaultDisplays } from '../data/projects.js'
 import { interests, photos } from '../data/lounge.js'
 import { awards } from '../data/awards.js'
 import { rooms, roomById } from '../data/rooms.js'
@@ -246,6 +246,22 @@ function ArtifactDetail({ a }) {
               ))}
             </div>
           )}
+        </Card>
+      )
+    }
+    case 'project': {
+      const pr = projects.find((x) => x.id === a.ref)
+      return (
+        <Card kicker={`A project · ${pr.kind}`} title={pr.name}>
+          <p className="font-serif text-[22px] italic leading-snug text-ivory-2">{pr.oneLiner}</p>
+          <p className="text-[15px] leading-relaxed text-stone">{pr.description}</p>
+          <Chips items={pr.stack} />
+          <div className="flex flex-wrap gap-3">
+            <a href={`#/vault/${pr.id}`} className="inline-flex h-11 items-center gap-2 rounded-full bg-brass px-5 text-[14px] font-medium text-charcoal transition-colors hover:bg-brass-2">
+              Open it in the Vault →
+            </a>
+            {pr.links.github && <ExternalButton href={pr.links.github}>Source on GitHub</ExternalButton>}
+          </div>
         </Card>
       )
     }

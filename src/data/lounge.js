@@ -2,7 +2,7 @@
 // the piece of the lounge that represents each one in the 3D scene.
 
 export const interests = [
-  { id: 'cars', name: 'Cars & automotive design', object: 'Scale model and print', note: 'Automotive design, supercars and ambitious long-term goals.' },
+  { id: 'cars', name: 'Cars & automotive design', object: 'Racing sim rig', note: 'Automotive design, supercars and ambitious long-term goals.' },
   { id: 'gym', name: 'The gym', object: 'Dumbbell rack', note: 'Training, consistently.' },
   { id: 'cooking', name: 'Cooking', object: 'Kitchen island', note: 'Cooking at home.' },
   { id: 'biking', name: 'Biking', object: 'Bike by the window', note: 'Getting out on the bike.' },

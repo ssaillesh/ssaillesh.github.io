@@ -2,8 +2,8 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
-import { carBodyGeometry, wheelPositions } from '../carGeometry.js'
-import { reportPageTexture, introCardTexture, bookCoverTexture, certificateTexture, drawerLabelTexture, foilBagTexture, labelTexture, ledStripTexture, medalFaceTexture, phoneCardTexture, pipelineScreenTexture, resumePageTexture, spineTexture, sqlScreenTexture } from './textures.js'
+import CrossoverCar from '../CrossoverCar.jsx'
+import { arcadeScreenTexture, reportPageTexture, introCardTexture, bookCoverTexture, certificateTexture, drawerLabelTexture, foilBagTexture, labelTexture, ledStripTexture, medalFaceTexture, phoneCardTexture, pipelineScreenTexture, resumePageTexture, spineTexture, sqlScreenTexture } from './textures.js'
 
 // Close-up models for the inspection view. Each is authored to fit roughly a
 // 2.4-unit box centred on the origin, facing +z (towards the viewer).
@@ -1032,53 +1032,94 @@ export function Clipboard() {
 }
 
 // UWAFT: the autonomous car with its roof lidar mount
-const SMALL_CAR = { length: 2.6, width: 1.18, height: 0.86 }
-
+// UWAFT: the autonomous crossover with its roof lidar mount
 export function AutonomousCar() {
+  return <CrossoverCar lidar scale={0.62} position={[0, -0.75, 0]} rotation={[0.12, 0.78, 0]} />
+}
+
+// Den: a racing sim rig (cars & automotive design)
+export function SimRig() {
   const m = useMats()
-  const C = SMALL_CAR
-  const body = useMemo(() => carBodyGeometry(SMALL_CAR), [])
-  const paint = useMemo(() => new THREE.MeshPhysicalMaterial({ color: '#e4e1da', metalness: 0.35, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.06 }), [])
-  const led = useMemo(() => new THREE.MeshStandardMaterial({ color: '#111', emissive: '#e8a35a', emissiveIntensity: 2.5 }), [])
+  const red = useMemo(() => new THREE.MeshStandardMaterial({ color: '#8f2a22', roughness: 0.5 }), [])
+  const screen = useMemo(() => new THREE.MeshStandardMaterial({ color: '#0b0d10', emissive: '#7fa8d8', emissiveIntensity: 0.6 }), [])
   return (
-    <group position={[0, -0.55, 0]} rotation={[0.12, -0.6, 0]}>
-      <mesh geometry={body} material={paint} castShadow />
-      <mesh position={[0.1, 0.62, 0]} rotation={[0, 0, -0.06]}>
-        <boxGeometry args={[1.0, 0.15, 1.0]} />
-        <meshPhysicalMaterial color="#0d1115" roughness={0.05} metalness={0.2} clearcoat={1} />
+    <group rotation={[0.25, 0.75, 0]} position={[0, -0.75, 0]} scale={0.95}>
+      <mesh material={m.steel} castShadow>
+        <boxGeometry args={[0.9, 0.08, 2.4]} />
       </mesh>
-      {wheelPositions(C).map(([x, z]) => (
-        <group key={`${x}${z}`} position={[x, 0.2, z]}>
-          <mesh rotation={[Math.PI / 2, 0, 0]} material={m.rubber}>
-            <cylinderGeometry args={[0.25, 0.25, 0.18, 32]} />
-          </mesh>
-          <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, z > 0 ? 0.092 : -0.092]} material={m.gold}>
-            <cylinderGeometry args={[0.15, 0.15, 0.01, 24]} />
-          </mesh>
-        </group>
-      ))}
-      {/* the lidar mount */}
-      {[-0.34, 0.34].map((z) => (
-        <mesh key={z} position={[0.1, 0.72, z]} material={m.steel}>
-          <boxGeometry args={[0.72, 0.04, 0.05]} />
+      <mesh position={[0, 0.3, 0.55]} material={m.black} castShadow>
+        <boxGeometry args={[0.7, 0.4, 0.85]} />
+      </mesh>
+      <mesh position={[0, 0.9, 0.95]} rotation={[-0.3, 0, 0]} material={m.black}>
+        <boxGeometry args={[0.7, 0.95, 0.18]} />
+      </mesh>
+      <mesh position={[0, 1.0, 0.86]} rotation={[-0.3, 0, 0]} material={red}>
+        <boxGeometry args={[0.5, 0.65, 0.02]} />
+      </mesh>
+      <mesh position={[0, 0.55, -0.55]} material={m.steel}>
+        <boxGeometry args={[0.1, 1.0, 0.1]} />
+      </mesh>
+      <mesh position={[0, 1.08, -0.5]} rotation={[0.35, 0, 0]} material={m.black}>
+        <torusGeometry args={[0.24, 0.035, 12, 40]} />
+      </mesh>
+      <mesh position={[0, 1.08, -0.5]} rotation={[0.35, 0, 0]} material={m.black}>
+        <boxGeometry args={[0.46, 0.05, 0.03]} />
+      </mesh>
+      {[-0.15, 0.05, 0.25].map((x) => (
+        <mesh key={x} position={[x, 0.12, -1.0]} rotation={[0.6, 0, 0]} material={m.silver}>
+          <boxGeometry args={[0.09, 0.2, 0.03]} />
         </mesh>
       ))}
-      <mesh position={[0.1, 0.76, 0]} material={m.steel}>
-        <boxGeometry args={[0.36, 0.03, 0.36]} />
+      <mesh position={[0, 1.15, -1.35]} material={m.black}>
+        <boxGeometry args={[1.6, 0.92, 0.05]} />
       </mesh>
-      <Spin speed={2}>
-        <group position={[0.1, 0, 0]}>
-          <mesh position={[0, 0.86, 0]} material={m.black}>
-            <cylinderGeometry args={[0.12, 0.12, 0.16, 28]} />
-          </mesh>
-          <mesh position={[0.121, 0.86, 0]} material={led}>
-            <boxGeometry args={[0.01, 0.06, 0.05]} />
-          </mesh>
-        </group>
-      </Spin>
-      <mesh position={[-1.32, 0.22, 0]} material={m.black}>
-        <boxGeometry args={[0.04, 0.06, 0.2]} />
+      <mesh position={[0, 1.15, -1.32]} material={screen}>
+        <boxGeometry args={[1.52, 0.84, 0.005]} />
       </mesh>
+    </group>
+  )
+}
+
+// Den: an arcade cabinet (the Invasion project)
+export function ArcadeCabinet() {
+  const tex = arcadeScreenTexture()
+  const body = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1d1f4a', roughness: 0.5 }), [])
+  const marquee = useMemo(() => new THREE.MeshStandardMaterial({ color: '#06161a', emissive: '#4fd6e8', emissiveIntensity: 1.8, toneMapped: false }), [])
+  const m = useMats()
+  return (
+    <group rotation={[0.05, -0.5, 0]} position={[0, -1.3, 0]} scale={0.95}>
+      <mesh position={[0, 0.5, 0]} material={body} castShadow>
+        <boxGeometry args={[1.0, 1.0, 0.9]} />
+      </mesh>
+      <mesh position={[0, 1.45, -0.1]} material={body}>
+        <boxGeometry args={[1.0, 0.95, 0.7]} />
+      </mesh>
+      <mesh position={[0, 2.12, -0.02]} material={body}>
+        <boxGeometry args={[1.0, 0.36, 0.86]} />
+      </mesh>
+      <mesh position={[0, 2.12, 0.415]} material={marquee}>
+        <planeGeometry args={[0.88, 0.26]} />
+      </mesh>
+      <mesh position={[0, 1.5, 0.27]} rotation={[-0.25, 0, 0]}>
+        <planeGeometry args={[0.82, 0.68]} />
+        <meshStandardMaterial map={tex} emissive="#ffffff" emissiveMap={tex} emissiveIntensity={0.9} toneMapped={false} />
+      </mesh>
+      <mesh position={[0, 1.02, 0.42]} rotation={[0.35, 0, 0]} material={m.black}>
+        <boxGeometry args={[1.0, 0.06, 0.4]} />
+      </mesh>
+      <mesh position={[-0.22, 1.1, 0.45]} material={m.black}>
+        <cylinderGeometry args={[0.025, 0.025, 0.14, 12]} />
+      </mesh>
+      <mesh position={[-0.22, 1.19, 0.45]}>
+        <sphereGeometry args={[0.05, 16, 12]} />
+        <meshStandardMaterial color="#c0392b" roughness={0.3} />
+      </mesh>
+      {[0.05, 0.2, 0.35].map((x, i) => (
+        <mesh key={x} position={[x, 1.07, 0.46]} rotation={[0.35, 0, 0]}>
+          <cylinderGeometry args={[0.04, 0.04, 0.03, 20]} />
+          <meshStandardMaterial color={['#e8a35a', '#7fcf98', '#8a5cff'][i]} emissive={['#e8a35a', '#7fcf98', '#8a5cff'][i]} emissiveIntensity={0.6} />
+        </mesh>
+      ))}
     </group>
   )
 }

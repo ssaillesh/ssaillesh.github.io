@@ -3,7 +3,7 @@ import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { Box, Cyl, ChipBag } from '../primitives.jsx'
 import Interactive from '../Interactive.jsx'
-import { carBodyGeometry, wheelPositions } from '../carGeometry.js'
+import CrossoverCar from '../CrossoverCar.jsx'
 
 // ROOM 03, GARAGE: x[12, 20], z[-9, 9], the east wing. A roll-up door on the
 // south side opens onto the driveway. The UWAFT autonomous car is up on a
@@ -11,39 +11,6 @@ import { carBodyGeometry, wheelPositions } from '../carGeometry.js'
 // glass holds Symcor's rack, OmniaBio's test tubes, PepsiCo's clipboard and the
 // tool chest; PepsiCo's chips sit on a pallet. A training corner (bike on the
 // wall, dumbbells) and a hangout corner (couch, tyre table, fridge, neon SM).
-
-const CAR = { length: 3.5, width: 1.6, height: 1.15 }
-
-function GarageCar({ mats, m }) {
-  const body = useMemo(() => carBodyGeometry(CAR), [])
-  return (
-    <group position={[16, 1.35, 5.0]} rotation={[0, Math.PI / 2, 0]}>
-      <mesh geometry={body} material={m.paint} castShadow />
-      <mesh position={[0.15, 0.86, 0]} rotation={[0, 0, -0.06]} material={m.glassDark}>
-        <boxGeometry args={[1.35, 0.2, 1.34]} />
-      </mesh>
-      {wheelPositions(CAR).map(([x, z]) => (
-        <group key={`${x}${z}`} position={[x, 0.26, z]}>
-          <mesh rotation={[Math.PI / 2, 0, 0]} material={mats.rubber} castShadow>
-            <cylinderGeometry args={[0.34, 0.34, 0.24, 28]} />
-          </mesh>
-          <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, z > 0 ? 0.122 : -0.122]} material={mats.brass}>
-            <cylinderGeometry args={[0.2, 0.2, 0.01, 20]} />
-          </mesh>
-        </group>
-      ))}
-      {/* roof lidar mount: two bars, a plate and the spinning puck */}
-      {[-0.45, 0.45].map((z) => (
-        <Box key={z} p={[0.15, 0.96, z]} s={[0.9, 0.05, 0.06]} m={mats.steel} />
-      ))}
-      <Box p={[0.15, 1.01, 0]} s={[0.46, 0.04, 0.46]} m={mats.steel} />
-      <Cyl p={[0.15, 1.05, 0]} radius={0.16} h={0.2} m={mats.blackMatte} />
-      <Cyl p={[0.15, 1.12, 0]} radius={0.165} h={0.05} m={mats.led} />
-      {/* bumper camera */}
-      <Box p={[-1.77, 0.3, 0]} s={[0.06, 0.08, 0.24]} m={mats.blackMatte} />
-    </group>
-  )
-}
 
 export default function Garage({ mats, ctx }) {
   const it = (id) => ({ id, enabled: ctx.active, hovered: ctx.hovered, selected: ctx.selected, onHover: ctx.onHover, onSelect: ctx.onSelect })
@@ -54,8 +21,6 @@ export default function Garage({ mats, ctx }) {
     () => ({
       epoxy: new THREE.MeshStandardMaterial({ color: '#3a3b3d', roughness: 0.28, metalness: 0.15 }),
       lines: new THREE.MeshStandardMaterial({ color: '#d9b23a', roughness: 0.6 }),
-      paint: new THREE.MeshPhysicalMaterial({ color: '#e4e1da', metalness: 0.35, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.08 }),
-      glassDark: new THREE.MeshPhysicalMaterial({ color: '#0d1115', roughness: 0.05, metalness: 0.2, clearcoat: 1 }),
       pallet: new THREE.MeshStandardMaterial({ color: '#9a7a52', roughness: 0.9 }),
       carton: new THREE.MeshStandardMaterial({ color: '#8a6a45', roughness: 0.95 }),
       paper: new THREE.MeshStandardMaterial({ color: '#f1ece2', roughness: 0.9 }),
@@ -93,7 +58,7 @@ export default function Garage({ mats, ctx }) {
           </group>
         ))}
         <Box p={[16, 3.1, 5.0]} s={[3.2, 0.14, 0.2]} m={m.lift} />
-        <GarageCar mats={mats} m={m} />
+        <CrossoverCar lidar scale={0.85} position={[16, 0.95, 5.0]} rotation={[0, Math.PI / 2, 0]} />
         <Box p={[19.35, 0, 5.0]} s={[0.7, 0.9, 3.0]} m={mats.steel} />
         <Box p={[19.35, 0.9, 5.0]} s={[0.78, 0.06, 3.1]} m={mats.walnut} />
         <Cyl p={[19.35, 0.96, 4.1]} radius={0.13} h={0.16} m={mats.blackMatte} />

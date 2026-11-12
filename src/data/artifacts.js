@@ -23,12 +23,13 @@ export const artifacts = [
   { id: 'uwaft', room: 'garage', object: 'An autonomous car with a lidar mount', where: 'Up on the lift', kind: 'experience', ref: 'uwaft' },
   { id: 'toolkit', room: 'garage', object: 'A tool chest', where: 'By the north glass', kind: 'toolkit' },
 
-  // 05 Lounge
-  { id: 'cars', room: 'lounge', object: 'A scale model car', where: 'Coffee table', kind: 'interest', ref: 'cars' },
+  // 05 Den
+  { id: 'cars', room: 'lounge', object: 'A racing sim rig', where: 'Games corner', kind: 'interest', ref: 'cars' },
   { id: 'gym', room: 'garage', object: 'A dumbbell rack', where: 'Training corner', kind: 'interest', ref: 'gym' },
   { id: 'cooking', room: 'dining', object: 'A cast-iron pan', where: 'Kitchen island', kind: 'interest', ref: 'cooking' },
   { id: 'biking', room: 'garage', object: 'A bicycle', where: 'On the wall, training corner', kind: 'interest', ref: 'biking' },
-  { id: 'exploring', room: 'lounge', object: 'Two photographs', where: 'Credenza', kind: 'interest', ref: 'exploring' },
+  { id: 'exploring', room: 'lounge', object: 'Two photographs', where: 'Credenza, between the two halves', kind: 'interest', ref: 'exploring' },
+  { id: 'arcade', room: 'lounge', object: 'An arcade cabinet', where: 'Games corner', kind: 'project', ref: 'invasion' },
   { id: 'contact', room: 'lounge', object: 'A rotary phone', where: 'Side table by the sofa', kind: 'contact' },
 ]
 
@@ -42,7 +43,7 @@ export const roomIntro = {
   garage: 'The big room. A car up on the lift, benches along the glass, a training corner and somewhere to sit.',
   dining: 'Kitchen and dining. Something is on the stove.',
   vault: 'A bank vault with PROJECTS over the door. It has to be unlocked first.',
-  lounge: 'Where the day ends: the fire, the sofa, a few photographs.',
+  lounge: 'A home theater with a fire, and a games corner. Warm light, a little RGB.',
 }
 
 // Everything kept in the Study's display cabinet, in compartment order.

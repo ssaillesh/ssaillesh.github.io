@@ -400,3 +400,26 @@ export const reportPageTexture = () =>
     g.fillStyle = 'rgba(27,26,23,.18)'
     for (let i = 0; i < 4; i++) g.fillRect(70, 920 + i * 30, (w - 140) * (0.5 + (i % 3) * 0.2), 10)
   })
+
+// Arcade screen: a little field of pixel invaders over a player ship.
+export const arcadeScreenTexture = () =>
+  make('arcade-screen', 512, 420, (g, w, h) => {
+    g.fillStyle = '#05060a'
+    g.fillRect(0, 0, w, h)
+    const invader = ['00100000100', '00010001000', '00111111100', '01101110110', '11111111111', '10111111101', '10100000101', '00011011000']
+    const draw = (ox, oy, s, c) => {
+      g.fillStyle = c
+      invader.forEach((row, y) => row.split('').forEach((v, x) => v === '1' && g.fillRect(ox + x * s, oy + y * s, s, s)))
+    }
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 5; c++) draw(40 + c * 90, 40 + r * 70, 6, ['#7fcf98', '#e8a35a', '#8a5cff'][r])
+    g.fillStyle = '#4fd6e8'
+    g.fillRect(232, 360, 48, 14)
+    g.fillRect(250, 346, 12, 14)
+    g.fillRect(254, 300, 4, 26)
+    g.font = '600 22px JetBrains Mono, monospace'
+    g.fillStyle = '#efe9dd'
+    g.textAlign = 'left'
+    g.fillText('SCORE 004820', 20, 22)
+    g.textAlign = 'right'
+    g.fillText('INVASION', w - 20, 22)
+  })

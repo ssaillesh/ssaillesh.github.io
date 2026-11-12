@@ -6,6 +6,7 @@ import { education } from './education.js'
 import { experience } from './experience.js'
 import { interests } from './lounge.js'
 import { roomById } from './rooms.js'
+import { projects } from './projects.js'
 
 export const INSPECTABLE = Object.fromEntries(artifacts.map((a) => [a.id, `${roomById[a.room].name} · ${a.where}`]))
 
@@ -37,6 +38,8 @@ export function inspectLabel(id) {
     }
     case 'interest':
       return interests.find((i) => i.id === a.ref)?.name || id
+    case 'project':
+      return projects.find((p) => p.id === a.ref)?.name || id
     default:
       return id
   }
