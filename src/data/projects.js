@@ -9,7 +9,7 @@ export const projects = [
     kind: 'AI outing planner',
     status: 'In progress',
     year: 2026,
-    image: '/residence/rova-brand.jpg',
+    image: '/residence/rova-brand.pdf',
     icon: '/residence/rova-icon.jpg',
     tagline: 'Plan less. Go out more.',
     oneLiner: 'Tell it your mood and get a real, timed plan for a night out from places near you.',
