@@ -1,6 +1,6 @@
-import { Suspense, useEffect, useMemo, useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { Environment, Lightformer, useGLTF, useTexture } from '@react-three/drei'
+import { createContext, Suspense, useContext, useEffect, useMemo, useRef } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Environment, Lightformer, Sparkles, useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { labelTexture } from '../inspect/textures.js'
 import { ArcadeCabinet } from '../inspect/models.jsx'
@@ -19,12 +19,10 @@ const CEIL = 3.8
 const DOOR_Z = 9.5
 const END_Z = -7
 const WALK_FROM = 8.6
-const WALK_TO = -3.0
+const WALK_TO = -1.2
 
 // side -1 = left wall, +1 = right wall. z is the case centre along the corridor.
 const CASES = [
-  { id: 'vouch', side: -1, z: -2.2, big: true },
-  { id: 'lapzero', side: 1, z: -2.2, big: true },
   { id: 'codegraphrag', side: -1, z: 0.6, big: true },
   { id: 'heston', side: 1, z: 0.6, big: true },
   { id: 'asl', side: -1, z: 3.4, big: true },
@@ -36,7 +34,13 @@ const CASES = [
 ]
 const BIG_W = 2.4
 const SMALL_W = 1.2
-const PILLARS = [8.0, 6.4, 4.8, 2.0, -0.8, -3.6]
+const PILLARS = [8.0, 6.4, 4.8, 2.0, -0.8]
+// The top three: Rova at the end, VouchStudio and LapZero on glass towers either side of it.
+const TOP = [
+  { id: 'vouch', rank: '02', pos: [-1.45, END_Z + 3.1], rot: 0.5 },
+  { id: 'lapzero', rank: '03', pos: [1.45, END_Z + 3.1], rot: -0.5 },
+]
+const SANCTUM_Z = -1.0 // where the cases end and the inner hall for the top three begins
 
 const walkZ = (w) => WALK_FROM + (WALK_TO - WALK_FROM) * w
 const walkFor = (z) => THREE.MathUtils.clamp((z - WALK_FROM) / (WALK_TO - WALK_FROM), 0, 1)
@@ -187,12 +191,84 @@ const marbleTex = () =>
   })
 
 // ---------------------------------------------------------------- exhibits
+// While a piece is being handled, its idle spin stops.
+const HeldContext = createContext(false)
+
 function Spin({ speed = 0.4, children }) {
   const ref = useRef()
+  const held = useContext(HeldContext)
   useFrame((_, dt) => {
-    if (ref.current && !reduceMotion) ref.current.rotation.y += dt * speed
+    if (!ref.current || reduceMotion) return
+    if (held) ref.current.rotation.y = THREE.MathUtils.damp(ref.current.rotation.y, Math.round(ref.current.rotation.y / (Math.PI * 2)) * Math.PI * 2, 4, dt)
+    else ref.current.rotation.y += dt * speed
   })
   return <group ref={ref}>{children}</group>
+}
+
+// Drag to turn a selected piece any way you like; it eases back when you step away.
+// `pivot` is the height it turns about, `limit` caps the tilt (for wall pieces).
+function Turntable({ active, pivot = 0.3, limit = Infinity, grow = 1.15, children }) {
+  const g = useRef()
+  const drag = useRef({ on: false, x: 0, y: 0, vx: 0, vy: 0, rx: 0, ry: 0 })
+  const gl = useThree((s) => s.gl)
+  useEffect(() => {
+    if (!active) return
+    const el = gl.domElement
+    const d = drag.current
+    const down = (e) => {
+      d.on = true
+      d.x = e.clientX
+      d.y = e.clientY
+      d.vx = 0
+      d.vy = 0
+    }
+    const move = (e) => {
+      if (!d.on) return
+      d.vx = (e.clientX - d.x) * 0.012
+      d.vy = (e.clientY - d.y) * 0.012
+      d.ry += d.vx
+      d.rx += d.vy
+      d.x = e.clientX
+      d.y = e.clientY
+    }
+    const up = () => (d.on = false)
+    el.addEventListener('pointerdown', down)
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', up)
+    return () => {
+      el.removeEventListener('pointerdown', down)
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', up)
+      d.on = false
+    }
+  }, [active, gl])
+  useFrame((_, dt) => {
+    const d = drag.current
+    if (!active) {
+      d.rx = THREE.MathUtils.damp(d.rx, 0, 4, dt)
+      d.ry = THREE.MathUtils.damp(d.ry, Math.round(d.ry / (Math.PI * 2)) * Math.PI * 2, 4, dt)
+    } else if (!d.on) {
+      d.ry += d.vx
+      d.rx += d.vy
+      d.vx *= 0.92
+      d.vy *= 0.92
+    }
+    d.rx = THREE.MathUtils.clamp(d.rx, -limit, limit)
+    if (limit !== Infinity) d.ry = THREE.MathUtils.clamp(d.ry, -limit, limit)
+    if (!g.current) return
+    g.current.rotation.set(d.rx, d.ry, 0)
+    const s = THREE.MathUtils.damp(g.current.scale.x, active ? grow : 1, 5, dt)
+    g.current.scale.setScalar(s)
+  })
+  return (
+    <HeldContext.Provider value={active}>
+      <group position={[0, pivot, 0]}>
+        <group ref={g}>
+          <group position={[0, -pivot, 0]}>{children}</group>
+        </group>
+      </group>
+    </HeldContext.Provider>
+  )
 }
 
 // Rova: the brand pin (the V mark), loaded from its GLB and fitted to the plinth.
@@ -225,7 +301,7 @@ function F1({ m }) {
         <mesh position={[0, 0.06, 0]} material={m.red} castShadow>
           <boxGeometry args={[0.24, 0.1, 1.0]} />
         </mesh>
-        <mesh position={[0, 0.06, -0.6]} rotation={[Math.PI / 2, 0, 0]} material={m.red}>
+        <mesh position={[0, 0.06, -0.6]} rotation={[-Math.PI / 2, 0, 0]} material={m.red}>
           <coneGeometry args={[0.08, 0.36, 12]} />
         </mesh>
         {[-1, 1].map((s) => (
@@ -551,10 +627,10 @@ function Corridor({ m }) {
             <boxGeometry args={[0.6, 0.8, LEN]} />
           </mesh>
           {/* end-alcove panels between the last case and Rova */}
-          <mesh position={[s * (HALF + 0.3), CEIL / 2, (-3.8 + END_Z) / 2]} material={m.wood}>
-            <boxGeometry args={[0.6, CEIL, -3.8 - END_Z]} />
+          <mesh position={[s * (HALF + 0.3), CEIL / 2, (SANCTUM_Z + END_Z) / 2]} material={m.wood}>
+            <boxGeometry args={[0.6, CEIL, SANCTUM_Z - END_Z]} />
           </mesh>
-          {[-4.6, -5.9].map((z) => (
+          {[-1.9, -3.1, -4.3, -5.5].map((z) => (
             <mesh key={z} position={[s * (HALF - 0.005), 1.9, z]} rotation={[0, -s * (Math.PI / 2), 0]} material={m.led}>
               <planeGeometry args={[0.04, 2.4]} />
             </mesh>
@@ -570,36 +646,90 @@ function Corridor({ m }) {
   )
 }
 
-function Pendants({ m }) {
+// One big white crystal chandelier in the middle of the hall: tiers of hanging
+// crystal drops around a central stem, turning slowly so the facets catch the light.
+const CHANDELIER_Z = 1.2
+const TIERS = [
+  { y: 3.25, r: 0.78, n: 30, drop: 0.5 },
+  { y: 2.95, r: 0.58, n: 24, drop: 0.42 },
+  { y: 2.68, r: 0.38, n: 16, drop: 0.34 },
+  { y: 2.45, r: 0.18, n: 9, drop: 0.24 },
+]
+
+function Chandelier({ m }) {
+  const spin = useRef()
+  const crystals = useRef()
+  const strands = useRef()
+  const { drops, lines } = useMemo(() => {
+    const d = []
+    const l = []
+    TIERS.forEach((tier, ti) =>
+      Array.from({ length: tier.n }, (_, i) => {
+        const a = (i / tier.n) * Math.PI * 2 + ti * 0.3
+        const len = tier.drop * (0.7 + 0.3 * Math.sin(i * 2.3))
+        const x = Math.cos(a) * tier.r
+        const z = Math.sin(a) * tier.r
+        l.push([x, tier.y - len / 2, z, len])
+        for (let k = 1; k <= 3; k++) d.push([x, tier.y - (len * k) / 3, z, k === 3 ? 1.5 : 1])
+      }),
+    )
+    return { drops: d, lines: l }
+  }, [])
+  useEffect(() => {
+    const mat = new THREE.Matrix4()
+    const q = new THREE.Quaternion()
+    drops.forEach(([x, y, z, s], i) => {
+      mat.compose(new THREE.Vector3(x, y, z), q, new THREE.Vector3(s, s * 1.6, s))
+      crystals.current.setMatrixAt(i, mat)
+    })
+    crystals.current.instanceMatrix.needsUpdate = true
+    lines.forEach(([x, y, z, len], i) => {
+      mat.compose(new THREE.Vector3(x, y, z), q, new THREE.Vector3(1, len, 1))
+      strands.current.setMatrixAt(i, mat)
+    })
+    strands.current.instanceMatrix.needsUpdate = true
+  }, [drops, lines])
+  useFrame((_, dt) => {
+    if (spin.current && !reduceMotion) spin.current.rotation.y += dt * 0.12
+  })
   return (
-    <group>
-      {[5.0, 1.8, -1.4, -4.4].map((z) =>
-        [0, 1].map((i) => {
-          const y = i ? 2.55 : 2.9
-          const dz = i ? 0.18 : -0.18
-          return (
-            <group key={`${z}${i}`} position={[0, 0, z + dz]}>
-              <mesh position={[0, (CEIL + y) / 2, 0]} material={m.brass}>
-                <cylinderGeometry args={[0.006, 0.006, CEIL - y, 6]} />
-              </mesh>
-              <mesh position={[0, y, 0]} material={m.globe}>
-                <sphereGeometry args={[0.11, 20, 14]} />
-              </mesh>
-              <mesh position={[0, y + 0.12, 0]} material={m.brass}>
-                <cylinderGeometry args={[0.03, 0.05, 0.05, 14]} />
-              </mesh>
-            </group>
-          )
-        }),
-      )}
-      {[2.7, -2.5].map((z) => (
-        <pointLight key={z} position={[0, 2.6, z]} intensity={5} distance={7} decay={1.6} color="#ffd9a8" />
-      ))}
+    <group position={[0, 0, CHANDELIER_Z]}>
+      <mesh position={[0, (CEIL + 3.3) / 2, 0]} material={m.chrome}>
+        <cylinderGeometry args={[0.012, 0.012, CEIL - 3.3, 8]} />
+      </mesh>
+      <mesh position={[0, CEIL - 0.03, 0]} material={m.chrome}>
+        <cylinderGeometry args={[0.25, 0.3, 0.05, 32]} />
+      </mesh>
+      <group ref={spin}>
+        {TIERS.map((tier) => (
+          <mesh key={tier.y} position={[0, tier.y, 0]} rotation={[Math.PI / 2, 0, 0]} material={m.chrome}>
+            <torusGeometry args={[tier.r, 0.012, 8, 64]} />
+          </mesh>
+        ))}
+        <mesh position={[0, 2.85, 0]} material={m.chrome}>
+          <cylinderGeometry args={[0.02, 0.02, 0.9, 8]} />
+        </mesh>
+        <mesh position={[0, 2.25, 0]} material={m.crystal}>
+          <octahedronGeometry args={[0.09, 0]} />
+        </mesh>
+        <mesh position={[0, 2.9, 0]} material={m.globeWhite}>
+          <sphereGeometry args={[0.16, 24, 16]} />
+        </mesh>
+        <instancedMesh ref={strands} args={[undefined, m.chrome, lines.length]}>
+          <cylinderGeometry args={[0.002, 0.002, 1, 4]} />
+        </instancedMesh>
+        <instancedMesh ref={crystals} args={[undefined, m.crystal, drops.length]}>
+          <octahedronGeometry args={[0.026, 0]} />
+        </instancedMesh>
+      </group>
+      <Sparkles count={60} scale={[1.9, 1.2, 1.9]} position={[0, 2.85, 0]} size={2.4} speed={0.25} opacity={0.9} color="#ffffff" />
+      <pointLight position={[0, 2.6, 0]} intensity={14} distance={12} decay={1.5} color="#f4f6ff" />
+      <pointLight position={[0, 2.4, 5.6]} intensity={3} distance={6} decay={1.6} color="#ffe6c4" />
     </group>
   )
 }
 
-// A few gold bars, instanced: on the Rova console and at the foot of the big cases.
+// A few gold bars, instanced: at the foot of the Rova sculpture and of the big cases.
 function Gold({ m }) {
   const ref = useRef()
   const bar = useMemo(() => {
@@ -616,8 +746,8 @@ function Gold({ m }) {
         for (let i = 0; i < n; i++) out.push([cx + Math.cos(rot) * (i - (n - 1) / 2) * 0.29, cy + 0.035 + lvl * 0.07, cz - Math.sin(rot) * (i - (n - 1) / 2) * 0.29, rot])
       }
     }
-    pile(-0.75, 0.9, END_Z + 0.32, 3)
-    pile(0.75, 0.9, END_Z + 0.32, 3)
+    pile(-1.25, 0, END_Z + 0.45, 4)
+    pile(1.25, 0, END_Z + 0.45, 4)
     for (const c of CASES.filter((x) => x.big)) pile(c.side * (HALF + 0.27), 0.58, c.z + 0.72, 2, Math.PI / 2)
     return out
   }, [])
@@ -634,12 +764,12 @@ function Gold({ m }) {
   return <instancedMesh ref={ref} args={[bar, m.gold, layout.length]} />
 }
 
-// Banded cash stacked on the floor either side of the Rova console.
+// Banded cash stacked on the floor either side of the Rova sculpture.
 function Cash({ m }) {
   return (
     <group>
       {[-1, 1].map((s) => (
-        <group key={s} position={[s * 1.55, 0, END_Z + 0.45]}>
+        <group key={s} position={[s * 1.85, 0, END_Z + 0.4]}>
           {Array.from({ length: 10 }, (_, i) => (
             <mesh key={i} position={[(i % 2) * 0.17 - 0.085, 0.04 + Math.floor(i / 2) * 0.075, 0]} material={m.cash}>
               <boxGeometry args={[0.16, 0.07, 0.34]} />
@@ -741,7 +871,9 @@ function Case({ c, project, hovered, selected, onHover, onSelect, m, tex }) {
         <boxGeometry args={[c.big ? 0.8 : 0.6, pedH, 0.36]} />
       </mesh>
       <group position={[0, y0 + pedH + 0.01, -D / 2 + 0.02]} scale={scale}>
-        <Suspense fallback={null}>{obj}</Suspense>
+        <Turntable active={selected === c.id}>
+          <Suspense fallback={null}>{obj}</Suspense>
+        </Turntable>
       </group>
       {/* glass front and its brass edge */}
       <mesh position={[0, y0 + H / 2, 0]} material={m.glass}>
@@ -758,50 +890,208 @@ function Case({ c, project, hovered, selected, onHover, onSelect, m, tex }) {
 }
 
 // ---------------------------------------------------------------- Rova, at the end of the walk
-function RovaEnd({ project, hovered, selected, onHover, onSelect, m, tex }) {
+// The Rova V as a floor-to-ceiling sculpture set into black marble, lit from behind
+// like an eclipse; in front, the pin floats over a glass pedestal under a spotlight,
+// behind a short arc of velvet rope.
+const PED_Z = END_Z + 1.3
+
+// The V: a short ivory left stroke and a long brass blade rising to the right.
+const V_LEFT = (() => {
+  const s = new THREE.Shape()
+  s.moveTo(-0.62, 0.32)
+  s.lineTo(-0.34, 0.32)
+  s.lineTo(0.03, -0.38)
+  s.lineTo(-0.02, -0.58)
+  s.closePath()
+  return s
+})()
+const V_RIGHT = (() => {
+  const s = new THREE.Shape()
+  s.moveTo(-0.06, -0.52)
+  s.lineTo(0.7, 0.78)
+  s.lineTo(0.76, 0.76)
+  s.lineTo(0.08, -0.4)
+  s.closePath()
+  return s
+})()
+
+const haloTex = () =>
+  canvasTex(512, 512, (g, w, h) => {
+    const grd = g.createRadialGradient(w / 2, h / 2, w * 0.12, w / 2, h / 2, w / 2)
+    grd.addColorStop(0, 'rgba(255,236,200,0)')
+    grd.addColorStop(0.45, 'rgba(255,230,185,0.85)')
+    grd.addColorStop(0.62, 'rgba(255,214,150,0.35)')
+    grd.addColorStop(1, 'rgba(255,200,130,0)')
+    g.fillStyle = grd
+    g.fillRect(0, 0, w, h)
+  })
+
+function RopeArc({ m }) {
+  const posts = [-1.15, -0.4, 0.4, 1.15].map((a) => [Math.sin(a) * 1.15, PED_Z + Math.cos(a) * 1.15])
+  const ropes = useMemo(
+    () =>
+      posts.slice(0, -1).map(([x, z], i) => {
+        const [x2, z2] = posts[i + 1]
+        const a = new THREE.Vector3(x, 0.86, z)
+        const b = new THREE.Vector3(x2, 0.86, z2)
+        const mid = a.clone().add(b).multiplyScalar(0.5).add(new THREE.Vector3(0, -0.18, 0))
+        return new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(a, mid, b), 16, 0.022, 6, false)
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
+  return (
+    <group>
+      {posts.map(([x, z]) => (
+        <group key={x} position={[x, 0, z]}>
+          <mesh position={[0, 0.02, 0]} material={m.brass}>
+            <cylinderGeometry args={[0.12, 0.14, 0.04, 20]} />
+          </mesh>
+          <mesh position={[0, 0.45, 0]} material={m.brass}>
+            <cylinderGeometry args={[0.024, 0.024, 0.86, 10]} />
+          </mesh>
+          <mesh position={[0, 0.9, 0]} material={m.brass}>
+            <sphereGeometry args={[0.05, 14, 10]} />
+          </mesh>
+        </group>
+      ))}
+      {ropes.map((g, i) => (
+        <mesh key={i} geometry={g} material={m.velvet} />
+      ))}
+    </group>
+  )
+}
+
+function RovaEnd({ project, hovered, selected, onHover, onSelect, m }) {
+  const halo = useRef()
   const ring = useRef()
+  const pin = useRef()
   const lit = hovered === 'rova' || selected === 'rova'
-  const plaque = useMemo(() => labelTexture({ key: 'hof-rova', w: 512, h: 96, bg: '#c6a96c', lines: [{ text: 'ROVA', size: 54, font: 'sans', weight: 600, color: '#2a2118', spacing: 10 }] }), [])
+  const vLeft = useMemo(() => new THREE.ExtrudeGeometry(V_LEFT, { depth: 0.14, bevelEnabled: true, bevelSize: 0.012, bevelThickness: 0.012, bevelSegments: 3 }), [])
+  const vRight = useMemo(() => new THREE.ExtrudeGeometry(V_RIGHT, { depth: 0.14, bevelEnabled: true, bevelSize: 0.012, bevelThickness: 0.012, bevelSegments: 3 }), [])
+  const haloMap = useMemo(() => haloTex(), [])
+  const plaque = useMemo(() => labelTexture({ key: 'hof-rova', w: 768, h: 128, bg: '#c6a96c', lines: [{ text: 'ROVA · PLAN LESS. GO OUT MORE.', size: 44, font: 'sans', weight: 600, color: '#2a2118', spacing: 4 }] }), [])
+  const target = useMemo(() => new THREE.Object3D(), [])
   useFrame((state, dt) => {
-    if (!ring.current) return
-    const breathe = 0.3 + 0.15 * Math.sin(state.clock.elapsedTime * 2.2)
-    ring.current.opacity = THREE.MathUtils.damp(ring.current.opacity, lit ? 0.9 : breathe, 8, dt)
+    const t = state.clock.elapsedTime
+    if (halo.current) halo.current.opacity = THREE.MathUtils.damp(halo.current.opacity, (lit ? 1 : 0.8) + 0.08 * Math.sin(t * 0.8), 4, dt)
+    if (ring.current) ring.current.opacity = THREE.MathUtils.damp(ring.current.opacity, lit ? 0.95 : 0.55 + 0.2 * Math.sin(t * 2), 6, dt)
+    if (pin.current) pin.current.position.y = 1.32 + (reduceMotion ? 0 : 0.04 * Math.sin(t * 1.4))
   })
   if (!project) return null
   return (
     <group {...hoverProps('rova', onHover, onSelect)}>
-      {/* the framed portrait */}
-      <mesh position={[0, 2.15, END_Z + 0.03]} material={m.brass}>
-        <boxGeometry args={[2.72, 1.12, 0.04]} />
+      {/* eclipse halo behind the sculpture */}
+      <mesh position={[0, 2.0, END_Z + 0.02]}>
+        <planeGeometry args={[3.6, 3.6]} />
+        <meshBasicMaterial ref={halo} map={haloMap} transparent opacity={0.85} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
-      <mesh position={[0, 2.15, END_Z + 0.055]}>
-        <planeGeometry args={[2.6, 1.0]} />
-        <meshStandardMaterial map={tex.rova} emissiveMap={tex.rova} emissive="#ffffff" emissiveIntensity={0.35} roughness={0.6} />
+      <group position={[0, 2.0, END_Z + 0.12]} scale={2.1}>
+        <Turntable active={selected === 'rova'} pivot={0} limit={0.45} grow={1.04}>
+          <group position={[0, 0, -0.07]}>
+            <mesh geometry={vLeft} material={m.ivoryPolished} />
+            <mesh geometry={vRight} material={m.gold} />
+          </group>
+        </Turntable>
+      </group>
+      <Sparkles count={26} scale={[2.6, 2.6, 0.6]} position={[0, 2.0, END_Z + 0.5]} size={2} speed={0.2} opacity={0.8} color="#ffe9c2" />
+
+      {/* glass pedestal, floating pin, halo ring */}
+      <mesh position={[0, 0.5, PED_Z]} material={m.pedestalGlass}>
+        <cylinderGeometry args={[0.28, 0.28, 1.0, 40]} />
       </mesh>
-      {/* the console and the pin */}
-      <mesh position={[0, 0.45, END_Z + 0.3]} material={m.black}>
-        <boxGeometry args={[2.0, 0.9, 0.5]} />
-      </mesh>
-      <mesh position={[0, 0.905, END_Z + 0.3]} material={m.brass}>
-        <boxGeometry args={[2.04, 0.02, 0.54]} />
-      </mesh>
-      <mesh position={[0, 0.62, END_Z + 0.552]}>
-        <planeGeometry args={[0.7, 0.13]} />
+      {[0.01, 1.0].map((y) => (
+        <mesh key={y} position={[0, y, PED_Z]} material={m.brass}>
+          <cylinderGeometry args={[0.31, 0.31, 0.025, 40]} />
+        </mesh>
+      ))}
+      <mesh position={[0, 0.16, PED_Z + 0.29]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[0.52, 0.085]} />
         <meshStandardMaterial map={plaque} metalness={0.7} roughness={0.3} />
       </mesh>
-      <mesh position={[0, 0.95, END_Z + 0.32]} material={m.black}>
-        <cylinderGeometry args={[0.16, 0.19, 0.08, 28]} />
-      </mesh>
-      <group position={[0, 0.99, END_Z + 0.32]}>
-        <Suspense fallback={null}>
-          <RovaPin size={0.72} />
-        </Suspense>
+      <group ref={pin} position={[0, 1.32, PED_Z]}>
+        <Turntable active={selected === 'rova'} pivot={0.3} grow={1.25}>
+          <Suspense fallback={null}>
+            <RovaPin size={0.62} />
+          </Suspense>
+        </Turntable>
       </group>
-      <mesh position={[0, 0.006, END_Z + 1.3]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.8, 0.86, 56]} />
-        <meshBasicMaterial ref={ring} color="#e0b874" transparent opacity={0.3} depthWrite={false} />
+      <mesh position={[0, 1.62, PED_Z]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.46, 0.008, 8, 72]} />
+        <meshBasicMaterial ref={ring} color="#fff3dc" transparent opacity={0.6} toneMapped={false} />
       </mesh>
-      <pointLight position={[0, 2.8, END_Z + 1.6]} intensity={lit ? 8 : 6} distance={4.5} decay={1.6} color="#ffe2b8" />
+      {/* the spotlight, with a faint visible beam */}
+      <primitive object={target} position={[0, 1.2, PED_Z]} />
+      <spotLight position={[0, CEIL - 0.05, PED_Z + 0.3]} target={target} angle={0.32} penumbra={0.6} intensity={lit ? 40 : 30} distance={6} decay={1.4} color="#ffffff" />
+      <mesh position={[0, (CEIL + 0.9) / 2, PED_Z + 0.15]}>
+        <cylinderGeometry args={[0.06, 0.6, CEIL - 0.9, 32, 1, true]} />
+        <meshBasicMaterial color="#fff6e6" transparent opacity={0.05} depthWrite={false} side={THREE.DoubleSide} blending={THREE.AdditiveBlending} />
+      </mesh>
+      <mesh position={[0, 0.006, PED_Z]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.75, 48]} />
+        <meshBasicMaterial color="#fff1d6" transparent opacity={0.08} depthWrite={false} />
+      </mesh>
+      <RopeArc m={m} />
+      <pointLight position={[0, 2.6, END_Z + 1.2]} intensity={4} distance={4} decay={1.6} color="#ffe2b8" />
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------- the top three
+// A glass vitrine on a black plinth, turned toward the walk, with its rank in brass.
+function Tower({ top, project, hovered, selected, onHover, onSelect, m }) {
+  const glow = useRef()
+  const lit = hovered === top.id || selected === top.id
+  const plaque = useMemo(
+    () =>
+      labelTexture({
+        key: `top-${top.id}`,
+        w: 768,
+        h: 192,
+        bg: '#c6a96c',
+        lines: [
+          { text: `Nº ${top.rank}`, size: 40, font: 'mono', weight: 500, color: '#5a4320', spacing: 6 },
+          { text: project.name.toUpperCase(), size: 54, font: 'sans', weight: 600, color: '#2a2118', spacing: 4 },
+        ],
+      }),
+    [top.id, top.rank, project.name],
+  )
+  useFrame((state, dt) => {
+    if (!glow.current) return
+    glow.current.opacity = THREE.MathUtils.damp(glow.current.opacity, lit ? 0.9 : 0.35 + 0.15 * Math.sin(state.clock.elapsedTime * 2 + top.pos[0]), 8, dt)
+  })
+  const obj = top.id === 'vouch' ? <VouchMark m={m} /> : <F1 m={m} />
+  const target = useMemo(() => new THREE.Object3D(), [])
+  return (
+    <group position={[top.pos[0], 0, top.pos[1]]} rotation={[0, top.rot, 0]} {...hoverProps(top.id, onHover, onSelect)}>
+      <mesh position={[0, 0.45, 0]} material={m.black}>
+        <boxGeometry args={[1.0, 0.9, 1.0]} />
+      </mesh>
+      <mesh position={[0, 0.905, 0]} material={m.brass}>
+        <boxGeometry args={[1.04, 0.02, 1.04]} />
+      </mesh>
+      <mesh position={[0, 0.58, 0.502]}>
+        <planeGeometry args={[0.8, 0.2]} />
+        <meshStandardMaterial map={plaque} metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* the vitrine */}
+      <mesh position={[0, 1.42, 0]} material={m.pedestalGlass}>
+        <boxGeometry args={[0.98, 1.0, 0.98]} />
+      </mesh>
+      <mesh position={[0, 1.93, 0]} material={m.brass}>
+        <boxGeometry args={[1.02, 0.025, 1.02]} />
+      </mesh>
+      <group position={[0, 0.93, 0]} scale={0.72}>
+        <Turntable active={selected === top.id} pivot={0.3} grow={1.2}>
+          <Suspense fallback={null}>{obj}</Suspense>
+        </Turntable>
+      </group>
+      <mesh position={[0, 0.006, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.72, 0.77, 48]} />
+        <meshBasicMaterial ref={glow} color="#e0b874" transparent opacity={0.4} depthWrite={false} />
+      </mesh>
+      <primitive object={target} position={[0, 1.2, 0]} />
+      <spotLight position={[0, CEIL - 0.05, 0.4]} target={target} angle={0.36} penumbra={0.7} intensity={lit ? 26 : 18} distance={5} decay={1.4} color="#ffffff" />
     </group>
   )
 }
@@ -818,9 +1108,14 @@ function Rig({ selected, walk }) {
       const cy = c.big ? 1.55 : 1.6
       pos.set(-c.side * 0.85, 1.65, c.z + 0.7)
       look.set(c.side * (HALF + 0.25), cy, c.z)
+    } else if (TOP.some((x) => x.id === selected)) {
+      const tp = TOP.find((x) => x.id === selected)
+      const [x, z] = tp.pos
+      pos.set(x + Math.sin(tp.rot) * 2.3, 1.7, z + Math.cos(tp.rot) * 2.3)
+      look.set(x, 1.35, z)
     } else if (selected === 'rova') {
-      pos.set(0, 1.7, END_Z + 3.4)
-      look.set(0, 1.55, END_Z)
+      pos.set(0, 1.75, END_Z + 4.4)
+      look.set(0, 1.6, END_Z)
     } else {
       w.current = THREE.MathUtils.damp(w.current, walk.current, reduceMotion ? 30 : 4, dt)
       const z = walkZ(w.current)
@@ -836,10 +1131,10 @@ function Rig({ selected, walk }) {
 }
 
 function Scene({ projects, hovered, selected, onHover, onSelect }) {
-  const imgs = useTexture(['/residence/news.jpg', '/residence/rova-wordmark.jpg'], (ts) => {
+  const imgs = useTexture(['/residence/news.jpg'], (ts) => {
     ;(Array.isArray(ts) ? ts : [ts]).forEach((t) => (t.colorSpace = THREE.SRGBColorSpace))
   })
-  const tex = useMemo(() => ({ news: imgs[0], rova: imgs[1], paper: paperTex(), hand: handTex(), backlight: backlightTex() }), [imgs])
+  const tex = useMemo(() => ({ news: imgs[0], paper: paperTex(), hand: handTex(), backlight: backlightTex() }), [imgs])
   const m = useMemo(() => {
     const chevron = chevronTex()
     chevron.repeat.set(1, LEN / (HALF * 2))
@@ -850,7 +1145,12 @@ function Scene({ projects, hovered, selected, onHover, onSelect }) {
       ceiling: new THREE.MeshStandardMaterial({ color: '#e9e1d3', roughness: 0.9 }),
       coffer: new THREE.MeshStandardMaterial({ color: '#f5eee2', emissive: '#f5e6cc', emissiveIntensity: 0.25, roughness: 0.9 }),
       led: new THREE.MeshBasicMaterial({ color: '#ffd9a0', toneMapped: false }),
-      globe: new THREE.MeshStandardMaterial({ color: '#fff1d6', emissive: '#ffd59a', emissiveIntensity: 2.2, toneMapped: false }),
+      globeWhite: new THREE.MeshStandardMaterial({ color: '#ffffff', emissive: '#ffffff', emissiveIntensity: 2.5, toneMapped: false }),
+      chrome: new THREE.MeshStandardMaterial({ color: '#f2f2f4', metalness: 1, roughness: 0.08 }),
+      crystal: new THREE.MeshPhysicalMaterial({ color: '#ffffff', metalness: 0.2, roughness: 0, clearcoat: 1, emissive: '#e8eeff', emissiveIntensity: 0.55, envMapIntensity: 2.5 }),
+      pedestalGlass: new THREE.MeshPhysicalMaterial({ color: '#dfe8ee', metalness: 0, roughness: 0.04, transparent: true, opacity: 0.22, clearcoat: 1, depthWrite: false }),
+      ivoryPolished: new THREE.MeshPhysicalMaterial({ color: '#f1e7d6', roughness: 0.15, clearcoat: 1, metalness: 0.1 }),
+      velvet: new THREE.MeshStandardMaterial({ color: '#6e1219', roughness: 0.85 }),
       caseSide: new THREE.MeshStandardMaterial({ color: '#3a2a1c', roughness: 0.7 }),
       glass: new THREE.MeshStandardMaterial({ color: '#ffffff', transparent: true, opacity: 0.06, roughness: 0.02, metalness: 1, depthWrite: false }),
       plinth: new THREE.MeshStandardMaterial({ color: '#1c1d1f', roughness: 0.5, metalness: 0.4 }),
@@ -873,11 +1173,12 @@ function Scene({ projects, hovered, selected, onHover, onSelect }) {
   return (
     <>
       <Corridor m={m} />
-      <Pendants m={m} />
+      <Chandelier m={m} />
       <Gold m={m} />
       <Cash m={m} />
       {CASES.map((c) => pick(c.id) && <Case key={c.id} c={c} project={pick(c.id)} hovered={hovered} selected={selected} onHover={onHover} onSelect={onSelect} m={m} tex={tex} />)}
-      <RovaEnd project={pick('rova')} hovered={hovered} selected={selected} onHover={onHover} onSelect={onSelect} m={m} tex={tex} />
+      {TOP.map((tp) => pick(tp.id) && <Tower key={tp.id} top={tp} project={pick(tp.id)} hovered={hovered} selected={selected} onHover={onHover} onSelect={onSelect} m={m} />)}
+      <RovaEnd project={pick('rova')} hovered={hovered} selected={selected} onHover={onHover} onSelect={onSelect} m={m} />
     </>
   )
 }
@@ -886,7 +1187,7 @@ function Scene({ projects, hovered, selected, onHover, onSelect }) {
 function walkOf(id) {
   const c = CASES.find((x) => x.id === id)
   if (c) return walkFor(c.z + 2.4)
-  if (id === 'rova') return 1
+  if (id === 'rova' || TOP.some((x) => x.id === id)) return 1
   return null
 }
 

@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowUpRight, Github, Image as ImageIcon, X } from 'lucide-react'
-import { projects, vaultBoxed, vaultDisplays, vaultFeatured } from '../data/projects.js'
+import { projects, vaultBoxed, vaultDisplays, vaultFeatured, vaultRightWall } from '../data/projects.js'
 import { Chips, Kicker, Metrics, SectionLabel } from './bits.jsx'
 
 const Motion = motion
@@ -559,6 +559,7 @@ function ExhibitRow({ d, onProject, setHovered }) {
   )
 }
 
+const TOP_THREE = { rova: '01', vouch: '02', lapzero: '03' }
 const featuredDisplays = displays.filter((d) => vaultFeatured.includes(d.p.id))
 const boxedDisplays = displays.filter((d) => vaultBoxed.includes(d.p.id))
 
@@ -572,6 +573,8 @@ function Vault3D({ project, onProject, onClose, closeRef }) {
   const hov = displays.find((d) => d.p.id === hovered)
   const boxed = sel && vaultBoxed.includes(sel.p.id)
   const panel = Boolean(sel) || listOpen
+  // a case on the right wall gets its panel on the left, so the case stays in view
+  const onLeft = Boolean(sel) && vaultRightWall.includes(sel.p.id)
 
   if (fileOpen && sel)
     return <Inside project={project} onProject={(id) => (id ? onProject(id) : setFileOpen(false))} onClose={onClose} closeRef={closeRef} />
@@ -605,19 +608,19 @@ function Vault3D({ project, onProject, onClose, closeRef }) {
             </div>
           )}
           <p className="label-mono rounded-full border border-line bg-charcoal/80 px-4 py-2 text-[10px] text-stone backdrop-blur-md">
-            {sel ? 'Esc, scroll or click the floor to step back' : hov ? `${hov.p.name} · ${hov.p.kind}` : 'Scroll or ↑ ↓ to walk the hall · click a case to look closer'}
+            {sel ? 'Drag the piece to turn it · Esc, scroll or click the floor to step back' : hov ? `${hov.p.name} · ${hov.p.kind}` : 'Scroll or ↑ ↓ to walk the hall · click a case to look closer'}
           </p>
         </div>
 
         <AnimatePresence>
           {panel && (
             <Motion.aside
-              key="panel"
-              initial={{ x: 40, opacity: 0 }}
+              key={onLeft ? 'panel-left' : 'panel-right'}
+              initial={{ x: onLeft ? -40 : 40, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 40, opacity: 0 }}
+              exit={{ x: onLeft ? -40 : 40, opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
-              className="panel-scroll absolute inset-y-0 right-0 w-full max-w-[400px] overflow-y-auto border-l border-line bg-[#111214]/95 p-6 backdrop-blur-md"
+              className={`panel-scroll absolute inset-y-0 w-full max-w-[400px] overflow-y-auto bg-[#111214]/95 p-6 backdrop-blur-md ${onLeft ? 'left-0 border-r border-line' : 'right-0 border-l border-line'}`}
             >
               <AnimatePresence mode="wait">
                 {sel ? (
@@ -626,7 +629,7 @@ function Vault3D({ project, onProject, onClose, closeRef }) {
                       ← Back to the hall
                     </button>
                     <Kicker>
-                      {sel.p.id === 'rova' ? 'The centrepiece' : boxed ? 'Small case' : 'Exhibit'} {sel.n} · {sel.p.kind}
+                      {TOP_THREE[sel.p.id] ? `Top three · Nº ${TOP_THREE[sel.p.id]}` : boxed ? `Small case ${sel.n}` : `Exhibit ${sel.n}`} · {sel.p.kind}
                     </Kicker>
                     <h2 className="font-serif text-[44px] leading-[0.95] text-ivory">{sel.p.name}</h2>
                     <span className="self-start rounded-full border border-brass/40 px-2.5 py-0.5 font-mono text-[10.5px] text-brass-2">

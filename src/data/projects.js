@@ -215,5 +215,7 @@ export const vaultDisplays = ['rova', 'vouch', 'lapzero', 'heston', 'codegraphra
 // projects, and smaller cases near the door for the rest.
 export const vaultFeatured = ['rova', 'vouch', 'lapzero', 'heston', 'codegraphrag', 'news', 'asl']
 export const vaultBoxed = ['ict', 'automl', 'padlock', 'invasion']
+// Cases on the right-hand wall: their details panel opens on the left so it never covers them.
+export const vaultRightWall = ['lapzero', 'heston', 'news', 'padlock', 'invasion']
 
 
