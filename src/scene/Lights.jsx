@@ -8,8 +8,9 @@ import * as THREE from 'three'
 const ROOM_LIGHTS = {
   foyer: [{ p: [0, 2.8, 6.5], i: 9 }],
   study: [{ p: [-8.6, 2.6, 4.6], i: 11 }],
-  workshop: [{ p: [-8.4, 2.9, -4.6], i: 14, d: 11 }],
-  lounge: [{ p: [8, 2.9, 4.2], i: 13, d: 10 }, { p: [8, 2.9, -5.2], i: 10, d: 9 }],
+  dining: [{ p: [-8.2, 2.8, -4.4], i: 11, d: 9 }],
+  garage: [{ p: [16, 3.0, -4.6], i: 14, d: 11 }, { p: [16, 3.0, 4.6], i: 14, d: 11 }],
+  lounge: [{ p: [8, 2.9, 4.2], i: 13, d: 10 }, { p: [8, 2.9, -4.6], i: 9, d: 9 }],
   core: [{ p: [0, 3, 0.5], i: 7 }],
 }
 
@@ -48,15 +49,15 @@ export default function Lights({ activeRoom, hoveredRoom }) {
       <hemisphereLight args={['#5b6372', '#2a2118', 0.55]} />
       <ambientLight intensity={0.18} color="#f3e6d2" />
       <directionalLight
-        position={[-18, 28, -14]}
+        position={[-14, 30, -14]}
         intensity={0.9}
         color="#c9d4e4"
         castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-camera-left={-17}
-        shadow-camera-right={17}
-        shadow-camera-top={17}
-        shadow-camera-bottom={-17}
+        shadow-mapSize={[1536, 1536]}
+        shadow-camera-left={-22}
+        shadow-camera-right={22}
+        shadow-camera-top={20}
+        shadow-camera-bottom={-20}
         shadow-camera-near={1}
         shadow-camera-far={80}
         shadow-bias={-0.0004}

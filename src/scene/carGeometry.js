@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 // Side profile of a low coupe, extruded across its width. Nose points to -x.
-// Used by the garage car in the Workshop and by its close-up model.
+// Used by the car on the Garage lift and by its close-up model.
 export function carBodyGeometry({ length = 3.6, width = 1.6, height = 1.2 } = {}) {
   const L = length / 2.4
   const H = height / 0.8

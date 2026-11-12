@@ -2,7 +2,7 @@
 // (the entrance is on the south face, closest to the default camera).
 // Every room's bounds feed the 3D scene, the SVG floor plan and the camera rig.
 
-export const BUILDING = { minX: -12, maxX: 12, minZ: -9, maxZ: 9, wallHeight: 3.4 }
+export const BUILDING = { minX: -12, maxX: 20, minZ: -9, maxZ: 9, wallHeight: 3.4 }
 
 export const rooms = [
   {
@@ -22,12 +22,12 @@ export const rooms = [
     bounds: { minX: -12, maxX: -4, minZ: 1, maxZ: 9 },
   },
   {
-    id: 'workshop',
+    id: 'garage',
     number: '03',
-    name: 'Workshop',
+    name: 'Garage',
     kicker: 'Experience',
     purpose: 'Where I’ve worked',
-    bounds: { minX: -12, maxX: -4, minZ: -9, maxZ: 1 },
+    bounds: { minX: 12, maxX: 20, minZ: -9, maxZ: 9 },
   },
   {
     id: 'vault',
@@ -44,6 +44,14 @@ export const rooms = [
     kicker: 'Personal & contact',
     purpose: 'The person behind it',
     bounds: { minX: 4, maxX: 12, minZ: -9, maxZ: 9 },
+  },
+  {
+    id: 'dining',
+    number: '06',
+    name: 'Dining',
+    kicker: 'Kitchen & dining',
+    purpose: 'Where the cooking happens',
+    bounds: { minX: -12, maxX: -4, minZ: -9, maxZ: 1 },
   },
 ]
 

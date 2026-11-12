@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
-import { roomById, roomCenter, roomSize } from '../data/rooms.js'
+import { BUILDING, roomById, roomCenter, roomSize } from '../data/rooms.js'
 
 // Narrow-lens perspective camera: reads almost isometric up close (an
 // architectural presentation), while the city behind still recedes.
@@ -30,18 +30,18 @@ export default function CameraRig({ room, intro, panelWidth }) {
   const goal = useRef({ target: new THREE.Vector3(), dist: 100, dir: dirFrom(AZIMUTH, POLAR) })
 
   const overviewDist = useMemo(() => {
-    const [pw, ph] = projected(25, 19, 4)
+    const [pw, ph] = projected(BUILDING.maxX - BUILDING.minX + 1.2, BUILDING.maxZ - BUILDING.minZ + 1.2, 4)
     return fitDistance(pw * 1.1, ph * 1.28, size.width, size.height)
   }, [size])
 
   useEffect(() => {
     const g = goal.current
     if (intro) {
-      g.target.set(0, -4, 0)
+      g.target.set((BUILDING.minX + BUILDING.maxX) / 2, -4, 0)
       g.dist = overviewDist * 1.9
       g.dir = dirFrom(AZIMUTH - 0.3, POLAR - 0.25)
     } else if (!room) {
-      g.target.set(0, 0, 0.6)
+      g.target.set((BUILDING.minX + BUILDING.maxX) / 2, 0, 0.6)
       g.dist = overviewDist
       g.dir = dirFrom(AZIMUTH, POLAR)
     } else {

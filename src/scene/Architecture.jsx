@@ -11,9 +11,10 @@ const T = 0.16
 // Interior partitions. `fadeFor` lists the rooms this wall would hide from the
 // default camera (it sits on their east or south edge), so it fades when one is open.
 const interiorWalls = [
-  { id: 'w-west-core', axis: 'z', at: -4, from: -9, to: 9, openings: [[-2.4, 0.4], [1.6, 3.6]], fadeFor: ['study', 'workshop'] },
+  { id: 'w-west-core', axis: 'z', at: -4, from: -9, to: 9, openings: [[-2.4, 0.4], [1.6, 3.6]], fadeFor: ['study', 'dining'] },
   { id: 'w-east-core', axis: 'z', at: 4, from: -9, to: 9, openings: [[-2, 3]], fadeFor: ['foyer', 'vault'] },
-  { id: 'w-study-workshop', axis: 'x', at: 1, from: -12, to: -4, openings: [], fadeFor: ['workshop'] },
+  { id: 'w-study-dining', axis: 'x', at: 1, from: -12, to: -4, openings: [], fadeFor: ['dining'] },
+  { id: 'w-lounge-garage', axis: 'z', at: 12, from: -9, to: 9, openings: [[-1.3, 1.3]], fadeFor: ['lounge'] },
   { id: 'w-gallery', axis: 'x', at: -3, from: -4, to: 4, openings: [[-2, 2]], fadeFor: ['vault'] },
   { id: 'w-foyer', axis: 'x', at: 4, from: -4, to: 4, openings: [[-2.4, 2.4]], fadeFor: [] },
 ]
@@ -145,22 +146,22 @@ function Ground({ mats }) {
   }, [mats])
   return (
     <group>
-      <mesh position={[0, -0.3, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow material={groundMat}>
+      <mesh position={[4, -0.3, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow material={groundMat}>
         <circleGeometry args={[70, 64]} />
       </mesh>
       {/* plinth the building sits on */}
-      <Box p={[0, -0.3, 0]} s={[25.2, 0.3, 19.2]} m={mats.slab} />
+      <Box p={[4, -0.3, 0]} s={[33.2, 0.3, 19.2]} m={mats.slab} />
       {/* forecourt paving and entrance steps */}
       <Box p={[0, -0.3, 11.2]} s={[6, 0.02, 3.2]} m={mats.stone} cast={false} />
       <Box p={[0, -0.3, 9.85]} s={[3.6, 0.2, 0.5]} m={mats.stone} />
       <Box p={[0, -0.3, 9.7]} s={[3.6, 0.3, 0.2]} m={mats.stone} />
-      {/* driveway out of the garage door on the west side */}
-      <Box p={[-15.6, -0.3, -2.25]} s={[6.8, 0.3, 4.2]} m={mats.stone} />
-      {[-3.9, -0.6].map((z) => (
-        <Box key={z} p={[-15.6, 0.0, z]} s={[6.8, 0.012, 0.08]} m={mats.wallCap} cast={false} />
+      {/* driveway from the garage door on the south side, beside the entrance */}
+      <Box p={[16, -0.3, 11.6]} s={[5.4, 0.3, 4.6]} m={mats.stone} />
+      {[13.75, 18.25].map((x) => (
+        <Box key={x} p={[x, 0.0, 11.6]} s={[0.08, 0.012, 4.6]} m={mats.wallCap} cast={false} />
       ))}
-      <mesh position={[-20.2, -0.15, -2.25]} rotation={[0, 0, -0.12]} receiveShadow material={mats.stone}>
-        <boxGeometry args={[2.6, 0.04, 4.2]} />
+      <mesh position={[16, -0.16, 15.1]} rotation={[0.13, 0, 0]} receiveShadow material={mats.stone}>
+        <boxGeometry args={[5.4, 0.04, 2.6]} />
       </mesh>
       {/* low planters flanking the entrance */}
       {[-3.6, 3.6].map((x) => (
@@ -177,7 +178,8 @@ const floors = [
   { b: [-4, 4, 4, 9], m: 'polished' },
   { b: [-4, 4, -3, 4], m: 'polished' },
   { b: [-12, -4, 1, 9], m: 'darkFloor' },
-  { b: [-12, -4, -9, 1], m: 'concreteFloor' },
+  { b: [-12, -4, -9, 1], m: 'oakFloor' },
+  { b: [12, 20, -9, 9], m: 'concreteFloor' },
   { b: [-4, 4, -9, -3], m: 'polished' },
   { b: [4, 12, -9, 9], m: 'oakFloor' },
 ]
@@ -192,10 +194,17 @@ export default function Architecture({ mats, activeRoom }) {
       {interiorWalls.map((w) => (
         <WallRun key={w.id} wall={w} mats={mats} activeRoom={activeRoom} />
       ))}
-      <GlazedFacade axis="x" at={-9} from={-12} to={12} piers={[-12, -8, -4, 0, 4, 8, 12]} mats={mats} />
-      <GlazedFacade axis="z" at={-12} from={-9} to={9} piers={[-9, -4.5, 0, 4.5, 9]} mats={mats} doors={[[-4.5, 0]]} />
-      <OpenFacade axis="x" at={9} from={-12} to={12} gaps={[[-1.3, 1.3]]} mats={mats} />
-      <OpenFacade axis="z" at={12} from={-9} to={9} mats={mats} />
+      <GlazedFacade axis="x" at={-9} from={-12} to={20} piers={[-12, -8, -4, 0, 4, 8, 12, 16, 20]} mats={mats} />
+      <GlazedFacade axis="z" at={-12} from={-9} to={9} piers={[-9, -4.5, 0, 4.5, 9]} mats={mats} />
+      <OpenFacade axis="x" at={9} from={-12} to={20} gaps={[[-1.3, 1.3], [13.3, 18.7]]} mats={mats} />
+      <OpenFacade axis="z" at={20} from={-9} to={9} mats={mats} />
+      {/* Garage: a roll-up door on the south side, raised most of the way */}
+      <Box p={[13.25, 0, 9]} s={[0.2, H, 0.35]} m={mats.wall} />
+      <Box p={[18.75, 0, 9]} s={[0.2, H, 0.35]} m={mats.wall} />
+      <Box p={[16, H - 0.55, 9.05]} s={[5.7, 0.55, 0.45]} m={mats.blackMatte} />
+      {[0, 1, 2].map((i) => (
+        <Box key={i} p={[16, H - 0.55 - (i + 1) * 0.2, 9]} s={[5.3, 0.19, 0.05]} m={i % 2 ? mats.steel : mats.stone} />
+      ))}
       {/* Entrance: steel portal and a walnut pivot door left ajar */}
       <Box p={[-1.35, 0, 9]} s={[0.12, 3, 0.3]} m={mats.steel} />
       <Box p={[1.35, 0, 9]} s={[0.12, 3, 0.3]} m={mats.steel} />

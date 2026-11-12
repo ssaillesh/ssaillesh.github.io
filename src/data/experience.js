@@ -1,4 +1,4 @@
-// Workshop content. Every responsibility and result below appears in the PDF résumé
+// Garage content. Every responsibility and result below appears in the PDF résumé
 // or the previous site's experience data. Do not add metrics that are not in either.
 
 export const experience = [

@@ -1,7 +1,7 @@
 # ssaillesh.github.io — The Private Residence
 
 Personal portfolio of Saillesh Somasundaram, built as an interactive architectural model:
-a converted-warehouse residence at ground level with five rooms around a central core, each one part of the story.
+a converted-warehouse residence at ground level with six rooms around a central core, plus a garage wing, each one part of the story.
 
 Live: https://ssaillesh.github.io/
 
@@ -9,9 +9,10 @@ Live: https://ssaillesh.github.io/
 | --- | --- | --- |
 | 01 Foyer | Introduction | A sealed envelope with a short intro, running shoes |
 | 02 Study | Education & awards | Degree on the wall, a lit display cabinet (opens the Cabinet view of every award), résumé on the desk, textbooks, microscope |
-| 03 Workshop | Experience | A working garage with a roll-up door and driveway: UWAFT autonomous car + lidar bench, Symcor server rack, OmniaBio test-tube cart, PepsiCo clipboard and chip pallet, tool chest |
-| 04 Vault | Projects | A bank vault signed PROJECTS; unlocking it opens a secure-storage wall of displays, one per GitHub project |
-| 05 Lounge | Personal & contact | Scale car, dumbbells, cast-iron pan, bicycle, photographs, rotary phone |
+| 03 Garage | Experience | East wing with a south roll-up door and driveway: UWAFT autonomous car on a two-post lift + lidar bench, Symcor server rack, OmniaBio test tubes, PepsiCo clipboard and chip pallet, tool chest, training corner (bike, dumbbells), hangout corner (couch, fridge, neon SM) |
+| 04 Vault | Projects | A bank vault signed PROJECTS; a 3D unlock opens a secure wall of displays, one per GitHub project |
+| 05 Lounge | Personal & contact | Fire, sofa and scale car, photographs, rotary phone, drinks cabinet |
+| 06 Dining | Kitchen & dining | Kitchen run, marble island with the cast-iron pan, dining table for six |
 
 ## Stack
 
@@ -30,7 +31,7 @@ src/
     artifacts.js   every object in the house: what it is, where it is, what it opens
     inspect.js     close-up copy, derived from artifacts.js
     lounge.js      interests and photos
-    rooms.js       floor plan: room ids and bounds in metres
+    rooms.js       floor plan: footprint, room ids and bounds in metres
   scene/           the 3D residence (lazy-loaded chunk)
     Residence.jsx  canvas and room hit areas (hover lights a room, no floating labels)
     Architecture.jsx  ground, plinth, walls (fade when they block the open room), glazing

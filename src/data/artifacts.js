@@ -15,19 +15,19 @@ export const artifacts = [
   { id: 'coursework', room: 'study', object: 'Five well-used textbooks', where: 'Bookshelf', kind: 'coursework' },
   { id: 'specialization', room: 'study', object: 'A microscope', where: 'Side table, reading corner', kind: 'specialization' },
 
-  // 03 Workshop
-  { id: 'symcor', room: 'workshop', object: 'A server rack and a security key', where: 'Against the north glass', kind: 'experience', ref: 'symcor' },
-  { id: 'omniabio', room: 'workshop', object: 'A test-tube rack', where: 'On the lab cart', kind: 'experience', ref: 'omniabio' },
-  { id: 'pepsico-ops', room: 'workshop', object: 'A bag of chips', where: 'On the pallet', kind: 'experience', ref: 'pepsico-ops' },
-  { id: 'pepsico-data', room: 'workshop', object: 'A clipboard of SQL and charts', where: 'Standing desk', kind: 'experience', ref: 'pepsico-data' },
-  { id: 'uwaft', room: 'workshop', object: 'An autonomous car with a lidar mount', where: 'Garage bay', kind: 'experience', ref: 'uwaft' },
-  { id: 'toolkit', room: 'workshop', object: 'A tool chest', where: 'By the north glass', kind: 'toolkit' },
+  // 03 Garage
+  { id: 'symcor', room: 'garage', object: 'A server rack and a security key', where: 'Bench row, north glass', kind: 'experience', ref: 'symcor' },
+  { id: 'omniabio', room: 'garage', object: 'A test-tube rack', where: 'Lab cart, north glass', kind: 'experience', ref: 'omniabio' },
+  { id: 'pepsico-ops', room: 'garage', object: 'A bag of chips', where: 'On the pallet', kind: 'experience', ref: 'pepsico-ops' },
+  { id: 'pepsico-data', room: 'garage', object: 'A clipboard of SQL and charts', where: 'Standing desk', kind: 'experience', ref: 'pepsico-data' },
+  { id: 'uwaft', room: 'garage', object: 'An autonomous car with a lidar mount', where: 'Up on the lift', kind: 'experience', ref: 'uwaft' },
+  { id: 'toolkit', room: 'garage', object: 'A tool chest', where: 'By the north glass', kind: 'toolkit' },
 
   // 05 Lounge
   { id: 'cars', room: 'lounge', object: 'A scale model car', where: 'Coffee table', kind: 'interest', ref: 'cars' },
-  { id: 'gym', room: 'lounge', object: 'A dumbbell rack', where: 'By the windows', kind: 'interest', ref: 'gym' },
-  { id: 'cooking', room: 'lounge', object: 'A cast-iron pan', where: 'Kitchen island', kind: 'interest', ref: 'cooking' },
-  { id: 'biking', room: 'lounge', object: 'A bicycle', where: 'By the east window', kind: 'interest', ref: 'biking' },
+  { id: 'gym', room: 'garage', object: 'A dumbbell rack', where: 'Training corner', kind: 'interest', ref: 'gym' },
+  { id: 'cooking', room: 'dining', object: 'A cast-iron pan', where: 'Kitchen island', kind: 'interest', ref: 'cooking' },
+  { id: 'biking', room: 'garage', object: 'A bicycle', where: 'On the wall, training corner', kind: 'interest', ref: 'biking' },
   { id: 'exploring', room: 'lounge', object: 'Two photographs', where: 'Credenza', kind: 'interest', ref: 'exploring' },
   { id: 'contact', room: 'lounge', object: 'A rotary phone', where: 'Side table by the sofa', kind: 'contact' },
 ]
@@ -39,9 +39,10 @@ export const artifactsIn = (room) => artifacts.filter((a) => a.room === room)
 export const roomIntro = {
   foyer: 'The way in. Something has been left for you on the console.',
   study: 'Books, a desk by the windows, and a lit cabinet on the north wall.',
-  workshop: 'A working garage: a car in the bay, a roll-up door onto the driveway, and benches along the glass.',
+  garage: 'The big room. A car up on the lift, benches along the glass, a training corner and somewhere to sit.',
+  dining: 'Kitchen and dining. Something is on the stove.',
   vault: 'A bank vault with PROJECTS over the door. It has to be unlocked first.',
-  lounge: 'Where the day ends. Look around.',
+  lounge: 'Where the day ends: the fire, the sofa, a few photographs.',
 }
 
 // Everything kept in the Study's display cabinet, in compartment order.

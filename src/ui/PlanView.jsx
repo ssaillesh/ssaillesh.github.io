@@ -9,7 +9,7 @@ import VaultPage from './VaultPage.jsx'
 
 const Motion = motion
 
-// Mobile / no-WebGL / "plain view" layout: the same five rooms read as one
+// Mobile / no-WebGL / "plain view" layout: the same six rooms read as one
 // editorial page, with the floor plan as the map and a sticky room bar.
 export default function PlanView({ route, go }) {
   const [items, setItems] = useState({})
@@ -68,7 +68,7 @@ export default function PlanView({ route, go }) {
           {profile.motto}
         </Motion.p>
         <p className="mt-5 max-w-[34rem] text-[15.5px] leading-relaxed text-stone">
-          A private residence of five rooms, one for each part of the story. Tap a room on the plan, or scroll through them in order.
+          A private residence of six rooms, one for each part of the story. Tap a room on the plan, or scroll through them in order.
         </p>
         <div className="mt-8 rounded-[4px] border border-line bg-char-2 p-3">
           <FloorPlan active={current} onSelect={scrollTo} className="w-full" />

@@ -50,7 +50,7 @@ export default function ResidenceView({ route, go, onFail }) {
       : { eyebrow: artifactById[hover.id]?.where || hover.sub, text: artifactById[hover.id]?.object || hover.label }
     : route.room
       ? { eyebrow: roomById[route.room].name, text: 'Glowing objects can be picked up · click one' }
-      : { eyebrow: 'Five rooms', text: 'Hover a room to light it · click to enter' }
+      : { eyebrow: 'Six rooms', text: 'Hover a room to light it · click to enter' }
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-charcoal">

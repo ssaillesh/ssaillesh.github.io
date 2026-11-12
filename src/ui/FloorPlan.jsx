@@ -10,7 +10,7 @@ export default function FloorPlan({ active, onSelect, className = '', showLabels
   const tz = (z) => z - BUILDING.minZ + pad
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className={className} role="group" aria-label="Floor plan of the residence">
-      <rect x={tx(BUILDING.minX)} y={tz(BUILDING.minZ)} width={24} height={18} fill="none" stroke="#c6a96c" strokeWidth="0.18" />
+      <rect x={tx(BUILDING.minX)} y={tz(BUILDING.minZ)} width={BUILDING.maxX - BUILDING.minX} height={BUILDING.maxZ - BUILDING.minZ} fill="none" stroke="#c6a96c" strokeWidth="0.18" />
       <rect
         x={tx(core.bounds.minX)}
         y={tz(core.bounds.minZ)}
