@@ -7,15 +7,15 @@ import { labelTexture } from '../inspect/textures.js'
 
 const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-// A walnut display cabinet seen from the front: 3 columns × 2 rows of lit
+// A walnut display cabinet seen from the front: 2 columns × 2 rows of lit
 // glass compartments. Each compartment holds the award's close-up model.
-const COLS = 3
+const COLS = 2
 const CELL_W = 2.1
 const CELL_H = 2.05
 const cellPos = (i) => {
   const c = i % COLS
   const r = Math.floor(i / COLS)
-  return [(c - 1) * CELL_W, (r === 0 ? 1 : -1) * (CELL_H / 2), 0]
+  return [(c - (COLS - 1) / 2) * CELL_W, (r === 0 ? 1 : -1) * (CELL_H / 2), 0]
 }
 
 // A gentle sway rather than a full spin, so medals and frames keep their faces to the visitor.
@@ -107,8 +107,8 @@ function Carcass({ mats }) {
           <boxGeometry args={[0.14, H, 1.45]} />
         </mesh>
       ))}
-      {[-1, 1].map((s) => (
-        <mesh key={`v2${s}`} position={[s * (CELL_W / 2), 0, 0]} material={mats.walnut}>
+      {Array.from({ length: COLS - 1 }, (_, k) => (k + 1 - COLS / 2) * CELL_W).map((x) => (
+        <mesh key={`v2${x}`} position={[x, 0, 0]} material={mats.walnut}>
           <boxGeometry args={[0.06, H - 0.2, 1.4]} />
         </mesh>
       ))}

@@ -23,7 +23,6 @@ import {
   Clipboard,
   AutonomousCar,
   SimRig,
-  ArcadeCabinet,
 } from './models.jsx'
 
 // Registry: route item id -> close-up model (see src/data/inspect.js for copy).
@@ -43,7 +42,6 @@ export const INSPECT = {
   intro: { Model: Envelope },
   resume: { Model: ResumeFolio },
   cars: { Model: SimRig },
-  arcade: { Model: ArcadeCabinet },
   gym: { Model: Dumbbell },
   cooking: { Model: CastIronPan },
   biking: { Model: Bicycle },

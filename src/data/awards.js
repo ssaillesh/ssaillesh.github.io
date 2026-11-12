@@ -1,4 +1,4 @@
-// Awards, shown around the Study (achievement shelf and desk). As given by the owner.
+// Awards, as given by the owner. Academic ones sit in the Study's cabinet; the robotics ones are in the Lab.
 // `display` is how each one is shown in the 3D room.
 
 export const awards = [

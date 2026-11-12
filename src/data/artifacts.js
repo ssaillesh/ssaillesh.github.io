@@ -24,13 +24,16 @@ export const artifacts = [
   { id: 'toolkit', room: 'garage', object: 'A tool chest', where: 'West wall, by the pegboard', kind: 'toolkit' },
 
   // 05 Den
-  { id: 'cars', room: 'lounge', object: 'A racing sim rig', where: 'Games corner', kind: 'interest', ref: 'cars' },
   { id: 'gym', room: 'garage', object: 'A dumbbell rack', where: 'Training corner', kind: 'interest', ref: 'gym' },
-  { id: 'cooking', room: 'dining', object: 'A cast-iron pan', where: 'Kitchen island', kind: 'interest', ref: 'cooking' },
+  { id: 'cooking', room: 'lounge', object: 'A cast-iron pan', where: 'Kitchen island', kind: 'interest', ref: 'cooking' },
+  { id: 'cars', room: 'garage', object: 'A racing sim rig', where: 'Hangout corner', kind: 'interest', ref: 'cars' },
   { id: 'biking', room: 'garage', object: 'A bicycle', where: 'On the wall, training corner', kind: 'interest', ref: 'biking' },
-  { id: 'exploring', room: 'lounge', object: 'Two photographs', where: 'Credenza, between the two halves', kind: 'interest', ref: 'exploring' },
-  { id: 'arcade', room: 'lounge', object: 'An arcade cabinet', where: 'Games corner', kind: 'project', ref: 'invasion' },
+  { id: 'exploring', room: 'lounge', object: 'Two photographs', where: 'Credenza, between the theater and the kitchen', kind: 'interest', ref: 'exploring' },
   { id: 'contact', room: 'lounge', object: 'A rotary phone', where: 'Side table by the sofa', kind: 'contact' },
+
+  // 06 Lab
+  { id: 'robotics-second', room: 'lab', object: 'An autonomous competition robot', where: 'On the test table', kind: 'award', ref: 'robotics-second' },
+  { id: 'robotics-excellence', room: 'lab', object: 'A robotics trophy', where: 'Shelf on the west wall', kind: 'award', ref: 'robotics-excellence' },
 ]
 
 export const artifactById = Object.fromEntries(artifacts.map((a) => [a.id, a]))
@@ -40,18 +43,16 @@ export const artifactsIn = (room) => artifacts.filter((a) => a.room === room)
 export const roomIntro = {
   foyer: 'The way in. Something has been left for you on the console.',
   study: 'Books, a desk by the windows, and a lit cabinet on the north wall.',
-  garage: 'The big room. A car up on the lift, benches along the glass, a training corner and somewhere to sit.',
-  dining: 'Kitchen and dining. Something is on the stove.',
+  garage: 'The big room. A car up on the lift, benches along the glass, a training corner and a sim rig by the couch.',
+  lab: 'Benches under the glass, a robot arm mid-task and a printer at work. Something on the test table has competed.',
   vault: 'A bank vault with PROJECTS over the door. It has to be unlocked first.',
-  lounge: 'A home theater with a fire, and a games corner. Warm light, a little RGB.',
+  lounge: 'A home theater with a fire, and an open kitchen behind it. Something is on the stove.',
 }
 
 // Everything kept in the Study's display cabinet, in compartment order.
 export const cabinetItems = [
   { id: 'ideal', kind: 'award', ref: 'ideal' },
-  { id: 'robotics-excellence', kind: 'award', ref: 'robotics-excellence' },
   { id: 'physics', kind: 'award', ref: 'physics' },
-  { id: 'robotics-second', kind: 'award', ref: 'robotics-second' },
   { id: 'presidential', kind: 'honour', ref: 'presidential' },
   { id: 'distinction', kind: 'honour', ref: 'distinction' },
 ]

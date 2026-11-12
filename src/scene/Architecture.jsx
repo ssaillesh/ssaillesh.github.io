@@ -11,9 +11,9 @@ const T = 0.16
 // Interior partitions. `fadeFor` lists the rooms this wall would hide from the
 // default camera (it sits on their east or south edge), so it fades when one is open.
 const interiorWalls = [
-  { id: 'w-west-core', axis: 'z', at: -4, from: -9, to: 9, openings: [[-2.4, 0.4], [1.6, 3.6]], fadeFor: ['study', 'dining'] },
+  { id: 'w-west-core', axis: 'z', at: -4, from: -9, to: 9, openings: [[-2.4, 0.4], [1.6, 3.6]], fadeFor: ['study', 'lab'] },
   { id: 'w-east-core', axis: 'z', at: 4, from: -9, to: 9, openings: [[-2, 3]], fadeFor: ['foyer', 'vault'] },
-  { id: 'w-study-dining', axis: 'x', at: 1, from: -12, to: -4, openings: [], fadeFor: ['dining'] },
+  { id: 'w-study-lab', axis: 'x', at: 1, from: -12, to: -4, openings: [], fadeFor: ['lab'] },
   { id: 'w-lounge-garage', axis: 'z', at: 12, from: -9, to: 9, openings: [[-1.3, 1.3]], fadeFor: ['lounge'] },
   { id: 'w-gallery', axis: 'x', at: -3, from: -4, to: 4, openings: [[-2, 2]], fadeFor: ['vault'] },
   { id: 'w-foyer', axis: 'x', at: 4, from: -4, to: 4, openings: [[-2.4, 2.4]], fadeFor: [] },

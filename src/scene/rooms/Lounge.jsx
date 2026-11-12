@@ -1,14 +1,14 @@
 import { useMemo } from 'react'
 import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
-import { Box, Cyl, FloorLamp, Plant, Rug } from '../primitives.jsx'
+import { Box, Cyl, FloorLamp, Plant, Rug, Stool } from '../primitives.jsx'
 import { makeCarPrintTexture } from '../materials.js'
 import Interactive from '../Interactive.jsx'
 
 // ROOM 05, DEN: x[4, 12], z[-9, 9]. A home theater to the south (a big screen
-// over the linear fireplace, a front sofa and a raised row of recliners) and a
-// games corner to the north (PC battlestation, racing sim rig, arcade cabinet,
-// the drinks cabinet and armchairs). Warm light, with a little RGB by the games.
+// over the linear fireplace, a front sofa and a raised row of recliners) and an
+// open kitchen to the north (kitchen run under the glass, a marble island with
+// bar stools and the cast-iron pan, the drinks bar). Open plan, warm light.
 
 function Recliner({ p, m }) {
   return (
@@ -36,11 +36,7 @@ export default function Lounge({ mats, ctx }) {
       throw: new THREE.MeshStandardMaterial({ color: '#b8743f', roughness: 1 }),
       riser: new THREE.MeshStandardMaterial({ color: '#2a2320', roughness: 0.9 }),
       backlight: new THREE.MeshBasicMaterial({ color: '#ffb36b', transparent: true, opacity: 0.5, toneMapped: false }),
-      rgbPurple: new THREE.MeshStandardMaterial({ color: '#130a1a', emissive: '#8a5cff', emissiveIntensity: 2.2, toneMapped: false }),
       rgbCyan: new THREE.MeshStandardMaterial({ color: '#06161a', emissive: '#4fd6e8', emissiveIntensity: 2, toneMapped: false }),
-      monitor: new THREE.MeshStandardMaterial({ color: '#0b0d10', emissive: '#7fa8d8', emissiveIntensity: 0.6 }),
-      arcade: new THREE.MeshStandardMaterial({ color: '#1d1f4a', roughness: 0.5 }),
-      arcadeScreen: new THREE.MeshStandardMaterial({ color: '#05060a', emissive: '#7fcf98', emissiveIntensity: 0.9 }),
       popcorn: new THREE.MeshStandardMaterial({ color: '#a8261d', roughness: 0.45, metalness: 0.2 }),
       corn: new THREE.MeshStandardMaterial({ color: '#f5e3a8', roughness: 0.9 }),
       bottle: ['#5b3a2a', '#2f3b3a', '#7d6a4f', '#3a2e2a', '#8a7a62'].map((c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.2, metalness: 0.1 })),
@@ -122,37 +118,52 @@ export default function Lounge({ mats, ctx }) {
       <Plant p={[11.4, 0, 2.2]} mats={mats} scale={1.1} />
       <Plant p={[4.7, 0, 3.5]} mats={mats} scale={0.9} />
 
-      {/* ---------------- games ---------------- */}
-      <Rug p={[7.8, 0.02, -5.0]} s={[5.6, 6.6]} m={mats.rugWarm} />
-
-      {/* PC battlestation under the north glass */}
-      <Box p={[6.0, 0.74, -8.4]} s={[2.4, 0.05, 0.8]} m={mats.walnut} />
-      {[4.9, 7.1].map((x) => (
-        <Box key={x} p={[x, 0, -8.4]} s={[0.06, 0.74, 0.7]} m={mats.steel} />
+      {/* ---------------- open kitchen ---------------- */}
+      {/* kitchen run under the north glass: hob, oven, sink */}
+      <Box p={[8.0, 0, -8.45]} s={[6.2, 0.9, 0.65]} m={mats.walnut} />
+      <Box p={[8.0, 0.9, -8.45]} s={[6.24, 0.04, 0.69]} m={mats.marble} />
+      <Box p={[6.3, 0.94, -8.45]} s={[0.7, 0.01, 0.48]} m={mats.blackMatte} cast={false} />
+      {[6.1, 6.5].map((x) => (
+        <Cyl key={x} p={[x, 0.95, -8.45]} radius={0.09} h={0.005} m={mats.steel} cast={false} />
       ))}
-      {[[5.55, 0.25], [6.45, -0.25]].map(([x, r]) => (
-        <group key={x} position={[x, 0.79, -8.6]} rotation={[0, r, 0]}>
-          <Box p={[0, 0, 0]} s={[0.16, 0.02, 0.12]} m={mats.steel} />
-          <Box p={[0, 0, -0.02]} s={[0.03, 0.2, 0.03]} m={mats.steel} />
-          <Box p={[0, 0.18, 0]} s={[0.78, 0.44, 0.03]} m={mats.blackMatte} />
-          <Box p={[0, 0.2, 0.017]} s={[0.74, 0.4, 0.003]} m={m.monitor} cast={false} />
+      <Box p={[6.3, 0.15, -8.12]} s={[0.66, 0.55, 0.01]} m={mats.blackMatte} cast={false} />
+      <Box p={[6.3, 0.62, -8.11]} s={[0.5, 0.025, 0.02]} m={mats.steel} cast={false} />
+      <Box p={[9.4, 0.92, -8.45]} s={[0.62, 0.02, 0.44]} m={mats.steel} cast={false} />
+      <Box p={[9.4, 0.94, -8.68]} s={[0.04, 0.32, 0.04]} m={mats.steel} />
+      <Box p={[9.4, 1.24, -8.6]} s={[0.04, 0.04, 0.2]} m={mats.steel} />
+      {/* tall fridge and oven column on the garage wall */}
+      <Box p={[11.6, 0, -7.4]} s={[0.7, 2.3, 1.9]} m={mats.walnut} />
+      <Box p={[11.24, 1.2, -7.85]} s={[0.01, 0.6, 0.62]} m={mats.blackMatte} cast={false} />
+      <Box p={[11.24, 0.3, -6.9]} s={[0.02, 1.6, 0.02]} m={mats.brass} cast={false} />
+
+      {/* the island: marble waterfall, the pan on the hob, stools facing the theater */}
+      <Interactive {...it('cooking')} label="A cast-iron pan" sub="Pick up" ring={[8.0, -4.8, 1.9]}>
+        <Box p={[8.0, 0, -4.8]} s={[3.0, 0.9, 1.1]} m={mats.walnut} />
+        <Box p={[8.0, 0.9, -4.8]} s={[3.1, 0.06, 1.2]} m={mats.marble} />
+        {[-1, 1].map((s) => (
+          <Box key={s} p={[8.0 + s * 1.53, 0, -4.8]} s={[0.06, 0.9, 1.2]} m={mats.marble} />
+        ))}
+        <Box p={[7.3, 0.96, -4.85]} s={[0.62, 0.01, 0.5]} m={mats.blackMatte} cast={false} />
+        <Cyl p={[7.3, 0.97, -4.85]} radius={0.17} h={0.06} m={mats.blackMatte} />
+        <Box p={[7.65, 0.99, -4.85]} s={[0.4, 0.03, 0.05]} m={mats.walnut} />
+        <Box p={[8.6, 0.96, -4.7]} s={[0.5, 0.03, 0.32]} m={mats.walnut} />
+        <Cyl p={[9.1, 0.96, -4.9]} radius={0.14} h={0.1} m={mats.stone} />
+      </Interactive>
+      {[6.9, 7.65, 8.4, 9.15].map((x) => (
+        <Stool key={x} p={[x, 0, -3.95]} mats={mats} />
+      ))}
+      {/* three glass pendants over the island */}
+      {[7.1, 8.0, 8.9].map((x) => (
+        <group key={x}>
+          <Box p={[x, 2.25, -4.8]} s={[0.01, 1.15, 0.01]} m={mats.brass} cast={false} />
+          <mesh position={[x, 2.15, -4.8]}>
+            <sphereGeometry args={[0.13, 18, 12]} />
+            <meshStandardMaterial color="#fff3df" emissive="#ffd39a" emissiveIntensity={1.4} transparent opacity={0.9} />
+          </mesh>
         </group>
       ))}
-      <Box p={[5.99, 1.3, -8.72]} s={[1.9, 0.02, 0.02]} m={m.rgbPurple} cast={false} />
-      <Box p={[7.45, 0, -8.4]} s={[0.3, 0.75, 0.6]} m={mats.blackMatte} />
-      <Box p={[7.3, 0.1, -8.4]} s={[0.005, 0.5, 0.45]} m={m.rgbPurple} cast={false} />
-      <Box p={[6.0, 0.79, -8.15]} s={[0.7, 0.02, 0.22]} m={mats.blackMatte} />
-      {/* gaming chair */}
-      <group position={[6.0, 0, -7.4]} rotation={[0, Math.PI, 0]}>
-        <Cyl p={[0, 0, 0]} radius={0.3} h={0.04} m={mats.steel} />
-        <Cyl p={[0, 0.04, 0]} radius={0.04} h={0.4} m={mats.steel} />
-        <Box p={[0, 0.44, 0]} s={[0.56, 0.1, 0.55]} m={mats.blackMatte} />
-        <Box p={[0, 0.54, -0.25]} s={[0.56, 0.85, 0.1]} m={mats.blackMatte} />
-        <Box p={[0, 0.7, -0.19]} s={[0.4, 0.55, 0.01]} m={mats.carRed} cast={false} />
-      </group>
-      <pointLight position={[6.0, 1.6, -7.8]} intensity={2.5} distance={3.5} decay={1.6} color="#9a6cff" />
 
-      {/* drinks cabinet on the west wall with the car print above it */}
+      {/* drinks bar on the west wall with the car print above it */}
       <Box p={[4.35, 0, -4.2]} s={[0.55, 0.95, 2.8]} m={mats.walnut} />
       <Box p={[4.35, 0.95, -4.2]} s={[0.59, 0.03, 2.84]} m={mats.brass} />
       {[-5.1, -4.8, -4.5, -3.7, -3.4].map((z, i) => (
@@ -163,50 +174,8 @@ export default function Lounge({ mats, ctx }) {
         <planeGeometry args={[1.7, 1.0]} />
         <meshStandardMaterial map={carPrint} roughness={0.6} />
       </mesh>
-
-      {/* armchairs around a small table */}
-      {[[6.6, -4.3, 1.2], [6.6, -2.7, 1.9]].map(([x, z, r]) => (
-        <group key={z} position={[x, 0, z]} rotation={[0, r, 0]}>
-          <Box p={[0, 0, 0]} s={[0.9, 0.42, 0.85]} m={mats.leather} />
-          <Box p={[0, 0.42, -0.34]} s={[0.9, 0.5, 0.18]} m={mats.leather} />
-        </group>
-      ))}
-      <Cyl p={[7.5, 0, -3.5]} radius={0.3} h={0.5} m={mats.walnut} />
-
-      {/* racing sim rig: the cars artifact */}
-      <Interactive {...it('cars')} label="A racing sim rig" sub="Pick up" ring={[10.2, -4.6, 1.2]}>
-        <group position={[10.2, 0, -4.6]} rotation={[0, Math.PI / 2, 0]}>
-          <Box p={[0, 0, 0]} s={[0.7, 0.08, 1.7]} m={mats.steel} />
-          <Box p={[0, 0.08, 0.35]} s={[0.55, 0.32, 0.6]} m={mats.blackMatte} />
-          <Box p={[0, 0.4, 0.6]} s={[0.55, 0.62, 0.14]} m={mats.blackMatte} r={[-0.3, 0, 0]} />
-          <Box p={[0, 0.58, 0.63]} s={[0.4, 0.4, 0.01]} m={mats.carRed} r={[-0.3, 0, 0]} cast={false} />
-          <Box p={[0, 0.08, -0.45]} s={[0.08, 0.62, 0.08]} m={mats.steel} />
-          <mesh position={[0, 0.78, -0.42]} rotation={[0.35, 0, 0]} material={mats.blackMatte}>
-            <torusGeometry args={[0.16, 0.025, 10, 28]} />
-          </mesh>
-          <Box p={[0, 0.08, -0.75]} s={[0.4, 0.1, 0.2]} m={mats.blackMatte} r={[0.5, 0, 0]} />
-          <Box p={[0, 0.55, -1.25]} s={[1.3, 0.75, 0.04]} m={mats.blackMatte} />
-          <Box p={[0, 0.58, -1.225]} s={[1.24, 0.69, 0.004]} m={m.monitor} cast={false} />
-          <Box p={[0, 0, -1.25]} s={[0.1, 0.55, 0.1]} m={mats.steel} />
-        </group>
-      </Interactive>
-
-      {/* arcade cabinet in the corner: Invasion */}
-      <Interactive {...it('arcade')} label="An arcade cabinet" sub="Pick up" ring={[11.2, -8.2, 0.9]}>
-        <group position={[11.25, 0, -8.25]} rotation={[0, -0.6, 0]}>
-          <Box p={[0, 0, 0]} s={[0.75, 1.0, 0.7]} m={m.arcade} />
-          <Box p={[0, 1.0, -0.08]} s={[0.75, 0.8, 0.54]} m={m.arcade} />
-          <Box p={[0, 1.8, -0.02]} s={[0.75, 0.22, 0.66]} m={m.arcade} />
-          <Box p={[0, 1.83, 0.315]} s={[0.66, 0.16, 0.01]} m={m.rgbCyan} cast={false} />
-          <Box p={[0, 1.12, 0.2]} s={[0.6, 0.48, 0.01]} m={m.arcadeScreen} r={[-0.25, 0, 0]} cast={false} />
-          <Box p={[0, 0.98, 0.32]} s={[0.75, 0.05, 0.3]} m={mats.blackMatte} r={[0.3, 0, 0]} />
-          {[-0.18, 0.05, 0.16].map((x, i) => (
-            <Cyl key={x} p={[x, 1.02, 0.36]} radius={i ? 0.03 : 0.02} h={i ? 0.02 : 0.08} m={i ? mats.carRed : mats.blackMatte} />
-          ))}
-        </group>
-      </Interactive>
-      <pointLight position={[11.0, 1.8, -7.6]} intensity={2} distance={3} decay={1.6} color="#4fd6e8" />
-      <FloorLamp p={[9.0, 0, -7.6]} mats={mats} />
+      <Plant p={[4.7, 0, -8.3]} mats={mats} />
+      <FloorLamp p={[11.3, 0, -1.6]} mats={mats} />
     </group>
   )
 }

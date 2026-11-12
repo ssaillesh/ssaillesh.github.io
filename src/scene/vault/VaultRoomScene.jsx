@@ -1,6 +1,6 @@
 import { createContext, Suspense, useContext, useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Environment, Lightformer, Sparkles, useGLTF, useTexture } from '@react-three/drei'
+import { Environment, Lightformer, MeshReflectorMaterial, Sparkles, useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { labelTexture } from '../inspect/textures.js'
 import { ArcadeCabinet } from '../inspect/models.jsx'
@@ -113,49 +113,53 @@ const paperTex = () =>
   })
 
 
-// Chevron marble: black and white bands meeting in a V down the corridor, with brass seams.
-const chevronTex = () => {
-  const w = 512
-  const h = 512
+// Polished Nero marble: large dark slabs with soft white veining and thin brass seams.
+const slabTex = () => {
+  const w = 1024
+  const h = 1024
   const c = document.createElement('canvas')
   c.width = w
   c.height = h
   const g = c.getContext('2d')
-  const img = g.createImageData(w, h)
-  const band = 36
-  for (let y = 0; y < h; y++)
-    for (let x = 0; x < w; x++) {
-      const d = y + Math.abs(x - w / 2)
-      const k = Math.floor(d / band)
-      const f = (d % band) / band
-      const vein = 0.5 + 0.5 * Math.sin(x * 0.045 + y * 0.02 + Math.sin(y * 0.013 + x * 0.007) * 4)
-      let r
-      let gg
-      let b
-      if (f < 0.035 || Math.abs(x - w / 2) < 1.5) {
-        r = 198
-        gg = 169
-        b = 108
-      } else if (k % 2) {
-        const v = 226 + vein * 18
-        r = v
-        gg = v - 3
-        b = v - 9
-      } else {
-        const v = 20 + vein * 16
-        r = v
-        gg = v
-        b = v + 2
-      }
-      const i = (y * w + x) * 4
-      img.data[i] = r
-      img.data[i + 1] = gg
-      img.data[i + 2] = b
-      img.data[i + 3] = 255
+  g.fillStyle = '#121213'
+  g.fillRect(0, 0, w, h)
+  // cloudy depth
+  for (let i = 0; i < 40; i++) {
+    const x = (i * 211) % w
+    const y = (i * 137) % h
+    const r = 80 + ((i * 53) % 160)
+    const grd = g.createRadialGradient(x, y, 0, x, y, r)
+    grd.addColorStop(0, 'rgba(40,38,36,0.5)')
+    grd.addColorStop(1, 'rgba(40,38,36,0)')
+    g.fillStyle = grd
+    g.fillRect(x - r, y - r, r * 2, r * 2)
+  }
+  // veins
+  for (let i = 0; i < 9; i++) {
+    g.strokeStyle = `rgba(232,226,214,${0.05 + (i % 3) * 0.03})`
+    g.lineWidth = 0.5 + (i % 3) * 0.5
+    g.beginPath()
+    let x = (i * 241) % w
+    let y = 0
+    g.moveTo(x, y)
+    while (y < h) {
+      y += 40
+      x += Math.sin(i * 2.1 + y * 0.004) * 9 + (i % 2 ? 14 : -14)
+      g.lineTo(x, y)
     }
-  g.putImageData(img, 0, 0)
+    g.stroke()
+  }
+  // slab seams in brass
+  g.strokeStyle = 'rgba(198,169,108,0.55)'
+  g.lineWidth = 3
+  g.strokeRect(1.5, 1.5, w - 3, h - 3)
+  g.beginPath()
+  g.moveTo(w / 2, 0)
+  g.lineTo(w / 2, h)
+  g.stroke()
   const t = new THREE.CanvasTexture(c)
   t.colorSpace = THREE.SRGBColorSpace
+  t.wrapS = THREE.RepeatWrapping
   t.wrapT = THREE.RepeatWrapping
   t.anisotropy = 8
   return t
@@ -591,8 +595,22 @@ const MID = (DOOR_Z + END_Z) / 2
 function Corridor({ m }) {
   return (
     <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, MID]} material={m.chevron}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, MID]}>
         <planeGeometry args={[HALF * 2, LEN]} />
+        <MeshReflectorMaterial
+          map={m.slab}
+          blur={[300, 80]}
+          resolution={512}
+          mixBlur={1}
+          mixStrength={1.4}
+          mixContrast={1}
+          roughness={0.55}
+          metalness={0.35}
+          depthScale={0.8}
+          minDepthThreshold={0.4}
+          maxDepthThreshold={1.4}
+          color="#ffffff"
+        />
       </mesh>
       {/* walls behind the cases, the end wall and the ceiling */}
       {[-1, 1].map((s) => (
@@ -646,85 +664,29 @@ function Corridor({ m }) {
   )
 }
 
-// One big white crystal chandelier in the middle of the hall: tiers of hanging
-// crystal drops around a central stem, turning slowly so the facets catch the light.
-const CHANDELIER_Z = 1.2
-const TIERS = [
-  { y: 3.25, r: 0.78, n: 30, drop: 0.5 },
-  { y: 2.95, r: 0.58, n: 24, drop: 0.42 },
-  { y: 2.68, r: 0.38, n: 16, drop: 0.34 },
-  { y: 2.45, r: 0.18, n: 9, drop: 0.24 },
-]
+// Recessed pot lights down the middle of the ceiling: a brass bezel, a bright
+// lens and a soft cone of light under each. Only a few of them cast real light.
+const POTS = [7.2, 5.2, 3.2, 1.2, -0.8, -2.8, -4.8]
 
-function Chandelier({ m }) {
-  const spin = useRef()
-  const crystals = useRef()
-  const strands = useRef()
-  const { drops, lines } = useMemo(() => {
-    const d = []
-    const l = []
-    TIERS.forEach((tier, ti) =>
-      Array.from({ length: tier.n }, (_, i) => {
-        const a = (i / tier.n) * Math.PI * 2 + ti * 0.3
-        const len = tier.drop * (0.7 + 0.3 * Math.sin(i * 2.3))
-        const x = Math.cos(a) * tier.r
-        const z = Math.sin(a) * tier.r
-        l.push([x, tier.y - len / 2, z, len])
-        for (let k = 1; k <= 3; k++) d.push([x, tier.y - (len * k) / 3, z, k === 3 ? 1.5 : 1])
-      }),
-    )
-    return { drops: d, lines: l }
-  }, [])
-  useEffect(() => {
-    const mat = new THREE.Matrix4()
-    const q = new THREE.Quaternion()
-    drops.forEach(([x, y, z, s], i) => {
-      mat.compose(new THREE.Vector3(x, y, z), q, new THREE.Vector3(s, s * 1.6, s))
-      crystals.current.setMatrixAt(i, mat)
-    })
-    crystals.current.instanceMatrix.needsUpdate = true
-    lines.forEach(([x, y, z, len], i) => {
-      mat.compose(new THREE.Vector3(x, y, z), q, new THREE.Vector3(1, len, 1))
-      strands.current.setMatrixAt(i, mat)
-    })
-    strands.current.instanceMatrix.needsUpdate = true
-  }, [drops, lines])
-  useFrame((_, dt) => {
-    if (spin.current && !reduceMotion) spin.current.rotation.y += dt * 0.12
-  })
+function PotLights({ m }) {
   return (
-    <group position={[0, 0, CHANDELIER_Z]}>
-      <mesh position={[0, (CEIL + 3.3) / 2, 0]} material={m.chrome}>
-        <cylinderGeometry args={[0.012, 0.012, CEIL - 3.3, 8]} />
-      </mesh>
-      <mesh position={[0, CEIL - 0.03, 0]} material={m.chrome}>
-        <cylinderGeometry args={[0.25, 0.3, 0.05, 32]} />
-      </mesh>
-      <group ref={spin}>
-        {TIERS.map((tier) => (
-          <mesh key={tier.y} position={[0, tier.y, 0]} rotation={[Math.PI / 2, 0, 0]} material={m.chrome}>
-            <torusGeometry args={[tier.r, 0.012, 8, 64]} />
+    <group>
+      {POTS.map((z) => (
+        <group key={z} position={[0, CEIL, z]}>
+          <mesh position={[0, -0.012, 0]} rotation={[Math.PI / 2, 0, 0]} material={m.brass}>
+            <torusGeometry args={[0.12, 0.018, 8, 32]} />
           </mesh>
-        ))}
-        <mesh position={[0, 2.85, 0]} material={m.chrome}>
-          <cylinderGeometry args={[0.02, 0.02, 0.9, 8]} />
-        </mesh>
-        <mesh position={[0, 2.25, 0]} material={m.crystal}>
-          <octahedronGeometry args={[0.09, 0]} />
-        </mesh>
-        <mesh position={[0, 2.9, 0]} material={m.globeWhite}>
-          <sphereGeometry args={[0.16, 24, 16]} />
-        </mesh>
-        <instancedMesh ref={strands} args={[undefined, m.chrome, lines.length]}>
-          <cylinderGeometry args={[0.002, 0.002, 1, 4]} />
-        </instancedMesh>
-        <instancedMesh ref={crystals} args={[undefined, m.crystal, drops.length]}>
-          <octahedronGeometry args={[0.026, 0]} />
-        </instancedMesh>
-      </group>
-      <Sparkles count={60} scale={[1.9, 1.2, 1.9]} position={[0, 2.85, 0]} size={2.4} speed={0.25} opacity={0.9} color="#ffffff" />
-      <pointLight position={[0, 2.6, 0]} intensity={14} distance={12} decay={1.5} color="#f4f6ff" />
-      <pointLight position={[0, 2.4, 5.6]} intensity={3} distance={6} decay={1.6} color="#ffe6c4" />
+          <mesh position={[0, -0.014, 0]} rotation={[Math.PI / 2, 0, 0]} material={m.lens}>
+            <circleGeometry args={[0.1, 28]} />
+          </mesh>
+          <mesh position={[0, -1.3, 0]} material={m.beam}>
+            <cylinderGeometry args={[0.1, 0.75, 2.55, 28, 1, true]} />
+          </mesh>
+        </group>
+      ))}
+      {[5.2, 1.2, -2.8].map((z) => (
+        <pointLight key={z} position={[0, CEIL - 0.3, z]} intensity={6} distance={6} decay={1.5} color="#fff4e2" />
+      ))}
     </group>
   )
 }
@@ -890,40 +852,31 @@ function Case({ c, project, hovered, selected, onHover, onSelect, m, tex }) {
 }
 
 // ---------------------------------------------------------------- Rova, at the end of the walk
-// The Rova V as a floor-to-ceiling sculpture set into black marble, lit from behind
-// like an eclipse; in front, the pin floats over a glass pedestal under a spotlight,
-// behind a short arc of velvet rope.
+// Rova's pin floats over a glass pedestal under a white spotlight, in front of a
+// backlit onyx niche, behind a short arc of velvet rope.
 const PED_Z = END_Z + 1.3
 
-// The V: a short ivory left stroke and a long brass blade rising to the right.
-const V_LEFT = (() => {
-  const s = new THREE.Shape()
-  s.moveTo(-0.62, 0.32)
-  s.lineTo(-0.34, 0.32)
-  s.lineTo(0.03, -0.38)
-  s.lineTo(-0.02, -0.58)
-  s.closePath()
-  return s
-})()
-const V_RIGHT = (() => {
-  const s = new THREE.Shape()
-  s.moveTo(-0.06, -0.52)
-  s.lineTo(0.7, 0.78)
-  s.lineTo(0.76, 0.76)
-  s.lineTo(0.08, -0.4)
-  s.closePath()
-  return s
-})()
-
-const haloTex = () =>
-  canvasTex(512, 512, (g, w, h) => {
-    const grd = g.createRadialGradient(w / 2, h / 2, w * 0.12, w / 2, h / 2, w / 2)
-    grd.addColorStop(0, 'rgba(255,236,200,0)')
-    grd.addColorStop(0.45, 'rgba(255,230,185,0.85)')
-    grd.addColorStop(0.62, 'rgba(255,214,150,0.35)')
-    grd.addColorStop(1, 'rgba(255,200,130,0)')
+// A backlit onyx niche set into the black marble end wall, behind the pedestal.
+const onyxTex = () =>
+  canvasTex(256, 512, (g, w, h) => {
+    const grd = g.createLinearGradient(0, h, 0, 0)
+    grd.addColorStop(0, '#5a3a1c')
+    grd.addColorStop(0.55, '#e8c48a')
+    grd.addColorStop(1, '#fff1d6')
     g.fillStyle = grd
     g.fillRect(0, 0, w, h)
+    for (let i = 0; i < 12; i++) {
+      g.strokeStyle = `rgba(${i % 2 ? '255,248,232' : '120,80,40'},${0.04 + (i % 4) * 0.02})`
+      g.lineWidth = 1 + (i % 3)
+      g.beginPath()
+      let x = (i * 37) % w
+      g.moveTo(x, 0)
+      for (let y = 0; y <= h; y += 16) {
+        x += Math.sin(i * 1.3 + y * 0.006) * 3
+        g.lineTo(x, y)
+      }
+      g.stroke()
+    }
   })
 
 function RopeArc({ m }) {
@@ -967,34 +920,27 @@ function RovaEnd({ project, hovered, selected, onHover, onSelect, m }) {
   const ring = useRef()
   const pin = useRef()
   const lit = hovered === 'rova' || selected === 'rova'
-  const vLeft = useMemo(() => new THREE.ExtrudeGeometry(V_LEFT, { depth: 0.14, bevelEnabled: true, bevelSize: 0.012, bevelThickness: 0.012, bevelSegments: 3 }), [])
-  const vRight = useMemo(() => new THREE.ExtrudeGeometry(V_RIGHT, { depth: 0.14, bevelEnabled: true, bevelSize: 0.012, bevelThickness: 0.012, bevelSegments: 3 }), [])
-  const haloMap = useMemo(() => haloTex(), [])
+  const onyx = useMemo(() => onyxTex(), [])
   const plaque = useMemo(() => labelTexture({ key: 'hof-rova', w: 768, h: 128, bg: '#c6a96c', lines: [{ text: 'ROVA · PLAN LESS. GO OUT MORE.', size: 44, font: 'sans', weight: 600, color: '#2a2118', spacing: 4 }] }), [])
   const target = useMemo(() => new THREE.Object3D(), [])
   useFrame((state, dt) => {
     const t = state.clock.elapsedTime
-    if (halo.current) halo.current.opacity = THREE.MathUtils.damp(halo.current.opacity, (lit ? 1 : 0.8) + 0.08 * Math.sin(t * 0.8), 4, dt)
+    if (halo.current) halo.current.opacity = THREE.MathUtils.damp(halo.current.opacity, (lit ? 0.95 : 0.78) + 0.05 * Math.sin(t * 0.8), 4, dt)
     if (ring.current) ring.current.opacity = THREE.MathUtils.damp(ring.current.opacity, lit ? 0.95 : 0.55 + 0.2 * Math.sin(t * 2), 6, dt)
     if (pin.current) pin.current.position.y = 1.32 + (reduceMotion ? 0 : 0.04 * Math.sin(t * 1.4))
   })
   if (!project) return null
   return (
     <group {...hoverProps('rova', onHover, onSelect)}>
-      {/* eclipse halo behind the sculpture */}
-      <mesh position={[0, 2.0, END_Z + 0.02]}>
-        <planeGeometry args={[3.6, 3.6]} />
-        <meshBasicMaterial ref={halo} map={haloMap} transparent opacity={0.85} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+      {/* backlit onyx niche in the end wall, framed in brass */}
+      <mesh position={[0, 2.0, END_Z + 0.03]} material={m.brass}>
+        <boxGeometry args={[1.86, 3.06, 0.04]} />
       </mesh>
-      <group position={[0, 2.0, END_Z + 0.12]} scale={2.1}>
-        <Turntable active={selected === 'rova'} pivot={0} limit={0.45} grow={1.04}>
-          <group position={[0, 0, -0.07]}>
-            <mesh geometry={vLeft} material={m.ivoryPolished} />
-            <mesh geometry={vRight} material={m.gold} />
-          </group>
-        </Turntable>
-      </group>
-      <Sparkles count={26} scale={[2.6, 2.6, 0.6]} position={[0, 2.0, END_Z + 0.5]} size={2} speed={0.2} opacity={0.8} color="#ffe9c2" />
+      <mesh position={[0, 2.0, END_Z + 0.055]}>
+        <planeGeometry args={[1.76, 2.96]} />
+        <meshBasicMaterial ref={halo} map={onyx} transparent opacity={0.85} toneMapped={false} />
+      </mesh>
+      <Sparkles count={22} scale={[1.2, 1.4, 1.2]} position={[0, 1.4, PED_Z]} size={1.8} speed={0.2} opacity={0.8} color="#fff4dc" />
 
       {/* glass pedestal, floating pin, halo ring */}
       <mesh position={[0, 0.5, PED_Z]} material={m.pedestalGlass}>
@@ -1136,18 +1082,17 @@ function Scene({ projects, hovered, selected, onHover, onSelect }) {
   })
   const tex = useMemo(() => ({ news: imgs[0], paper: paperTex(), hand: handTex(), backlight: backlightTex() }), [imgs])
   const m = useMemo(() => {
-    const chevron = chevronTex()
-    chevron.repeat.set(1, LEN / (HALF * 2))
+    const slab = slabTex()
+    slab.repeat.set(1, LEN / (HALF * 2))
     return {
-      chevron: new THREE.MeshStandardMaterial({ map: chevron, roughness: 0.18, metalness: 0.25 }),
+      slab,
       wood: new THREE.MeshStandardMaterial({ color: '#17110d', roughness: 0.55, metalness: 0.15 }),
       marble: new THREE.MeshStandardMaterial({ map: marbleTex(), roughness: 0.2, metalness: 0.3 }),
       ceiling: new THREE.MeshStandardMaterial({ color: '#e9e1d3', roughness: 0.9 }),
       coffer: new THREE.MeshStandardMaterial({ color: '#f5eee2', emissive: '#f5e6cc', emissiveIntensity: 0.25, roughness: 0.9 }),
       led: new THREE.MeshBasicMaterial({ color: '#ffd9a0', toneMapped: false }),
-      globeWhite: new THREE.MeshStandardMaterial({ color: '#ffffff', emissive: '#ffffff', emissiveIntensity: 2.5, toneMapped: false }),
-      chrome: new THREE.MeshStandardMaterial({ color: '#f2f2f4', metalness: 1, roughness: 0.08 }),
-      crystal: new THREE.MeshPhysicalMaterial({ color: '#ffffff', metalness: 0.2, roughness: 0, clearcoat: 1, emissive: '#e8eeff', emissiveIntensity: 0.55, envMapIntensity: 2.5 }),
+      lens: new THREE.MeshBasicMaterial({ color: '#fff8ec', toneMapped: false }),
+      beam: new THREE.MeshBasicMaterial({ color: '#fff3dc', transparent: true, opacity: 0.035, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }),
       pedestalGlass: new THREE.MeshPhysicalMaterial({ color: '#dfe8ee', metalness: 0, roughness: 0.04, transparent: true, opacity: 0.22, clearcoat: 1, depthWrite: false }),
       ivoryPolished: new THREE.MeshPhysicalMaterial({ color: '#f1e7d6', roughness: 0.15, clearcoat: 1, metalness: 0.1 }),
       velvet: new THREE.MeshStandardMaterial({ color: '#6e1219', roughness: 0.85 }),
@@ -1173,7 +1118,7 @@ function Scene({ projects, hovered, selected, onHover, onSelect }) {
   return (
     <>
       <Corridor m={m} />
-      <Chandelier m={m} />
+      <PotLights m={m} />
       <Gold m={m} />
       <Cash m={m} />
       {CASES.map((c) => pick(c.id) && <Case key={c.id} c={c} project={pick(c.id)} hovered={hovered} selected={selected} onHover={onHover} onSelect={onSelect} m={m} tex={tex} />)}

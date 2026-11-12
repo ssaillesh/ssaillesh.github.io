@@ -10,7 +10,7 @@ import CrossoverCar from '../CrossoverCar.jsx'
 // first from the north: Symcor's server rack (north-west), OmniaBio's lab cart
 // (north-centre), PepsiCo operations' pallet (north-east), PepsiCo data's
 // standing desk (centre), and the UWAFT car up on the lift (south). A training corner (bike on the
-// wall, dumbbells) and a hangout corner (couch, tyre table, fridge, neon SM).
+// wall, dumbbells) and a hangout corner (couch, tyre table, fridge, neon SM, racing sim rig).
 
 export default function Garage({ mats, ctx }) {
   const it = (id) => ({ id, enabled: ctx.active, hovered: ctx.hovered, selected: ctx.selected, onHover: ctx.onHover, onSelect: ctx.onSelect })
@@ -29,6 +29,7 @@ export default function Garage({ mats, ctx }) {
       lift: new THREE.MeshStandardMaterial({ color: '#c0392b', roughness: 0.5, metalness: 0.3 }),
       fridge: new THREE.MeshStandardMaterial({ color: '#e9e5dd', roughness: 0.35 }),
       couch: new THREE.MeshStandardMaterial({ color: '#4a2a1a', roughness: 0.7 }),
+      simScreen: new THREE.MeshStandardMaterial({ color: '#0b0d10', emissive: '#7fa8d8', emissiveIntensity: 0.6 }),
       liquids: ['#7fb7c9', '#c9a24a', '#9fc4a0', '#d97757', '#7fb7c9', '#c9a24a'].map((c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.2, transparent: true, opacity: 0.85 })),
     }),
     [],
@@ -219,6 +220,23 @@ export default function Garage({ mats, ctx }) {
       <Cyl p={[17.9, 0.3, -1.3]} radius={0.46} h={0.02} m={mats.glass} cast={false} />
       <Box p={[19.45, 0, 1.0]} s={[0.6, 0.85, 0.6]} m={m.fridge} />
       <Box p={[19.13, 0.45, 1.15]} s={[0.02, 0.3, 0.04]} m={mats.steel} />
+      {/* racing sim rig by the couch: the cars artifact */}
+      <Interactive {...it('cars')} label="A racing sim rig" sub="Pick up" ring={[13.75, 2.4, 1.2]}>
+        <group position={[13.9, 0, 2.4]} rotation={[0, Math.PI / 2, 0]}>
+          <Box p={[0, 0, 0]} s={[0.7, 0.08, 1.7]} m={mats.steel} />
+          <Box p={[0, 0.08, 0.35]} s={[0.55, 0.32, 0.6]} m={mats.blackMatte} />
+          <Box p={[0, 0.4, 0.6]} s={[0.55, 0.62, 0.14]} m={mats.blackMatte} r={[-0.3, 0, 0]} />
+          <Box p={[0, 0.58, 0.63]} s={[0.4, 0.4, 0.01]} m={mats.carRed} r={[-0.3, 0, 0]} cast={false} />
+          <Box p={[0, 0.08, -0.45]} s={[0.08, 0.62, 0.08]} m={mats.steel} />
+          <mesh position={[0, 0.78, -0.42]} rotation={[0.35, 0, 0]} material={mats.blackMatte}>
+            <torusGeometry args={[0.16, 0.025, 10, 28]} />
+          </mesh>
+          <Box p={[0, 0.08, -0.75]} s={[0.4, 0.1, 0.2]} m={mats.blackMatte} r={[0.5, 0, 0]} />
+          <Box p={[0, 0.55, -1.25]} s={[1.3, 0.75, 0.04]} m={mats.blackMatte} />
+          <Box p={[0, 0.58, -1.225]} s={[1.24, 0.69, 0.004]} m={m.simScreen} cast={false} />
+          <Box p={[0, 0, -1.25]} s={[0.1, 0.55, 0.1]} m={mats.steel} />
+        </group>
+      </Interactive>
       {/* neon SM sign on the garage side of the Lounge wall */}
       <mesh position={[12.13, 2.0, 4.6]} rotation={[0, Math.PI / 2, 0]}>
         <planeGeometry args={[1.05, 1.25]} />
