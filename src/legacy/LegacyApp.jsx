@@ -54,7 +54,7 @@ const experienceEntries = [
   },
   {
     id: 'omniabio-qa',
-    role: 'Quality Automation Engineer',
+    role: 'Software Engineer QC',
     org: 'OmniaBio Inc',
     logo: '/logos/omniabio.png',
     accent: '#2b6cb0',
@@ -75,7 +75,7 @@ const experienceEntries = [
   },
   {
     id: 'pepsico-swe',
-    role: 'Software Developer, Operations Manager',
+    role: 'Software Engineer / Operation Manager',
     org: 'PepsiCo Inc',
     logo: '/logos/pepsico.png',
     accent: '#003e7e',
