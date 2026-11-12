@@ -9,7 +9,9 @@ export const projects = [
     kind: 'AI outing planner',
     status: 'In progress',
     year: 2026,
-    image: '/residence/rova.jpg',
+    image: '/residence/rova-brand.jpg',
+    icon: '/residence/rova-icon.jpg',
+    tagline: 'Plan less. Go out more.',
     oneLiner: 'Tell it your mood and get a real, timed plan for a night out from places near you.',
     problem: 'Planning an outing means juggling maps, venue listings and event sites, then stitching a schedule together by hand.',
     description:
@@ -25,12 +27,39 @@ export const projects = [
     links: {},
     // The Vault shows Rova as an archive feed; each post is one real feature.
     archive: [
-      { id: 'plan', kind: 'image', title: 'Your night, planned', body: 'Describe the mood, or set where, budget, radius and who. Rova builds a real, timed plan from live venues nearby.' },
+      { id: 'brand', kind: 'image', image: '/residence/rova-wordmark.jpg', title: 'Rova', body: 'Plan less. Go out more.' },
+      { id: 'plan', kind: 'text', title: 'Your night, planned', body: 'Describe the mood, or set where, budget, radius and who. Rova builds a real, timed plan from live venues nearby.' },
+      { id: 'mark', kind: 'photo', image: '/residence/rova-mark.jpg', title: 'The mark' },
       { id: 'whatson', kind: 'text', title: 'What’s on', body: 'Live events from Ticketmaster and the City of Toronto festivals feed, in one view.' },
+      { id: 'phone', kind: 'photo', image: '/residence/rova-phone.jpg', title: 'On the home screen' },
       { id: 'route', kind: 'route', title: 'Every stop, mapped', body: 'Each plan comes with a route map of its stops.' },
+      { id: 'flow', kind: 'photo', wide: true, image: '/residence/rova-flow.jpg', title: 'Logo animation flow' },
       { id: 'taste', kind: 'text', title: 'A taste survey', body: 'Optional questions that turn your answers into planner defaults.' },
+      { id: 'icon', kind: 'photo', image: '/residence/rova-icon.jpg', title: 'App icon' },
       { id: 'stack', kind: 'stack', title: 'Under the hood', body: 'FastAPI, PostgreSQL + PostGIS and Redis behind a static web front end.' },
     ],
+  },
+  {
+    id: 'vouch',
+    name: 'VouchStudio',
+    kind: 'Evidence-based job matching',
+    status: 'Live',
+    year: 2026,
+    image: '/residence/vouch.jpg',
+    tagline: 'Better jobs. Smarter search.',
+    oneLiner: 'Scores open roles against the evidence in your résumé, then builds a one-page résumé tailored to the job from verified facts only.',
+    problem: 'Job boards rank postings by keywords, and tailored résumés drift away from what you can actually back up.',
+    description:
+      'A job board that pulls public postings from Greenhouse, Ashby, Simplify and Jooble across the US and Canada and scores each one against your résumé. Every requirement is matched to a line of your profile, and a skill counts only when a verified line backs it. For a chosen job it builds a one-page LaTeX résumé where every claim traces back to your master profile.',
+    architecture: [
+      'Deterministic scoring engine in standard-library Python: no LLMs, same profile and posting always give the same score',
+      'Next.js on Vercel for pages and API, with the engine as a Vercel Python Function',
+      'Neon Postgres for accounts, jobs, cached scores and reviews; Cloudflare R2 for files behind five-minute links',
+      'LaTeX tailoring that must compile, fit exactly one page, read cleanly in ATS and lay out cleanly',
+    ],
+    stack: ['Python', 'Next.js', 'TypeScript', 'Postgres (Neon)', 'Cloudflare R2', 'LaTeX'],
+    contribution: null,
+    links: { github: 'https://github.com/ssaillesh/VouchStudio', live: 'https://vouchstudio.vercel.app/' },
   },
   {
     id: 'lapzero',
@@ -181,6 +210,10 @@ projects.push(
 )
 
 // Order of the displays inside the Vault.
-export const vaultDisplays = ['rova', 'lapzero', 'codegraphrag', 'heston', 'ict', 'news', 'automl', 'asl', 'padlock', 'invasion']
+export const vaultDisplays = ['rova', 'vouch', 'lapzero', 'heston', 'codegraphrag', 'news', 'asl', 'ict', 'automl', 'padlock', 'invasion']
+// In the hall of fame: Rova at the end of the walk, big lit cases for the featured
+// projects, and smaller cases near the door for the rest.
+export const vaultFeatured = ['rova', 'vouch', 'lapzero', 'heston', 'codegraphrag', 'news', 'asl']
+export const vaultBoxed = ['ict', 'automl', 'padlock', 'invasion']
 
 

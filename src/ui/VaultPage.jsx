@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowUpRight, Github, Image as ImageIcon, X } from 'lucide-react'
-import { projects, vaultDisplays } from '../data/projects.js'
+import { projects, vaultBoxed, vaultDisplays, vaultFeatured } from '../data/projects.js'
 import { Chips, Kicker, Metrics, SectionLabel } from './bits.jsx'
 
 const Motion = motion
@@ -220,13 +220,15 @@ function ArchiveTile({ post, image }) {
   const base = 'group relative flex aspect-square flex-col justify-end overflow-hidden rounded-[3px] border border-line p-4 text-left'
   if (post.kind === 'image')
     return (
-      <article className={`${base} col-span-2 row-span-2 aspect-auto min-h-[300px]`}>
-        <img src={image} alt="Rova planner screenshot" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/30 to-transparent" />
-        <div className="relative">
-          <p className="font-serif text-[30px] leading-tight text-ivory">{post.title}</p>
-          <p className="mt-1.5 max-w-[30rem] text-[14px] leading-relaxed text-ivory-2">{post.body}</p>
-        </div>
+      <article className={`${base} col-span-2 row-span-2 aspect-auto min-h-[300px] bg-[#f2e8dc] p-0`}>
+        <img src={post.image || image} alt={`${post.title} brand artwork`} className="absolute inset-0 h-full w-full object-contain transition-transform duration-700 group-hover:scale-[1.03]" />
+      </article>
+    )
+  if (post.kind === 'photo')
+    return (
+      <article className={`${base} ${post.wide ? 'col-span-2 aspect-auto min-h-[120px]' : ''} bg-black p-0`}>
+        <img src={post.image} alt={`Rova ${post.title.toLowerCase()}`} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+        <p className="label-mono relative m-3 self-start rounded-full bg-charcoal/80 px-2.5 py-1 text-[9.5px] text-ivory-2 backdrop-blur">{post.title}</p>
       </article>
     )
   if (post.kind === 'route')
@@ -268,12 +270,17 @@ function RovaArchive({ p }) {
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
       <section aria-label="Rova archive">
         <div className="mb-6 flex items-center gap-4 border-b border-line pb-6">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full border border-brass/60 font-serif text-[30px] text-brass-2">R</span>
+          {p.icon ? (
+            <img src={p.icon} alt="" className="h-16 w-16 rounded-full border border-brass/60 object-cover" />
+          ) : (
+            <span className="flex h-16 w-16 items-center justify-center rounded-full border border-brass/60 font-serif text-[30px] text-brass-2">R</span>
+          )}
           <div>
             <p className="font-serif text-[34px] leading-none text-ivory">{p.name}</p>
             <p className="label-mono mt-2 text-[10px] text-stone">
               The archive · {p.archive.length} posts · {p.status}
             </p>
+            {p.tagline && <p className="mt-2 font-serif text-[17px] italic text-ivory-2">{p.tagline}</p>}
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -531,11 +538,40 @@ function Inside({ project, onProject, onClose, closeRef }) {
 
 // project: null shows the wall of displays, an id opens that file.
 // ============================================================ the 3D walk-in vault
+function ExhibitRow({ d, onProject, setHovered }) {
+  return (
+    <li>
+      <button
+        type="button"
+        onClick={() => onProject(d.p.id)}
+        onMouseEnter={() => setHovered(d.p.id)}
+        onMouseLeave={() => setHovered(null)}
+        className="flex w-full items-center gap-4 border-b border-line py-3 text-left text-ivory transition-colors hover:text-brass-2"
+      >
+        <span className="font-mono text-[11px] text-brass">{d.n}</span>
+        <span className="flex-1">
+          <span className="block text-[15px]">{d.p.name}</span>
+          <span className="block font-mono text-[10.5px] text-stone">{d.p.kind}</span>
+        </span>
+        <span className="font-mono text-[10.5px] text-stone">View →</span>
+      </button>
+    </li>
+  )
+}
+
+const featuredDisplays = displays.filter((d) => vaultFeatured.includes(d.p.id))
+const boxedDisplays = displays.filter((d) => vaultBoxed.includes(d.p.id))
+
 function Vault3D({ project, onProject, onClose, closeRef }) {
   const [hovered, setHovered] = useState(null)
   const [fileOpen, setFileOpen] = useState(false)
+  const [listOpen, setListOpen] = useState(false)
+  const [boxesOpen, setBoxesOpen] = useState(false)
+  const [walk, setWalk] = useState(0)
   const sel = displays.find((d) => d.p.id === project)
   const hov = displays.find((d) => d.p.id === hovered)
+  const boxed = sel && vaultBoxed.includes(sel.p.id)
+  const panel = Boolean(sel) || listOpen
 
   if (fileOpen && sel)
     return <Inside project={project} onProject={(id) => (id ? onProject(id) : setFileOpen(false))} onClose={onClose} closeRef={closeRef} />
@@ -543,77 +579,117 @@ function Vault3D({ project, onProject, onClose, closeRef }) {
   return (
     <div className="flex h-screen flex-col bg-[#0b0c0d]">
       <SecureHeader onClose={onClose} closeRef={closeRef} current={null} onBack={() => onProject(null)} />
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <div className="relative min-h-[420px] flex-1">
-          <Suspense fallback={null}>
-            <VaultRoomScene projects={projects} hovered={hovered} selected={project} onHover={setHovered} onSelect={(id) => onProject(id)} />
-          </Suspense>
-          <p className="label-mono pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-line bg-charcoal/80 px-4 py-2 text-[10px] text-stone backdrop-blur-md">
-            {sel ? 'Esc or click the floor to step back' : hov ? `${hov.p.name} · ${hov.p.kind}` : `${displays.length} projects on display · click one to walk up to it`}
+      <div className="relative min-h-0 flex-1 overflow-hidden">
+        <Suspense fallback={null}>
+          <VaultRoomScene projects={projects} hovered={hovered} selected={project} onHover={setHovered} onSelect={(id) => onProject(id)} onWalk={setWalk} />
+        </Suspense>
+
+        {!panel && (
+          <button
+            type="button"
+            onClick={() => setListOpen(true)}
+            className="label-mono absolute right-5 top-5 inline-flex h-10 items-center gap-2 rounded-full border border-brass/50 bg-charcoal/80 px-4 text-[10.5px] text-brass-2 backdrop-blur-md transition-colors hover:bg-charcoal"
+          >
+            {displays.length} projects <span aria-hidden>☰</span>
+          </button>
+        )}
+
+        <div className="pointer-events-none absolute bottom-5 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2.5">
+          {!sel && (
+            <div className="flex items-center gap-2.5 font-mono text-[9.5px] text-stone" aria-hidden>
+              <span>Door</span>
+              <span className="relative h-[3px] w-40 overflow-hidden rounded-full bg-line">
+                <span className="absolute inset-y-0 left-0 rounded-full bg-brass" style={{ width: `${Math.round(walk * 100)}%` }} />
+              </span>
+              <span>Rova</span>
+            </div>
+          )}
+          <p className="label-mono rounded-full border border-line bg-charcoal/80 px-4 py-2 text-[10px] text-stone backdrop-blur-md">
+            {sel ? 'Esc, scroll or click the floor to step back' : hov ? `${hov.p.name} · ${hov.p.kind}` : 'Scroll or ↑ ↓ to walk the hall · click a case to look closer'}
           </p>
         </div>
 
-        <aside className="panel-scroll w-full shrink-0 overflow-y-auto border-t border-line bg-[#111214]/95 p-6 lg:w-[400px] lg:border-l lg:border-t-0">
-          <AnimatePresence mode="wait">
-            {sel ? (
-              <Motion.div key={sel.p.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="flex flex-col gap-5">
-                <button type="button" onClick={() => onProject(null)} className="label-mono self-start text-[10px] text-stone hover:text-ivory">
-                  ← The whole vault
-                </button>
-                <div className="flex items-center gap-3">
-                  <Kicker>
-                    Exhibit {sel.n} · {sel.p.kind}
-                  </Kicker>
-                </div>
-                <h2 className="font-serif text-[44px] leading-[0.95] text-ivory">{sel.p.name}</h2>
-                <span className="self-start rounded-full border border-brass/40 px-2.5 py-0.5 font-mono text-[10.5px] text-brass-2">
-                  {sel.p.status} · {sel.p.year}
-                </span>
-                <div className="relative aspect-[16/10] overflow-hidden rounded-[4px] border border-line bg-black">
-                  <ScreenImage p={sel.p} className="absolute inset-0 h-full w-full" />
-                </div>
-                <p className="font-serif text-[21px] italic leading-snug text-ivory-2">{sel.p.oneLiner}</p>
-                <Chips items={sel.p.stack} />
-                <div className="flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setFileOpen(true)}
-                    className="inline-flex h-11 items-center gap-2 rounded-full bg-brass px-5 text-[14px] font-medium text-charcoal transition-colors hover:bg-brass-2"
-                  >
-                    Open full file →
-                  </button>
-                  {sel.p.links.live && <LinkButton href={sel.p.links.live}>Live demo</LinkButton>}
-                  {sel.p.links.github && <LinkButton href={sel.p.links.github}>GitHub</LinkButton>}
-                </div>
-              </Motion.div>
-            ) : (
-              <Motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <p className="label-mono text-[10px] text-brass">Access granted · {displays.length} exhibits</p>
-                <h2 className="mt-2 font-serif text-[34px] leading-none text-ivory">Everything I’ve built</h2>
-                <ul className="mt-5">
-                  {displays.map((d) => (
-                    <li key={d.p.id}>
+        <AnimatePresence>
+          {panel && (
+            <Motion.aside
+              key="panel"
+              initial={{ x: 40, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 40, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
+              className="panel-scroll absolute inset-y-0 right-0 w-full max-w-[400px] overflow-y-auto border-l border-line bg-[#111214]/95 p-6 backdrop-blur-md"
+            >
+              <AnimatePresence mode="wait">
+                {sel ? (
+                  <Motion.div key={sel.p.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="flex flex-col gap-5">
+                    <button type="button" onClick={() => onProject(null)} className="label-mono self-start text-[10px] text-stone hover:text-ivory">
+                      ← Back to the hall
+                    </button>
+                    <Kicker>
+                      {sel.p.id === 'rova' ? 'The centrepiece' : boxed ? 'Small case' : 'Exhibit'} {sel.n} · {sel.p.kind}
+                    </Kicker>
+                    <h2 className="font-serif text-[44px] leading-[0.95] text-ivory">{sel.p.name}</h2>
+                    <span className="self-start rounded-full border border-brass/40 px-2.5 py-0.5 font-mono text-[10.5px] text-brass-2">
+                      {sel.p.status} · {sel.p.year}
+                    </span>
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-[4px] border border-line bg-black">
+                      <ScreenImage p={sel.p} className="absolute inset-0 h-full w-full" />
+                    </div>
+                    <p className="font-serif text-[21px] italic leading-snug text-ivory-2">{sel.p.oneLiner}</p>
+                    <Chips items={sel.p.stack} />
+                    <div className="flex flex-wrap gap-3">
                       <button
                         type="button"
-                        onClick={() => onProject(d.p.id)}
-                        onMouseEnter={() => setHovered(d.p.id)}
-                        onMouseLeave={() => setHovered(null)}
-                        className="flex w-full items-center gap-4 border-b border-line py-3 text-left text-ivory transition-colors hover:text-brass-2"
+                        onClick={() => setFileOpen(true)}
+                        className="inline-flex h-11 items-center gap-2 rounded-full bg-brass px-5 text-[14px] font-medium text-charcoal transition-colors hover:bg-brass-2"
                       >
-                        <span className="font-mono text-[11px] text-brass">{d.n}</span>
-                        <span className="flex-1">
-                          <span className="block text-[15px]">{d.p.name}</span>
-                          <span className="block font-mono text-[10.5px] text-stone">{d.p.kind}</span>
-                        </span>
-                        <span className="font-mono text-[10.5px] text-stone">View →</span>
+                        Open full file →
                       </button>
-                    </li>
-                  ))}
-                </ul>
-              </Motion.div>
-            )}
-          </AnimatePresence>
-        </aside>
+                      {sel.p.links.live && <LinkButton href={sel.p.links.live}>Live demo</LinkButton>}
+                      {sel.p.links.github && <LinkButton href={sel.p.links.github}>GitHub</LinkButton>}
+                    </div>
+                  </Motion.div>
+                ) : (
+                  <Motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <div className="flex items-start justify-between gap-4">
+                      <p className="label-mono text-[10px] text-brass">Access granted · {displays.length} projects</p>
+                      <button type="button" onClick={() => setListOpen(false)} aria-label="Hide the list" className="-mt-1 text-stone hover:text-ivory">
+                        ✕
+                      </button>
+                    </div>
+                    <h2 className="mt-2 font-serif text-[34px] leading-none text-ivory">Everything I’ve built</h2>
+                    <p className="label-mono mt-6 text-[10px] text-stone">Hall of fame · {featuredDisplays.length}</p>
+                    <ul className="mt-1">
+                      {featuredDisplays.map((d) => (
+                        <ExhibitRow key={d.p.id} d={d} onProject={onProject} setHovered={setHovered} />
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      onClick={() => setBoxesOpen((o) => !o)}
+                      aria-expanded={boxesOpen}
+                      className="label-mono mt-6 flex w-full items-center justify-between border-b border-line pb-3 text-[10px] text-stone hover:text-ivory"
+                    >
+                      <span>In the smaller cases · {boxedDisplays.length}</span>
+                      <span aria-hidden className={`transition-transform ${boxesOpen ? 'rotate-180' : ''}`}>
+                        ▾
+                      </span>
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {boxesOpen && (
+                        <Motion.ul key="boxes" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                          {boxedDisplays.map((d) => (
+                            <ExhibitRow key={d.p.id} d={d} onProject={onProject} setHovered={setHovered} />
+                          ))}
+                        </Motion.ul>
+                      )}
+                    </AnimatePresence>
+                  </Motion.div>
+                )}
+              </AnimatePresence>
+            </Motion.aside>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )
