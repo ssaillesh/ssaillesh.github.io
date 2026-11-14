@@ -76,7 +76,7 @@ export const projects = [
     live: true, // running for real people; the plain view flags it, the 3D Vault still reads `status`
     featured: true,
     year: 2026,
-    image: '/residence/rova-brand.jpg',
+    image: '/residence/rova-site-hero.jpg', // the live site's home page; shown when Rova is opened in the Vault
     icon: '/residence/rova-icon.jpg',
     tagline: 'Plan less. Go out more.',
     oneLiner: 'Tell it your mood and get a real, timed plan for a night out from places near you.',
@@ -92,17 +92,19 @@ export const projects = [
     stack: ['Python', 'FastAPI', 'PostgreSQL', 'PostGIS', 'Redis'],
     contribution: null,
     links: { live: 'https://traviq.vercel.app' },
-    // The Vault shows Rova as an archive feed; each post is one real feature.
+    // The Vault shows Rova as an archive feed: screenshots of the live site
+    // (traviq.vercel.app, captured 2026-11-14) with a few notes between them.
     archive: [
-      { id: 'brand', kind: 'image', image: '/residence/rova-wordmark.jpg', title: 'Rova', body: 'Plan less. Go out more.' },
-      { id: 'plan', kind: 'text', title: 'Your night, planned', body: 'Describe the mood, or set where, budget, radius and who. Rova builds a real, timed plan from live venues nearby.' },
-      { id: 'mark', kind: 'photo', image: '/residence/rova-mark.jpg', title: 'The mark' },
+      { id: 'hero', kind: 'image', image: '/residence/rova-site-hero.jpg', title: 'Plan less. Go out more.', body: 'The home page: tell Rova the mood, the crew, the budget and the neighbourhood.' },
+      { id: 'phone', kind: 'photo', tall: true, image: '/residence/rova-site-phone.jpg', title: 'On a phone' },
+      { id: 'moods', kind: 'photo', wide: true, image: '/residence/rova-site-moods.jpg', title: 'Start with a mood' },
+      { id: 'nights', kind: 'photo', wide: true, image: '/residence/rova-site-nights.jpg', title: 'Nights worth stealing' },
+      { id: 'pricing', kind: 'photo', image: '/residence/rova-site-pricing.jpg', title: 'Free to start' },
+      { id: 'signin', kind: 'photo', image: '/residence/rova-site-planner.jpg', title: 'Sign in' },
+      { id: 'submit', kind: 'photo', image: '/residence/rova-site-submit.jpg', title: 'List your event' },
+      { id: 'plan', kind: 'text', title: 'Your night, planned', body: 'Describe the mood, or tap a word to change it. Rova builds a real, timed plan from live venues nearby.' },
       { id: 'whatson', kind: 'text', title: 'What’s on', body: 'Live events from Ticketmaster and the City of Toronto festivals feed, in one view.' },
-      { id: 'phone', kind: 'photo', image: '/residence/rova-phone.jpg', title: 'On the home screen' },
       { id: 'route', kind: 'route', title: 'Every stop, mapped', body: 'Each plan comes with a route map of its stops.' },
-      { id: 'flow', kind: 'photo', wide: true, image: '/residence/rova-flow.jpg', title: 'Logo animation flow' },
-      { id: 'taste', kind: 'text', title: 'A taste survey', body: 'Optional questions that turn your answers into planner defaults.' },
-      { id: 'icon', kind: 'photo', image: '/residence/rova-icon.jpg', title: 'App icon' },
       { id: 'stack', kind: 'stack', title: 'Under the hood', body: 'FastAPI, PostgreSQL + PostGIS and Redis behind a static web front end.' },
     ],
   },

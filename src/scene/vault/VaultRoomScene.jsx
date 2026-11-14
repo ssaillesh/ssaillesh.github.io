@@ -10,8 +10,8 @@ import { RACK_SIZE } from './isothermModel.js'
 
 // Inside the vault: a hall-of-fame walk. A polished marble corridor lit by LED
 // strips that trace the ceiling, the pillars and the open cases (no glass anywhere),
-// with Isotherm's GPU rack at the far end under the hall's one small pot light.
-// Rova and LapZero stand on LED-traced plinths either side of it; the other
+// with Isotherm's GPU rack at the far end under a small pot light. Rova and
+// LapZero stand on LED-traced plinths either side of it, each under a softer one; the other
 // featured projects get the big cases, the rest sit in smaller cases by the door. Scroll (or the arrow keys) walks the corridor; clicking a
 // case glides up to it.
 
@@ -860,7 +860,7 @@ function IsothermEnd({ project, hovered, selected, onHover, onSelect, m }) {
         <meshBasicMaterial ref={ring} color="#fff3dc" transparent opacity={0.5} depthWrite={false} toneMapped={false} />
       </mesh>
 
-      {/* the one pot light in the hall: small, recessed, aimed at the rack */}
+      {/* a small recessed pot light aimed at the rack, the brightest of the three */}
       <group position={[0, CEIL, PED_Z + 1.1]}>
         <mesh position={[0, -0.01, 0]} rotation={[Math.PI / 2, 0, 0]} material={m.brass}>
           <torusGeometry args={[0.075, 0.012, 8, 32]} />
@@ -900,6 +900,7 @@ function Tower({ top, project, hovered, selected, onHover, onSelect, m }) {
     glow.current.opacity = THREE.MathUtils.damp(glow.current.opacity, lit ? 0.9 : 0.35 + 0.15 * Math.sin(state.clock.elapsedTime * 2 + top.pos[0]), 8, dt)
   })
   const obj = top.id === 'rova' ? <RovaPin size={0.62} /> : <F1 m={m} />
+  const target = useMemo(() => new THREE.Object3D(), [])
   return (
     <group position={[top.pos[0], 0, top.pos[1]]} rotation={[0, top.rot, 0]} {...hoverProps(top.id, onHover, onSelect)}>
       <mesh position={[0, 0.45, 0]} material={m.black}>
@@ -928,6 +929,18 @@ function Tower({ top, project, hovered, selected, onHover, onSelect, m }) {
           <Suspense fallback={null}>{obj}</Suspense>
         </Turntable>
       </group>
+      {/* its own small pot light, so the piece and its logo read from the walk */}
+      <group position={[0, CEIL, 0.35]}>
+        <mesh position={[0, -0.01, 0]} rotation={[Math.PI / 2, 0, 0]} material={m.brass}>
+          <torusGeometry args={[0.06, 0.01, 8, 28]} />
+        </mesh>
+        <mesh position={[0, -0.012, 0]} rotation={[Math.PI / 2, 0, 0]} material={m.lens}>
+          <circleGeometry args={[0.05, 22]} />
+        </mesh>
+      </group>
+      <primitive object={target} position={[0, 1.15, 0]} />
+      <spotLight position={[0, CEIL - 0.03, 0.35]} target={target} angle={0.26} penumbra={0.8} intensity={lit ? 11 : 8} distance={4.5} decay={1.4} color="#fff6ea" />
+      <pointLight position={[0, 1.6, 0.55]} intensity={lit ? 1.2 : 0.8} distance={1.4} decay={2} color="#ffe9cc" />
       <mesh position={[0, 0.006, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.72, 0.77, 48]} />
         <meshBasicMaterial ref={glow} color="#e0b874" transparent opacity={0.4} depthWrite={false} />
@@ -983,7 +996,8 @@ function Scene({ projects, hovered, selected, onHover, onSelect }) {
       wood: new THREE.MeshStandardMaterial({ color: '#17110d', roughness: 0.55, metalness: 0.15 }),
       marble: new THREE.MeshStandardMaterial({ map: marbleTex(), roughness: 0.2, metalness: 0.3 }),
       ceiling: new THREE.MeshStandardMaterial({ color: '#e9e1d3', roughness: 0.9 }),
-      coffer: new THREE.MeshStandardMaterial({ color: '#f5eee2', emissive: '#f5e6cc', emissiveIntensity: 0.25, roughness: 0.9 }),
+      // a dark recessed coffer: the LED trace around it is the light, not the panel
+      coffer: new THREE.MeshStandardMaterial({ color: '#1b1815', roughness: 0.7, metalness: 0.2 }),
       led: new THREE.MeshBasicMaterial({ color: '#ffd9a0', toneMapped: false }),
       lens: new THREE.MeshBasicMaterial({ color: '#fff8ec', toneMapped: false }),
       ledSoft: new THREE.MeshBasicMaterial({ color: '#c99a5c', toneMapped: false }),

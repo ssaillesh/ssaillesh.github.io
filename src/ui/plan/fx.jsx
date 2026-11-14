@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import { profile } from '../../data/profile.js'
 import { isLive } from '../../data/projects.js'
 import { LiveBadge, Reveal } from './parts.jsx'
 import { ProjectCover } from './ProjectPages.jsx'
@@ -155,69 +154,5 @@ export function VaultCards({ items }) {
         <VaultCard key={p.id} p={p} i={i} />
       ))}
     </div>
-  )
-}
-
-// The welcome for phones and browsers without 3D: the same title card as the 3D intro,
-// with one way in.
-export function Welcome({ onEnter }) {
-  const enter = useRef(null)
-  const reduce = useReducedMotion()
-  const line = (delay) =>
-    reduce
-      ? {}
-      : {
-          initial: { opacity: 0, y: 18, filter: 'blur(6px)' },
-          animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
-          transition: { duration: 1.05, delay, ease: EASE },
-        }
-
-  useEffect(() => {
-    const prev = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    const t = setTimeout(() => enter.current?.focus(), 1400)
-    return () => {
-      document.body.style.overflow = prev
-      clearTimeout(t)
-    }
-  }, [])
-
-  return (
-    <Motion.section
-      role="dialog"
-      aria-modal="true"
-      aria-label="Welcome"
-      exit={{ opacity: 0, scale: 1.04, transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] } }}
-      className="grain fixed inset-0 z-[60] flex flex-col items-center justify-center bg-charcoal px-6 text-center"
-    >
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_35%,rgba(198,169,108,0.14),transparent_60%)]" />
-      <Motion.img {...line(0.05)} src="/logos/sai-logo.png" alt="SM logo" className="relative mb-7 h-16 w-auto" />
-      <Motion.p {...line(0.2)} className="label-mono relative text-[10.5px] text-brass">
-        {profile.school} · {profile.location}
-      </Motion.p>
-      <Motion.h1 {...line(0.4)} className="relative mt-5 font-serif text-[clamp(72px,22vw,180px)] leading-[0.85] tracking-[-0.02em] text-ivory">
-        {profile.name}.
-      </Motion.h1>
-      <Motion.p {...line(0.75)} className="label-mono relative mt-7 text-[11.5px] tracking-[0.4em] text-ivory-2">
-        {profile.residence}
-      </Motion.p>
-      <Motion.p {...line(1)} className="relative mt-3 font-serif text-[24px] italic text-stone">
-        {profile.motto}
-      </Motion.p>
-      <Motion.div {...line(1.3)} className="relative mt-12 flex flex-col items-center gap-4">
-        <button
-          ref={enter}
-          type="button"
-          onClick={onEnter}
-          className="inline-flex h-14 items-center gap-4 rounded-full border border-brass/60 pl-7 pr-2 text-[15px] text-ivory transition-colors hover:border-brass hover:bg-brass/10"
-        >
-          Step inside
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brass text-charcoal">
-            <ArrowRight size={18} strokeWidth={1.8} aria-hidden />
-          </span>
-        </button>
-        <p className="max-w-[18rem] text-[12.5px] leading-relaxed text-concrete">The full 3D residence is best on a computer. Here, you walk through it room by room.</p>
-      </Motion.div>
-    </Motion.section>
   )
 }

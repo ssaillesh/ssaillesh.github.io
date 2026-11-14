@@ -10,7 +10,7 @@ Live: https://ssaillesh.github.io/
 | 01 Foyer | Introduction | A sealed envelope with a short intro, running shoes |
 | 02 Study | Education & awards | Degree on the wall, a lit display cabinet (opens the Cabinet view of every award), résumé on the desk, textbooks, microscope |
 | 03 Garage | Experience | East wing with a south roll-up door and driveway: UWAFT autonomous crossover (detailed, src/scene/CrossoverCar.jsx) on a two-post lift + lidar bench, Symcor server rack, OmniaBio test tubes, PepsiCo clipboard and chip pallet, tool chest, training corner (bike, dumbbells), hangout corner (couch, fridge, neon SM, racing sim rig) |
-| 04 Vault | Projects | A bank vault signed PROJECTS; a 3D unlock opens a hall-of-fame walk: lit glass cases for each project, with Rova framed at the end. Scroll to walk, click a case to look closer; "Open full file" shows the details |
+| 04 Vault | Projects | A bank vault signed PROJECTS; a 3D unlock opens a hall-of-fame walk lit by LED strips, with open cases (no glass) for each project. Isotherm's GPU rack stands at the end under a small pot light, running the same thermal model as its playable demo, with Rova and LapZero on plinths either side, each under a softer pot light. Scroll to walk, click a case to look closer; "Open full file" shows the details |
 | 05 Den | Theater, kitchen & contact | Theater: big screen over the fireplace, sofa, riser recliners, popcorn cart. Open kitchen: kitchen run under the glass, marble island with the cast-iron pan and bar stools, drinks bar with the car print. Photographs, rotary phone |
 | 06 Lab | Robotics | Test table with the autonomous competition robot (2nd place), robotics trophy shelf, robot arm, 3D printer, workstation bench |
 
@@ -40,7 +40,7 @@ src/
     rooms/*.jsx    furniture for each room; interactive pieces wrap <Interactive>
   ui/              the interface over the scene
     ResidenceView.jsx  desktop experience (3D + panel + plan mini-map)
-    PlanView.jsx       mobile / no-WebGL / "plain view" layout
+    PlanView.jsx       the plain view: the default page for every visitor
     RoomContent.jsx    room content, shared by desktop panel and mobile page
     VaultPage.jsx      unlock sequence + the wall of project displays and project files
     CabinetPage.jsx    the Study's award cabinet (3D, scene/cabinet/CabinetScene.jsx)
@@ -49,8 +49,12 @@ src/
 
 Routing is hash-based (`#/workshop/symcor`), so deep links work on GitHub Pages.
 
-URL flags: `?plan` forces the mobile/plain layout, `?3d` forces the 3D residence,
-`?classic` shows the previous site.
+The plain view is the default. The 3D residence opens only with `?3d` (the "3D tour" links and the
+residence project's "Enter the 3D residence" button use it); without WebGL it falls back to the plain view.
+`?plan` forces the plain view, `?classic` shows the previous site.
+
+A project can carry a playable demo: put a self-contained page under `public/` and set
+`demo: { src, label, title }` in `src/data/projects.js` (Isotherm's is `public/isotherm/index.html`).
 
 ## Images for the Vault
 

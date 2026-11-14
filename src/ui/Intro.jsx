@@ -8,7 +8,8 @@ const line = (delay) => ({
   transition: { duration: 1.1, delay, ease: [0.2, 0.7, 0.2, 1] },
 })
 
-// Cinematic title card shown over the 3D scene while it loads.
+// The welcome to the 3D residence, shown over the scene while it loads. The plain view is the
+// site's default; only visitors who chose the 3D view (?3d) see this.
 export default function Intro({ show, ready, slow, onEnter, onPlain }) {
   return (
     <AnimatePresence>
@@ -19,17 +20,17 @@ export default function Intro({ show, ready, slow, onEnter, onPlain }) {
           exit={{ opacity: 0, transition: { duration: 1.1, ease: [0.4, 0, 0.2, 1] } }}
           className="grain fixed inset-0 z-50 flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_50%_60%,rgba(13,13,14,.55)_0%,rgba(13,13,14,.92)_70%)] px-6 text-center"
         >
-          <Motion.img {...line(0.05)} src="/logos/sai-logo.png" alt="SM logo" className="mb-8 h-20 w-auto" />
-          <Motion.p {...line(0.2)} className="label-mono text-[11px] text-brass">
-            {profile.school} · {profile.location}
+          <Motion.img {...line(0.05)} src="/logos/sai-logo.png" alt="SM logo" className="mb-9 h-24 w-auto" />
+          <Motion.p {...line(0.25)} className="label-mono text-[12px] tracking-[0.4em] text-brass">
+            Welcome to
           </Motion.p>
-          <Motion.h1 {...line(0.45)} className="mt-6 font-serif text-[clamp(72px,13vw,200px)] leading-[0.85] tracking-[-0.02em] text-ivory">
-            {profile.name}.
+          <Motion.h1 {...line(0.5)} className="mt-5 font-serif text-[clamp(56px,9vw,148px)] leading-[0.9] tracking-[-0.02em] text-ivory">
+            {profile.residence}.
           </Motion.h1>
-          <Motion.p {...line(0.85)} className="label-mono mt-8 text-[13px] tracking-[0.4em] text-ivory-2">
-            {profile.residence}
+          <Motion.p {...line(0.85)} className="label-mono mt-8 text-[11.5px] tracking-[0.3em] text-ivory-2">
+            {profile.fullName} · {profile.school}
           </Motion.p>
-          <Motion.p {...line(1.15)} className="mt-4 font-serif text-[clamp(22px,2.6vw,34px)] italic text-stone">
+          <Motion.p {...line(1.15)} className="mt-4 font-serif text-[clamp(20px,2.4vw,30px)] italic text-stone">
             {profile.motto}
           </Motion.p>
 
@@ -54,7 +55,7 @@ export default function Intro({ show, ready, slow, onEnter, onPlain }) {
                 href="?plan"
                 className="inline-flex h-14 flex-col items-start justify-center rounded-full border border-ivory/20 px-7 text-left transition-colors hover:border-ivory/50 hover:bg-ivory/5"
               >
-                <span className="text-[15px] text-ivory">Plain view</span>
+                <span className="text-[15px] text-ivory">Back to the plain view</span>
                 <span className="text-[11.5px] text-stone">Work, projects &amp; contact on one page</span>
               </a>
             </div>

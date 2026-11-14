@@ -218,32 +218,47 @@ function Facts({ p }) {
 }
 
 // ============================================================ Rova: archive feed
+// Screenshots keep their real shape: the home page full width at 16:10, the phone tall
+// beside two wide sections, the rest three to a row at 16:10. Notes come after them.
+// Each screenshot opens full size.
+const ARCHIVE_SPAN = {
+  image: 'col-span-6 aspect-[16/10]',
+  tall: 'col-span-6 aspect-[3/4] sm:col-span-2 sm:row-span-2 sm:aspect-auto',
+  wide: 'col-span-6 aspect-[16/10] sm:col-span-4',
+  photo: 'col-span-6 aspect-[16/10] sm:col-span-2',
+  note: 'col-span-3 min-h-[150px] sm:col-span-3 lg:col-span-3',
+}
+
 function ArchiveTile({ post, image }) {
-  const base = 'group relative flex aspect-square flex-col justify-end overflow-hidden rounded-[3px] border border-line p-4 text-left'
-  if (post.kind === 'image')
+  const base = 'group relative flex flex-col justify-end overflow-hidden rounded-[3px] border border-line text-left'
+  if (post.kind === 'image' || post.kind === 'photo') {
+    const span = post.kind === 'image' ? ARCHIVE_SPAN.image : post.tall ? ARCHIVE_SPAN.tall : post.wide ? ARCHIVE_SPAN.wide : ARCHIVE_SPAN.photo
+    const src = post.image || image
     return (
-      <article className={`${base} col-span-2 row-span-2 aspect-auto min-h-[300px] bg-[#f2e8dc] p-0`}>
-        <img src={post.image || image} alt={`${post.title} brand artwork`} className="absolute inset-0 h-full w-full object-contain transition-transform duration-700 group-hover:scale-[1.03]" />
-      </article>
+      <a href={src} target="_blank" rel="noreferrer" className={`${base} ${span} bg-[#f3efe8]`}>
+        {/* the phone shot is narrower than its tile: show its full width, cream below */}
+        <img
+          src={src}
+          alt={`Rova: ${post.title}`}
+          className={`absolute inset-0 h-full w-full object-top transition-transform duration-700 group-hover:scale-[1.02] ${post.tall ? 'object-contain' : 'object-cover'}`}
+        />
+        {post.kind === 'image' && post.body ? (
+          <span className="relative bg-gradient-to-t from-charcoal/90 via-charcoal/60 to-transparent px-4 pb-3 pt-12">
+            <span className="block font-serif text-[22px] leading-tight text-ivory">{post.title}</span>
+            <span className="mt-1 block text-[12.5px] leading-snug text-ivory-2">{post.body}</span>
+          </span>
+        ) : (
+          <span className="label-mono relative m-3 self-start rounded-full bg-charcoal/80 px-2.5 py-1 text-[9.5px] text-ivory-2 backdrop-blur">{post.title}</span>
+        )}
+      </a>
     )
-  if (post.kind === 'photo')
-    return (
-      <article className={`${base} ${post.wide ? 'col-span-2 aspect-auto min-h-[120px]' : ''} bg-black p-0`}>
-        <img src={post.image} alt={`Rova ${post.title.toLowerCase()}`} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
-        <p className="label-mono relative m-3 self-start rounded-full bg-charcoal/80 px-2.5 py-1 text-[9.5px] text-ivory-2 backdrop-blur">{post.title}</p>
-      </article>
-    )
+  }
+  const note = `${base} ${ARCHIVE_SPAN.note} p-4`
   if (post.kind === 'route')
     return (
-      <article className={`${base} bg-char-2`}>
-        <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full opacity-80" aria-hidden>
-          <path d="M16 50 C 28 30, 42 42, 52 26 S 72 14, 86 12" fill="none" stroke="#c6a96c" strokeWidth="1.6" strokeDasharray="3 3" />
-          {[[16, 50], [52, 26], [86, 12]].map(([x, y]) => (
-            <g key={x}>
-              <circle cx={x} cy={y} r="4.2" fill="#0d0d0e" stroke="#dcc48f" strokeWidth="1.4" />
-              <circle cx={x} cy={y} r="1.4" fill="#dcc48f" />
-            </g>
-          ))}
+      <article className={`${note} bg-char-2`}>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full opacity-70" aria-hidden>
+          <path d="M16 50 C 28 30, 42 42, 52 26 S 72 14, 86 12" fill="none" stroke="#c6a96c" strokeWidth="1.2" strokeDasharray="3 3" vectorEffect="non-scaling-stroke" />
         </svg>
         <div className="relative">
           <p className="font-serif text-[22px] leading-tight text-ivory">{post.title}</p>
@@ -253,14 +268,14 @@ function ArchiveTile({ post, image }) {
     )
   if (post.kind === 'stack')
     return (
-      <article className={`${base} bg-charcoal`}>
+      <article className={`${note} bg-charcoal`}>
         <p className="label-mono absolute left-4 top-4 text-[10px] text-brass">FastAPI · PostGIS · Redis</p>
         <p className="font-serif text-[22px] leading-tight text-ivory">{post.title}</p>
         <p className="mt-1 text-[12.5px] leading-snug text-stone">{post.body}</p>
       </article>
     )
   return (
-    <article className={`${base} bg-ivory`}>
+    <article className={`${note} bg-ivory`}>
       <p className="font-serif text-[24px] leading-tight text-charcoal">{post.title}</p>
       <p className="mt-1.5 text-[12.5px] leading-snug text-walnut">{post.body}</p>
     </article>
@@ -285,7 +300,7 @@ function RovaArchive({ p }) {
             {p.tagline && <p className="mt-2 font-serif text-[17px] italic text-ivory-2">{p.tagline}</p>}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="grid grid-flow-row-dense grid-cols-6 gap-2">
           {p.archive.map((post) => (
             <ArchiveTile key={post.id} post={post} image={p.image} />
           ))}

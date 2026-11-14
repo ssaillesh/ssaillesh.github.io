@@ -11,7 +11,7 @@ import { CountUp, Reveal, Sheet } from './plan/parts.jsx'
 import { useMediaQuery } from './plan/hooks.js'
 import { JobSheet } from './plan/Sheets.jsx'
 import { ProjectCover, ProjectPage, ProjectsPage } from './plan/ProjectPages.jsx'
-import { Aurora, LetterRise, RoleTicker, VaultCards, Welcome } from './plan/fx.jsx'
+import { Aurora, LetterRise, RoleTicker, VaultCards } from './plan/fx.jsx'
 import { Ambient, RoomChip, RoomHeader, RoomRail } from './plan/rooms.jsx'
 import { walkByRoom, walkStep } from './plan/walk.js'
 import { featuredProjects, projectById, projectHref } from './plan/projectMeta.js'
@@ -33,19 +33,10 @@ const TABS = [
 ]
 
 const JOB_BG = ['#3a2a1b', '#1d3a33', '#26304a', '#3a2438', '#2a3a22']
-const WELCOME_KEY = 'plain-view-welcomed'
 
 const scrollToSection = (id) => {
   if (id === 'top') window.scrollTo({ top: 0, behavior: 'smooth' })
   else document.getElementById(`sec-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-}
-
-const seenWelcome = () => {
-  try {
-    return sessionStorage.getItem(WELCOME_KEY) === '1'
-  } catch {
-    return false
-  }
 }
 
 function Container({ as = 'div', children, className = '', ...rest }) {
@@ -388,20 +379,6 @@ export default function PlanView({ route }) {
   const canTour = useMediaQuery('(min-width: 861px) and (any-pointer: fine)')
   const reduce = useReducedMotion()
 
-  // The welcome shows once per visit, on the home page, unless the visitor already chose the
-  // plain view from the 3D intro (?plan) or followed a link straight into the house.
-  const [welcome, setWelcome] = useState(
-    () => view === 'home' && !route.room && !new URLSearchParams(window.location.search).has('plan') && !seenWelcome(),
-  )
-  const enter = useCallback(() => {
-    try {
-      sessionStorage.setItem(WELCOME_KEY, '1')
-    } catch {
-      /* private mode: show it again next time */
-    }
-    setWelcome(false)
-  }, [])
-
   // Old links like #/garage/symcor open the matching job on first load.
   const [job, setJob] = useState(() => experience.find((e) => e.id === route.item) || null)
   const [room, setRoom] = useState('foyer')
@@ -431,11 +408,11 @@ export default function PlanView({ route }) {
 
   // Which room you are in follows what is in the middle of the screen.
   useEffect(() => {
-    if (view !== 'home' || welcome) return undefined
+    if (view !== 'home') return undefined
     const io = new IntersectionObserver((entries) => entries.forEach((e) => e.isIntersecting && setRoom(e.target.dataset.room)), { rootMargin: '-45% 0px -50% 0px' })
     document.querySelectorAll('[data-room]').forEach((el) => io.observe(el))
     return () => io.disconnect()
-  }, [view, welcome])
+  }, [view])
 
   const goSection = (section) => {
     setJob(null)
@@ -497,7 +474,7 @@ export default function PlanView({ route }) {
       <RoomRail current={here} onJump={(r) => goSection(walkByRoom[r].section)} />
 
       <main>
-        {view === 'home' && !welcome && <Walkthrough onJob={setJob} canTour={canTour} />}
+        {view === 'home' && <Walkthrough onJob={setJob} canTour={canTour} />}
         {view === 'projects' && <ProjectsPage />}
         {view === 'project' && <ProjectPage key={route.project} id={route.project} />}
       </main>
@@ -521,8 +498,6 @@ export default function PlanView({ route }) {
       <Sheet open={!!job} onClose={closeJob} label={job ? `${job.company}, ${job.title}` : ''}>
         {job && <JobSheet x={job} />}
       </Sheet>
-
-      <AnimatePresence>{welcome && <Welcome key="welcome" onEnter={enter} />}</AnimatePresence>
 
       {/* phone tab bar */}
       <nav aria-label="Sections" className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-charcoal/92 backdrop-blur-md lg:hidden">
