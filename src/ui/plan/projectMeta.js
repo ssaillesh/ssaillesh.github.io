@@ -19,8 +19,10 @@ for (const id of Object.keys(SHOTS)) SHOTS[id] = SHOTS[id].sort((a, b) => a.n - 
 export const shotsFor = (p) => SHOTS[p.id] || (p.image ? [p.image] : [])
 
 // Filter chips. A project can set its own `tags`; these fill in for the existing ones.
-export const FILTERS = ['All', 'AI / ML', 'Full-stack', 'Quant', 'Hardware']
+export const FILTERS = ['All', 'AI / ML', 'Full-stack', 'Infrastructure', 'Quant', 'Hardware']
 const TAGS = {
+  isotherm: ['AI / ML', 'Infrastructure'],
+  residence: ['Full-stack'],
   rova: ['Full-stack'],
   vouch: ['Full-stack'],
   lapzero: ['AI / ML', 'Full-stack'],

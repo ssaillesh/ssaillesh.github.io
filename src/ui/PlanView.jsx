@@ -10,11 +10,11 @@ import { photos } from '../data/lounge.js'
 import { CountUp, Reveal, Sheet } from './plan/parts.jsx'
 import { useMediaQuery } from './plan/hooks.js'
 import { JobSheet } from './plan/Sheets.jsx'
-import { ProjectPage, ProjectsPage } from './plan/ProjectPages.jsx'
+import { ProjectCover, ProjectPage, ProjectsPage } from './plan/ProjectPages.jsx'
 import { Aurora, LetterRise, RoleTicker, VaultCards, Welcome } from './plan/fx.jsx'
 import { Ambient, RoomChip, RoomHeader, RoomRail } from './plan/rooms.jsx'
 import { walkByRoom, walkStep } from './plan/walk.js'
-import { featuredProjects, projectById } from './plan/projectMeta.js'
+import { featuredProjects, projectById, projectHref } from './plan/projectMeta.js'
 
 const Motion = motion
 
@@ -143,6 +143,45 @@ function AwardCard({ a }) {
   )
 }
 
+// Right after the name: the 3D version of this portfolio, shown as a project of its own.
+function ResidenceFeature({ canTour }) {
+  const p = projectById('residence')
+  if (!p) return null
+  return (
+    <Container className="relative pb-4 pt-12 lg:pt-16">
+      <Reveal>
+        <div className="group grid overflow-hidden rounded-[24px] border border-line bg-char-2/70 lg:grid-cols-12">
+          <a href={p.enter.href} aria-label={`${p.enter.label}`} className="relative block aspect-[16/10] overflow-hidden lg:col-span-7 lg:aspect-auto lg:min-h-[340px]">
+            <span className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.03]">
+              <ProjectCover p={p} />
+            </span>
+            <span className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent to-50% lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-charcoal/50" />
+          </a>
+          <div className="flex flex-col justify-center gap-4 p-6 lg:col-span-5 lg:p-10">
+            <p className="label-mono flex items-center gap-2 text-[10.5px] text-brass">
+              <Box size={14} strokeWidth={1.7} aria-hidden /> Portfolio piece · {p.kind}
+            </p>
+            <h2 className="font-display text-[34px] font-bold leading-[0.95] tracking-[-0.04em] lg:text-[44px]">{p.tagline}</h2>
+            <p className="text-[15px] leading-relaxed text-ivory-2">{p.oneLiner} Six rooms, one for each part of the story, and every project on display in the vault.</p>
+            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <a
+                href={p.enter.href}
+                className="inline-flex h-11 items-center gap-2 rounded-full bg-brass px-5 text-[14px] font-medium text-charcoal transition-colors hover:bg-brass-2"
+              >
+                {p.enter.label} <ArrowRight size={15} strokeWidth={1.8} aria-hidden />
+              </a>
+              <a href={projectHref(p.id)} className="text-[14px] text-ivory-2 underline-offset-4 transition-colors hover:text-brass-2 hover:underline">
+                How it is built
+              </a>
+            </div>
+            {!canTour && <p className="label-mono text-[10px] text-concrete">Best on a laptop or desktop</p>}
+          </div>
+        </div>
+      </Reveal>
+    </Container>
+  )
+}
+
 function Walkthrough({ onJob, canTour }) {
   const featured = featuredProjects()
   const labAwards = awards.filter((a) => a.kind === 'Robotics')
@@ -202,6 +241,8 @@ function Walkthrough({ onJob, canTour }) {
           </div>
         </Container>
       </section>
+
+      <ResidenceFeature canTour={canTour} />
 
       {/* 02 · Garage: experience */}
       <Room room="garage" section="work">

@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowUpRight, Github, Image as ImageIcon, X } from 'lucide-react'
 import { projects, vaultBoxed, vaultDisplays, vaultFeatured, vaultRightWall } from '../data/projects.js'
 import { Chips, Kicker, Metrics, SectionLabel } from './bits.jsx'
+import { DemoButton } from './DemoFrame.jsx'
 
 const Motion = motion
 const UnlockScene = lazy(() => import('../scene/vault/UnlockScene.jsx'))
@@ -207,9 +208,10 @@ function Facts({ p }) {
         </div>
       )}
       <div className="flex flex-wrap gap-3">
+        <DemoButton demo={p.demo} />
         {p.links.live && <LinkButton href={p.links.live}>Live demo</LinkButton>}
         {p.links.github && <LinkButton href={p.links.github}>Source on GitHub</LinkButton>}
-        {!p.links.live && !p.links.github && <p className="font-mono text-[12px] text-stone">Private repository · not yet deployed</p>}
+        {!p.demo && !p.links.live && !p.links.github && <p className="font-mono text-[12px] text-stone">Private repository · not yet deployed</p>}
       </div>
     </div>
   )
@@ -559,7 +561,7 @@ function ExhibitRow({ d, onProject, setHovered }) {
   )
 }
 
-const TOP_THREE = { rova: '01', vouch: '02', lapzero: '03' }
+const TOP_THREE = { isotherm: '01', rova: '02', lapzero: '03' }
 const featuredDisplays = displays.filter((d) => vaultFeatured.includes(d.p.id))
 const boxedDisplays = displays.filter((d) => vaultBoxed.includes(d.p.id))
 
@@ -604,11 +606,11 @@ function Vault3D({ project, onProject, onClose, closeRef }) {
               <span className="relative h-[3px] w-40 overflow-hidden rounded-full bg-line">
                 <span className="absolute inset-y-0 left-0 rounded-full bg-brass" style={{ width: `${Math.round(walk * 100)}%` }} />
               </span>
-              <span>Rova</span>
+              <span>Isotherm</span>
             </div>
           )}
           <p className="label-mono rounded-full border border-line bg-charcoal/80 px-4 py-2 text-[10px] text-stone backdrop-blur-md">
-            {sel ? 'Drag the piece to turn it · Esc, scroll or click the floor to step back' : hov ? `${hov.p.name} · ${hov.p.kind}` : 'Scroll or ↑ ↓ to walk the hall · click a case to look closer'}
+            {sel ? `${sel.p.id === 'isotherm' ? 'Isotherm places a job every few seconds' : 'Drag the piece to turn it'} · Esc, scroll or click the floor to step back` : hov ? `${hov.p.name} · ${hov.p.kind}` : 'Scroll or ↑ ↓ to walk the hall · click a case to look closer'}
           </p>
         </div>
 
@@ -641,10 +643,15 @@ function Vault3D({ project, onProject, onClose, closeRef }) {
                     <p className="font-serif text-[21px] italic leading-snug text-ivory-2">{sel.p.oneLiner}</p>
                     <Chips items={sel.p.stack} />
                     <div className="flex flex-wrap gap-3">
+                      <DemoButton demo={sel.p.demo} />
                       <button
                         type="button"
                         onClick={() => setFileOpen(true)}
-                        className="inline-flex h-11 items-center gap-2 rounded-full bg-brass px-5 text-[14px] font-medium text-charcoal transition-colors hover:bg-brass-2"
+                        className={
+                          sel.p.demo
+                            ? 'inline-flex h-11 items-center gap-2 rounded-full border border-ivory/25 px-4 text-[14px] text-ivory transition-colors hover:border-brass hover:text-brass-2'
+                            : 'inline-flex h-11 items-center gap-2 rounded-full bg-brass px-5 text-[14px] font-medium text-charcoal transition-colors hover:bg-brass-2'
+                        }
                       >
                         Open full file →
                       </button>

@@ -1,13 +1,25 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Github } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Box, Github } from 'lucide-react'
 import { isLive } from '../../data/projects.js'
 import { Chips } from '../bits.jsx'
+import { DemoButton } from '../DemoFrame.jsx'
 import { Disclosure, LiveBadge, Reveal, Results } from './parts.jsx'
 import { Bullets, LinkButton } from './Sheets.jsx'
 import { FILTERS, coverBackground, projectById, projectHref, shotsFor, sortedProjects, tagsFor } from './projectMeta.js'
 
 const Motion = motion
+const DEMO_BUTTON = 'inline-flex h-11 items-center gap-2 rounded-full bg-brass px-4 text-[14px] font-medium text-charcoal transition-colors hover:bg-brass-2'
+
+// `enter`: a same-tab link, such as the residence's way into the 3D view.
+function EnterLink({ enter, className = '' }) {
+  if (!enter) return null
+  return (
+    <a href={enter.href} className={`${DEMO_BUTTON} ${className}`}>
+      <Box size={15} strokeWidth={1.8} aria-hidden /> {enter.label}
+    </a>
+  )
+}
 
 // A screenshot when there is one, otherwise a cover generated from the project's id.
 export function ProjectCover({ p, eager = false }) {
@@ -144,8 +156,10 @@ export function ProjectPage({ id }) {
           <h1 className="mt-2 font-display text-[46px] font-bold leading-[0.95] tracking-[-0.04em] lg:text-[72px]">{p.name}</h1>
           <p className="mt-4 max-w-[38rem] text-[17px] leading-snug text-ivory lg:text-[20px]">{p.oneLiner}</p>
 
-          {(live || github) && (
+          {(live || github || p.demo || p.enter) && (
             <div className="mt-6 flex flex-wrap gap-2 lg:hidden">
+              <EnterLink enter={p.enter} />
+              <DemoButton demo={p.demo} className={DEMO_BUTTON} />
               {live && (
                 <LinkButton href={live} primary>
                   Try it live
@@ -189,8 +203,10 @@ export function ProjectPage({ id }) {
 
         <aside className="mt-8 lg:mt-1">
           <div className="lg:sticky lg:top-28">
-            {(live || github) && (
+            {(live || github || p.demo || p.enter) && (
               <div className="mb-6 hidden flex-col gap-2 lg:flex">
+                <EnterLink enter={p.enter} className="justify-center" />
+                <DemoButton demo={p.demo} className={`${DEMO_BUTTON} justify-center`} />
                 {live && (
                   <LinkButton href={live} primary>
                     Try it live

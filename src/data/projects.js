@@ -6,10 +6,68 @@
 // Adding a project: id, name, kind, oneLiner and stack are enough. Everything else is optional
 // and hidden when missing. In the plain view:
 //   - screenshots are picked up from src/assets/projects/<id>.jpg (cover), <id>-2.jpg, <id>-3.jpg …
+//   - `demo: { src, label, title }` adds a button that opens a playable page from public/ in place
+//   - `enter: { href, label }` adds a button that goes there in the same tab (the residence uses it for ?3d)
 //   - `featured: true` puts it on the home page; `live: true` (or status 'Live') adds the Live badge
 //   - projects are listed newest `year` first
 
 export const projects = [
+  {
+    id: 'isotherm',
+    name: 'Isotherm',
+    kind: 'Thermal-aware GPU scheduling',
+    status: 'Open source',
+    featured: true,
+    year: 2026,
+    image: '/residence/isotherm.jpg',
+    // A playable page under public/. The Vault and the plain view both open it in place.
+    demo: { src: '/isotherm/index.html', label: 'Play with the scheduler', title: 'Isotherm: same jobs, two schedulers' },
+    tagline: 'Same jobs, two schedulers.',
+    oneLiner: 'A Kubernetes scheduler plugin that places GPU jobs where the rack row stays furthest from its thermal limits.',
+    problem: 'The common GPU default packs jobs into the first free servers without looking at heat, so part of the row runs hot while the rest sits cool.',
+    description:
+      'A kube-scheduler plugin written in Go asks a rack-row thermal simulator written in Python how hot the row would get for each candidate node, then places the pod where the margin to the inlet-air and GPU throttle limits is largest. The simulator models server power, hot-air recirculation and GPU junction temperature. Every result so far is simulated.',
+    architecture: [
+      'Go kube-scheduler plugin: one ScoreCandidates call per pod in PreScore, and it never computes a temperature itself',
+      'Python thermal simulator over gRPC: server power, a recirculation matrix for inlet air, and GPU junction temperatures',
+      'Trace replay through a kwok cluster, and the same traces run straight against the simulator for sweeps',
+      'Baseline policies and OR-Tools batch placement for comparison, with a learned surrogate trained on the simulator',
+      'Prometheus metrics and Grafana dashboards',
+    ],
+    results: [
+      { value: '1.29°C', label: 'cooler hottest GPU than bin packing at 30% load (simulated)' },
+      { value: '0.34°C', label: 'cooler at 90% load, in 5 of 5 seeds (simulated)' },
+      { value: '120', label: 'simulated runs: 6 policies × 4 loads × 5 seeds' },
+      { value: '320', label: 'GPUs in the simulated row' },
+    ],
+    stack: ['Go', 'Kubernetes', 'Python', 'gRPC', 'OR-Tools', 'Prometheus', 'Grafana'],
+    contribution: null,
+    links: { github: 'https://github.com/ssaillesh/Isotherm' },
+  },
+  {
+    id: 'residence',
+    name: 'The Private Residence',
+    kind: 'This portfolio, in 3D',
+    status: 'Live',
+    year: 2026,
+    image: '/residence/residence.jpg',
+    // Opens the 3D version of this site in the same tab.
+    enter: { href: '?3d', label: 'Enter the 3D residence' },
+    tagline: 'Check out this portfolio on a 3D scale.',
+    oneLiner: 'This portfolio, built a second time as a residence you can walk through in the browser.',
+    problem: 'A portfolio page lists the work; it does not show how its author builds an experience.',
+    description:
+      'An architectural model of a converted-warehouse residence with six rooms around a central core and a garage wing. Each room holds one part of the story: the foyer introduces me, the study holds education and awards, the garage holds work experience, the lab holds robotics, the den holds contact, and the vault holds the projects, with Isotherm’s GPU rack running live at the end of its hall. Click any object to look closer.',
+    architecture: [
+      'React Three Fiber and Drei scene: walls, furniture and every exhibit modelled in code, with procedural canvas textures instead of large image files',
+      'One set of content in src/data drives both this plain view and the 3D rooms',
+      'The 3D scene is a lazy-loaded chunk, so the plain view never downloads it',
+      'Hash routes for deep links into any room or exhibit',
+    ],
+    stack: ['React', 'Three.js', 'React Three Fiber', 'Drei', 'Framer Motion', 'Tailwind CSS', 'Vite'],
+    contribution: null,
+    links: { github: 'https://github.com/ssaillesh/ssaillesh.github.io' },
+  },
   {
     id: 'rova',
     name: 'Rova',
@@ -49,34 +107,6 @@ export const projects = [
     ],
   },
   {
-    id: 'vouch',
-    name: 'VouchStudio',
-    kind: 'Evidence-based job matching',
-    status: 'Live',
-    featured: true,
-    year: 2026,
-    image: '/residence/vouch.jpg',
-    tagline: 'Better jobs. Smarter search.',
-    oneLiner: 'Scores open roles against the evidence in your résumé, then builds a one-page résumé tailored to the job from verified facts only.',
-    problem: 'Job boards rank postings by keywords, and tailored résumés drift away from what you can actually back up.',
-    description:
-      'A job board that pulls public postings from Greenhouse, Ashby, Simplify and Jooble across the US and Canada and scores each one against your résumé. Every requirement is matched to a line of your profile, and a skill counts only when a verified line backs it. For a chosen job it builds a one-page LaTeX résumé where every claim traces back to your master profile.',
-    architecture: [
-      'Deterministic scoring engine in standard-library Python: no LLMs, same profile and posting always give the same score',
-      'Next.js on Vercel for pages and API, with the engine as a Vercel Python Function',
-      'Neon Postgres for accounts, jobs, cached scores and reviews; Cloudflare R2 for files behind five-minute links',
-      'LaTeX tailoring that must compile, fit exactly one page, read cleanly in ATS and lay out cleanly',
-    ],
-    results: [
-      { value: '4', label: 'job sources: Greenhouse, Ashby, Simplify and Jooble' },
-      { value: '0', label: 'LLM calls in scoring: same input, same score' },
-      { value: '4', label: 'checks every tailored PDF must pass' },
-    ],
-    stack: ['Python', 'Next.js', 'TypeScript', 'Postgres (Neon)', 'Cloudflare R2', 'LaTeX'],
-    contribution: null,
-    links: { github: 'https://github.com/ssaillesh/VouchStudio', live: 'https://vouchstudio.vercel.app/' },
-  },
-  {
     id: 'lapzero',
     name: 'LapZero',
     kind: 'Autonomous racing RL',
@@ -103,6 +133,34 @@ export const projects = [
     stack: ['Python', 'PyTorch', 'PPO', 'MLflow', 'FastAPI', 'PostgreSQL', 'React'],
     contribution: null,
     links: { github: 'https://github.com/ssaillesh/lapzero', live: 'https://lapzero-six.vercel.app/' },
+  },
+  {
+    id: 'vouch',
+    name: 'VouchStudio',
+    kind: 'Evidence-based job matching',
+    status: 'Live',
+    featured: true,
+    year: 2026,
+    image: '/residence/vouch-app.jpg', // the app itself; the V mark reads too close to Rova's
+    tagline: 'Better jobs. Smarter search.',
+    oneLiner: 'Scores open roles against the evidence in your résumé, then builds a one-page résumé tailored to the job from verified facts only.',
+    problem: 'Job boards rank postings by keywords, and tailored résumés drift away from what you can actually back up.',
+    description:
+      'A job board that pulls public postings from Greenhouse, Ashby, Simplify and Jooble across the US and Canada and scores each one against your résumé. Every requirement is matched to a line of your profile, and a skill counts only when a verified line backs it. For a chosen job it builds a one-page LaTeX résumé where every claim traces back to your master profile.',
+    architecture: [
+      'Deterministic scoring engine in standard-library Python: no LLMs, same profile and posting always give the same score',
+      'Next.js on Vercel for pages and API, with the engine as a Vercel Python Function',
+      'Neon Postgres for accounts, jobs, cached scores and reviews; Cloudflare R2 for files behind five-minute links',
+      'LaTeX tailoring that must compile, fit exactly one page, read cleanly in ATS and lay out cleanly',
+    ],
+    results: [
+      { value: '4', label: 'job sources: Greenhouse, Ashby, Simplify and Jooble' },
+      { value: '0', label: 'LLM calls in scoring: same input, same score' },
+      { value: '4', label: 'checks every tailored PDF must pass' },
+    ],
+    stack: ['Python', 'Next.js', 'TypeScript', 'Postgres (Neon)', 'Cloudflare R2', 'LaTeX'],
+    contribution: null,
+    links: { github: 'https://github.com/ssaillesh/VouchStudio', live: 'https://vouchstudio.vercel.app/' },
   },
   {
     id: 'codegraphrag',
@@ -267,15 +325,13 @@ projects.push(
 )
 
 // Order of the displays inside the Vault.
-export const vaultDisplays = ['rova', 'vouch', 'lapzero', 'heston', 'codegraphrag', 'news', 'asl', 'ict', 'automl', 'padlock', 'invasion']
-// In the hall of fame: Rova at the end of the walk, big lit cases for the featured
-// projects, and smaller cases near the door for the rest.
-export const vaultFeatured = ['rova', 'vouch', 'lapzero', 'heston', 'codegraphrag', 'news', 'asl']
-export const vaultBoxed = ['ict', 'automl', 'padlock', 'invasion']
-// Cases on the right-hand wall: their details panel opens on the left so it never covers them.
-export const vaultRightWall = ['lapzero', 'heston', 'news', 'padlock', 'invasion']
-
-
+export const vaultDisplays = ['isotherm', 'rova', 'lapzero', 'vouch', 'heston', 'codegraphrag', 'news', 'asl', 'ict', 'automl', 'padlock', 'invasion']
+// In the hall of fame: Isotherm at the end of the walk, Rova and LapZero on towers either
+// side of it, big lit cases for the other featured projects, and smaller cases for the rest.
+export const vaultFeatured = ['isotherm', 'rova', 'lapzero', 'vouch', 'heston', 'codegraphrag', 'news']
+export const vaultBoxed = ['asl', 'ict', 'automl', 'padlock', 'invasion']
+// Pieces on the right-hand side: their details panel opens on the left so it never covers them.
+export const vaultRightWall = ['lapzero', 'heston', 'news', 'ict', 'padlock']
 
 // A project counts as live when it is running for real people. The plain view flags only these.
 export const isLive = (p) => !!p.live || p.status === 'Live'

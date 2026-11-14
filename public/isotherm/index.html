@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Isotherm: same jobs, two schedulers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#08090B;color:#F2ECE2;font-family:Inter,system-ui,sans-serif}
+.wrap{max-width:1280px;margin:0 auto;padding:32px 24px 28px}
+.top{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:flex-end}
+h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:50px;line-height:1}
+.lede{margin:8px 0 0;max-width:580px;font-size:14px;line-height:1.6;color:#C9C2B7}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+button{min-height:44px;padding:0 18px;border-radius:6px;border:1px solid #45454B;background:transparent;color:#F2ECE2;font:500 14px Inter,sans-serif;cursor:pointer}
+button.on,button.primary{background:#F2ECE2;color:#08090B;border-color:#F2ECE2}
+button:focus-visible,input:focus-visible{outline:2px solid #E8913A;outline-offset:2px}
+.controls{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;margin:20px 0 14px;font-size:13px;color:#C9C2B7}
+.controls label{color:#A8A196}
+input[type=range]{width:200px;accent-color:#E8913A}
+.mono{font-family:'JetBrains Mono',monospace}
+.view{display:flex;gap:6px;margin-left:auto}
+.view button{min-height:40px;font-size:13px;padding:0 14px}
+.halls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(520px,100%),1fr));gap:16px}
+.hall{position:relative;height:500px;border-radius:12px;background:#0C0D10;border:1px solid #23262B;overflow:hidden}
+.hall.iso{border-color:#E8913A66}
+.hhead{position:absolute;left:18px;top:14px;z-index:2}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#A8A196}
+.iso .kicker{color:#E8913A}
+.htitle{font-size:18px;font-weight:500}
+.hstats{position:absolute;right:18px;top:14px;z-index:2;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6}
+.hstats .lbl{color:#8F897F}.hstats .big{font-size:24px}
+.hfoot{position:absolute;left:18px;right:18px;bottom:14px;z-index:2;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#A8A196}
+.iso .hfoot .last{color:#E8913A}
+.scene{position:absolute;left:0;right:0;top:60px;height:380px;perspective:950px;perspective-origin:50% 40%}
+.scaler{position:absolute;left:50%;top:60%;width:0;height:0;transform-style:preserve-3d}
+.stage{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;transform:rotateX(-11deg) rotateY(-30deg);animation:dolly 14s ease-in-out infinite alternate}
+@keyframes dolly{from{transform:rotateX(-11deg) rotateY(-38deg)}to{transform:rotateX(-11deg) rotateY(-22deg)}}
+.p{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.f{position:absolute}
+.floor{left:-330px;top:-230px;width:660px;height:460px;transform:translateY(120px) rotateX(90deg);background-color:#0E0F12;background-image:repeating-linear-gradient(90deg,#1A1C20 0 2px,transparent 2px 55px),repeating-linear-gradient(0deg,#1A1C20 0 2px,transparent 2px 55px)}
+.perf{position:absolute;left:30px;right:30px;top:300px;height:130px;background-color:#10171A;background-image:radial-gradient(#22343A 2.2px,transparent 2.6px);background-size:12px 12px}
+.side{left:-50px;top:-120px;width:100px;height:240px;background:#111215;border:1px solid #23262B}
+.l{transform:rotateY(-90deg) translateZ(40px)}.r{transform:rotateY(90deg) translateZ(40px)}
+.roof{left:-40px;top:-50px;width:80px;height:100px;transform:rotateX(90deg) translateZ(120px);background:#1A1B1F;border:1px solid #2A2C31}
+.front{left:-40px;top:-120px;width:80px;height:240px;transform:translateZ(50px);background:#141518;border:2px solid #2C2F35;padding:6px 5px;display:flex;flex-direction:column;gap:4px}
+.tor{height:11px;border-radius:2px;background-color:#0B0C0E;background-image:radial-gradient(#7FD1A8 1.2px,transparent 1.6px);background-size:5px 6px;background-position:2px 3px}
+.blank{border-radius:2px;background:#18191C;border:1px solid #222428}
+.srv{flex:1 1 0;position:relative;border-radius:2px;background-color:#1A1B1F;background-image:repeating-linear-gradient(0deg,#00000040 0 2px,transparent 2px 5px);border:1px solid #00000066;transition:background-color .8s ease}
+.pwr,.act{position:absolute;top:5px;width:4px;height:4px;border-radius:50%}
+.pwr{right:5px;background:#7FD1A8}.act{right:12px;background:#2A2D33}
+.blink{animation:blink 1s steps(2,end) infinite}
+@keyframes blink{50%{opacity:.3}}
+.tag{position:absolute;left:-46px;top:-24px;width:92px;padding:5px 8px;border-radius:6px;background:#0E1013E6;border:1px solid #2E3137;font:400 11px 'JetBrains Mono',monospace;line-height:1.4;transform:rotateY(30deg);animation:face 14s ease-in-out infinite alternate}
+@keyframes face{from{transform:rotateY(38deg)}to{transform:rotateY(22deg)}}
+.tag .n{color:#E6DFD4}
+.beam{animation:sweep 2.6s ease-in-out infinite alternate}
+@keyframes sweep{from{transform:translateX(-230px)}to{transform:translateX(230px)}}
+.beam .f{left:-80px;top:-130px;width:160px;height:260px;transform:translateZ(80px) rotateY(90deg);background:#A7D3DC14;border-left:2px solid #A7D3DCB3;border-right:2px solid #A7D3DC33}
+.camera .tagwrap,.camera .beam{display:none}
+.bottom{display:flex;flex-wrap:wrap;gap:12px 16px;justify-content:space-between;align-items:center;margin-top:16px}
+.verdict{margin:0;font-size:16px;color:#E6DFD4}
+.note{font-size:12px;color:#8F897F}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:600px){.scaler{transform:scale(.62)}h1{font-size:38px}.view{margin-left:0}}
+@media (prefers-reduced-motion:reduce){.stage,.tag,.beam,.blink{animation:none}.beam{opacity:0}.srv{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+<div class="top">
+<div>
+<h1>Same jobs, two schedulers</h1>
+<p class="lede">Every job lands in both halls at once. On the left, today's common GPU default packs jobs into the first free servers without looking at heat. On the right, Isotherm checks every free server and picks the one that keeps the row furthest from its limits.</p>
+</div>
+<div class="btns">
+<button type="button" class="primary" id="add">Add a job</button>
+<button type="button" id="auto" aria-pressed="true">Pause</button>
+<button type="button" id="reset">Reset</button>
+</div>
+</div>
+<div class="controls">
+<label for="supply">Supply air</label>
+<input id="supply" type="range" min="18" max="26" step="1" value="25">
+<span class="mono" id="supplyText">25°C</span>
+<span id="supplyNote" style="color:#8F897F">stress test</span>
+<div class="view" role="group" aria-label="View">
+<button type="button" class="on" id="vIso" aria-pressed="true">Isotherm view</button>
+<button type="button" id="vCam" aria-pressed="false">Camera view</button>
+</div>
+</div>
+<div class="halls" id="halls"></div>
+<div class="bottom">
+<p class="verdict" id="verdict" aria-live="polite"></p>
+<span class="note">A 4-rack slice of Isotherm's recirculation and GPU models with its real parameters. Example jobs; temperatures computed live.</span>
+</div>
+</div>
+<script>
+(function () {
+  var R = 4, S = 4, N = 16;
+  var ramp = ['#1C3C44', '#24545A', '#4E5A4A', '#8A6236', '#C2742E', '#E8913A'];
+
+  function buildModel() {
+    var k = 0.7 * 1005, mf = 0.25, L = 1.5, hb = 1.0, eb = 0.5;
+    var rack = [], slot = [], i, j, a, b, c, q;
+    for (var r = 0; r < R; r++) for (var s = 0; s < S; s++) { rack.push(r); slot.push(s); }
+    var w = rack.map(function (r, i) { return 1 + hb * slot[i] / (S - 1) + eb * (r === 0 || r === R - 1 ? 1 : 0); });
+    var wmax = Math.max.apply(null, w), A = [];
+    for (i = 0; i < N; i++) {
+      var g = [], sum = 0;
+      for (j = 0; j < N; j++) { var v = w[j] * Math.exp(-Math.hypot(rack[i] - rack[j], slot[i] - slot[j]) / L); g.push(v); sum += v; }
+      var fi = mf * w[i] / wmax;
+      A.push(g.map(function (v) { return fi * v / sum; }));
+    }
+    var M = [], B = [];
+    for (a = 0; a < N; a++) { M.push([]); B.push([]); for (b = 0; b < N; b++) { M[a].push((a === b ? 1 : 0) - A[b][a]); B[a].push(A[b][a] / k); } }
+    for (c = 0; c < N; c++) {
+      var p = c; for (q = c + 1; q < N; q++) if (Math.abs(M[q][c]) > Math.abs(M[p][c])) p = q;
+      var t = M[c]; M[c] = M[p]; M[p] = t; t = B[c]; B[c] = B[p]; B[p] = t;
+      var piv = M[c][c];
+      for (j = 0; j < N; j++) { M[c][j] /= piv; B[c][j] /= piv; }
+      for (q = 0; q < N; q++) if (q !== c) { var f = M[q][c]; if (f) for (j = 0; j < N; j++) { M[q][j] -= f * M[c][j]; B[q][j] -= f * B[c][j]; } }
+    }
+    return { rack: rack, slot: slot, D: B, gpu: function (i) { return rack[i] < 2 ? { tdp: 700, R: 0.075, thr: 87 } : { tdp: 400, R: 0.12, thr: 85 }; } };
+  }
+  var m = buildModel();
+
+  function evaluate(util, supply) {
+    var gp = function (i) { return 0.1 * m.gpu(i).tdp + util[i] * 0.9 * m.gpu(i).tdp; };
+    var P = util.map(function (x, i) { return 1500 + 8 * gp(i); });
+    var tin = m.D.map(function (row) { return supply + row.reduce(function (acc, d, j) { return acc + d * P[j]; }, 0); });
+    var over = [], tg = tin.map(function (t, i) { var v = t + gp(i) * m.gpu(i).R; over.push(t > 27 || v >= m.gpu(i).thr); return Math.min(v, m.gpu(i).thr); });
+    var head = 27 - Math.max.apply(null, tin);
+    tg.forEach(function (t, i) { head = Math.min(head, m.gpu(i).thr - t); });
+    return { tin: tin, tg: tg, over: over, head: head };
+  }
+  function empty() { var u = []; for (var i = 0; i < N; i++) u.push(0); return u; }
+  function nodeName(i) { return 'rack0' + m.rack[i] + '-slot' + m.slot[i]; }
+
+  var st = { ub: empty(), ui: empty(), jobs: 0, wait: 0, lastB: -1, lastI: -1, supply: 25, thermal: true, auto: true };
+
+  function hallMarkup(iso) {
+    var racks = '';
+    for (var r = 0; r < R; r++) {
+      var servers = '';
+      for (var s = S - 1; s >= 0; s--) servers += '<div class="srv" data-i="' + (r * S + s) + '"><span class="pwr"></span><span class="act"></span></div>';
+      racks += '<div class="p" style="transform:translateX(' + ((r - 1.5) * 120) + 'px)">' +
+        '<div class="f side l"></div><div class="f side r"></div><div class="f roof"></div>' +
+        '<div class="f front"><div class="tor"></div><div class="blank" style="height:18px"></div>' + servers + '<div class="blank" style="height:12px"></div></div>' +
+        '<div class="p tagwrap" style="transform:translate3d(0px,-206px,50px)"><div class="tag" data-r="' + r + '"><div class="n">rack0' + r + '</div><div class="t"></div></div></div>' +
+        '</div>';
+    }
+    return '<div class="hhead"><div class="kicker">' + (iso ? 'Optimized' : 'Today') + '</div><div class="htitle">' + (iso ? 'Isotherm' : 'Bin packing') + '</div></div>' +
+      '<div class="hstats"><div class="lbl">row headroom</div><div class="big" data-k="head"></div><div data-k="over"></div></div>' +
+      '<div class="scene" role="img" data-k="scene"><div class="scaler"><div class="stage">' +
+      '<div class="f floor"><div class="perf"></div></div>' +
+      '<div class="f" style="left:-260px;top:-8px;width:520px;height:16px;transform:translate3d(0,-178px,10px);background:#B8952A"></div>' +
+      '<div class="f" style="left:-260px;top:-35px;width:520px;height:70px;transform:translate3d(0,-186px,10px) rotateX(90deg);background:#8C7121"></div>' +
+      racks + (iso ? '<div class="p beam"><div class="f"></div></div>' : '') +
+      '</div></div></div>' +
+      '<div class="hfoot"><span>' + (iso ? 'picks the most headroom' : 'fills the first free server') + '</span><span class="last" data-k="last">no jobs yet</span></div>';
+  }
+
+  var hallsEl = document.getElementById('halls');
+  var halls = [false, true].map(function (iso) {
+    var el = document.createElement('section');
+    el.className = 'hall' + (iso ? ' iso' : '');
+    el.setAttribute('aria-label', iso ? 'Isotherm' : 'Bin packing');
+    el.innerHTML = hallMarkup(iso);
+    hallsEl.appendChild(el);
+    return {
+      el: el, iso: iso,
+      srv: Array.prototype.slice.call(el.querySelectorAll('.srv')),
+      tags: Array.prototype.slice.call(el.querySelectorAll('.tag')),
+      head: el.querySelector('[data-k="head"]'), over: el.querySelector('[data-k="over"]'),
+      last: el.querySelector('[data-k="last"]'), scene: el.querySelector('[data-k="scene"]')
+    };
+  });
+
+  function drawHall(h, util, last) {
+    var ev = evaluate(util, st.supply), overCount = 0;
+    h.srv.forEach(function (node) {
+      var i = Number(node.getAttribute('data-i'));
+      if (ev.over[i]) overCount++;
+      var level = Math.max(0, Math.min(5, Math.round(((ev.tg[i] - 30) / 55) * 5)));
+      var hot = ev.over[i] && st.thermal;
+      node.style.backgroundColor = hot ? '#C9362E' : st.thermal ? ramp[level] : '#1A1B1F';
+      node.style.borderColor = i === last ? '#F2ECE2' : '#00000066';
+      var act = node.querySelector('.act');
+      act.style.background = util[i] > 0 ? '#6AA9FF' : '#2A2D33';
+      act.className = 'act' + (hot || util[i] > 0 ? ' blink' : '');
+    });
+    h.tags.forEach(function (tag) {
+      var r = Number(tag.getAttribute('data-r')), maxIn = 0;
+      for (var s = 0; s < S; s++) maxIn = Math.max(maxIn, ev.tin[r * S + s]);
+      var overIn = maxIn > 27;
+      var t = tag.querySelector('.t');
+      t.textContent = 'in ' + maxIn.toFixed(1) + '°C' + (overIn ? ' over' : '');
+      t.style.color = overIn ? '#FF8A7A' : maxIn > 26 ? '#E8913A' : '#A7D3DC';
+      tag.style.borderColor = overIn ? '#FF6B5B' : (last >= 0 && Math.floor(last / S) === r ? '#F2ECE2' : '#2E3137');
+      tag.style.boxShadow = overIn ? '0 0 14px #FF6B5B66' : 'none';
+    });
+    h.head.textContent = ev.head.toFixed(2) + '°C';
+    h.head.style.color = ev.head < 0 ? '#FF8A7A' : ev.head < 1 ? '#E8913A' : '#7FD1A8';
+    h.over.textContent = overCount ? overCount + ' server' + (overCount > 1 ? 's' : '') + ' over limit' : 'all within limits';
+    h.over.style.color = overCount ? '#FF8A7A' : '#7FD1A8';
+    h.last.textContent = last >= 0 ? 'last job → ' + nodeName(last) : 'no jobs yet';
+    h.scene.setAttribute('aria-label', (h.iso ? 'Isotherm hall: jobs spread to the coolest slots. ' : 'Bin packing hall: jobs fill racks from the first rack upward. ') + h.over.textContent + '.');
+    return { head: ev.head, over: overCount };
+  }
+
+  function draw() {
+    var a = drawHall(halls[0], st.ub, st.lastB);
+    var b = drawHall(halls[1], st.ui, st.lastI);
+    document.getElementById('app').classList.toggle('camera', !st.thermal);
+    var v = 'Add a job, or let it play. Slide the supply air warmer to tighten the cooling.';
+    if (st.jobs > 0) {
+      v = st.jobs + ' job' + (st.jobs > 1 ? 's' : '') + ' at ' + st.supply + '°C supply: ';
+      if (a.over && !b.over) v += 'bin packing has pushed ' + a.over + ' server' + (a.over > 1 ? 's' : '') + ' over the limit. Isotherm has none.';
+      else if (a.over && b.over) v += 'the cooling is too tight for both, but Isotherm keeps ' + (b.head - a.head).toFixed(2) + '°C more headroom.';
+      else v += 'Isotherm keeps ' + (b.head - a.head).toFixed(2) + '°C more headroom than bin packing.';
+    }
+    document.getElementById('verdict').textContent = v;
+    document.getElementById('supplyText').textContent = st.supply + '°C';
+    document.getElementById('supplyNote').textContent = st.supply === 18 ? 'v1 baseline' : st.supply === 25 ? 'stress test' : '';
+    var auto = document.getElementById('auto');
+    auto.textContent = st.auto ? 'Pause' : 'Auto play';
+    auto.setAttribute('aria-pressed', st.auto ? 'true' : 'false');
+    var vi = document.getElementById('vIso'), vc = document.getElementById('vCam');
+    vi.classList.toggle('on', st.thermal); vc.classList.toggle('on', !st.thermal);
+    vi.setAttribute('aria-pressed', String(st.thermal)); vc.setAttribute('aria-pressed', String(!st.thermal));
+  }
+
+  function addJob() {
+    if (st.jobs >= N) return;
+    var b = st.ub.indexOf(0);
+    st.ub[b] = 0.95;
+    var best = -1, bestHead = -Infinity;
+    for (var c = 0; c < N; c++) {
+      if (st.ui[c] > 0) continue;
+      var trial = st.ui.slice(); trial[c] = 0.95;
+      var h = evaluate(trial, st.supply).head;
+      if (h > bestHead) { bestHead = h; best = c; }
+    }
+    st.ui[best] = 0.95;
+    st.jobs++; st.lastB = b; st.lastI = best;
+    draw();
+  }
+  function reset() { st.ub = empty(); st.ui = empty(); st.jobs = 0; st.wait = 0; st.lastB = -1; st.lastI = -1; draw(); }
+
+  document.getElementById('add').addEventListener('click', addJob);
+  document.getElementById('reset').addEventListener('click', reset);
+  document.getElementById('auto').addEventListener('click', function () { st.auto = !st.auto; draw(); });
+  document.getElementById('supply').addEventListener('input', function (e) { st.supply = Number(e.target.value); draw(); });
+  document.getElementById('vIso').addEventListener('click', function () { st.thermal = true; draw(); });
+  document.getElementById('vCam').addEventListener('click', function () { st.thermal = false; draw(); });
+
+  setInterval(function () {
+    if (!st.auto) return;
+    if (st.jobs >= 12) { if (st.wait < 2) st.wait++; else reset(); return; }
+    addJob();
+  }, 2200);
+
+  draw();
+})();
+</script>
+</body>
+</html>
